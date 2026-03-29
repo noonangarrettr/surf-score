@@ -56,8 +56,8 @@ html::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .match-league{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold)}
 .match-half{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.55)}
 
-.scores-row{display:grid;grid-template-columns:1fr 52px 1fr;align-items:center;padding:18px 12px 6px;gap:4px}
-.team-col{text-align:center}
+.scores-row{display:grid;grid-template-columns:1fr 52px 1fr;align-items:start;padding:18px 12px 6px;gap:4px}
+.team-col{text-align:center;width:100%;overflow:hidden}
 .team-label-input{background:transparent;border:none;outline:none;font-family:'Oswald',sans-serif;font-size:18px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--white);text-align:center;width:100%;padding:3px 4px;border-radius:6px;transition:background .2s}
 .team-label-input:focus{background:rgba(255,255,255,.09)}
 .score-wrap{position:relative;display:inline-block}
@@ -69,7 +69,7 @@ html::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .score-ring{position:absolute;inset:-8px;border-radius:50%;border:3px solid var(--gold);opacity:0;pointer-events:none}
 .score-ring.fire{animation:ringPop .6s ease-out forwards}
 @keyframes ringPop{0%{opacity:.9;transform:scale(.6)}100%{opacity:0;transform:scale(1.8)}}
-.score-sep{font-family:'Oswald',sans-serif;font-size:38px;font-weight:300;color:rgba(255,255,255,.25);text-align:center;line-height:1}
+.score-sep{font-family:'Oswald',sans-serif;font-size:38px;font-weight:300;color:rgba(255,255,255,.25);text-align:center;line-height:1;padding-top:26px;align-self:start}
 
 /* Shots under score */
 .shots-row{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:4px;min-height:20px}
@@ -79,8 +79,8 @@ html::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .btn-shot-adj:active{opacity:.6}
 
 /* Cards row */
-.cards-row{display:flex;justify-content:center;gap:6px;margin-top:6px;min-height:28px}
-.card-chip{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:transform .1s}
+.cards-row{display:flex;justify-content:center;gap:4px;margin-top:6px;min-height:28px;flex-wrap:nowrap;max-width:100%}
+.card-chip{display:flex;align-items:center;gap:3px;padding:4px 7px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:transform .1s;flex-shrink:1;min-width:0}
 .card-chip:active{transform:scale(.9)}
 .card-yellow{background:var(--yellow-card);color:#1a1200}
 .card-red-chip{background:var(--red-card);color:white}
@@ -108,7 +108,10 @@ html::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .timer-digits{font-family:'Oswald',sans-serif;font-size:74px;font-weight:700;letter-spacing:4px;text-align:center;line-height:1;color:var(--white);transition:color .3s}
 .timer-digits.warning{color:var(--gold)}
 .timer-digits.urgent{color:var(--red);animation:flash 1s infinite}
+.timer-digits.final{color:var(--white);animation:none;font-size:52px;letter-spacing:6px}
 @keyframes flash{0%,100%{opacity:1}50%{opacity:.45}}
+.timer-mode-btn{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:6px;padding:4px 9px;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+.timer-mode-btn.countup{color:var(--gold);border-color:rgba(232,184,75,.35);background:rgba(232,184,75,.09)}
 .stoppage-row{display:flex;gap:6px;justify-content:center;margin-top:10px;align-items:center}
 .btn-stoppage{border:1px solid rgba(232,184,75,.35);border-radius:9px;padding:6px 14px;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;background:rgba(232,184,75,.1);color:var(--gold);cursor:pointer}
 .timer-btns{display:flex;gap:8px;margin-top:12px}
@@ -298,6 +301,7 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
     <div class="timer-top">
       <div class="timer-label-text" id="timerHalfLabel">1ST HALF</div>
       <div class="timer-duration-control">
+        <button class="timer-mode-btn" id="modeBtn" onclick="toggleClockMode()">▲ COUNT UP</button>
         <button class="dur-btn" onclick="adjustDuration(-5)">−</button>
         <div class="dur-display" id="durDisplay">30 MIN</div>
         <button class="dur-btn" onclick="adjustDuration(5)">+</button>
@@ -368,7 +372,7 @@ const FB={
 
 let S={
   homeScore:0,awayScore:0,goals:[],half:1,halfMinutes:30,timerSec:1800,
-  timerRunning:false,timerStartWall:null,
+  timerRunning:false,timerStartWall:null,countUp:false,elapsedSec:0,
   homeTeam:'SDSC Surf',awayTeam:'Opponent',
   homeShots:0,awayShots:0,
   homeYellow:0,homeRed:0,awayYellow:0,awayRed:0
@@ -420,16 +424,29 @@ function startLocalTick(){
   if(ticker)return;
   ticker=setInterval(()=>{
     if(!S.timerRunning){stopLocalTick();showStartBtn();return;}
-    // Always recompute from wall clock so lock screen doesn't break it
-    if(S.timerStartWall){
-      const elapsed=Math.floor((Date.now()-S.timerStartWall)/1000);
-      S.timerSec=Math.max(0,S.timerSecAtStart-elapsed);
+    if(S.countUp){
+      // Count up: elapsed since start
+      if(S.timerStartWall){
+        S.elapsedSec=Math.floor((Date.now()-S.timerStartWall)/1000);
+      } else {
+        S.elapsedSec=(S.elapsedSec||0)+1;
+      }
+      renderTimer();
+      if(S.elapsedSec%5===0)push();
     } else {
-      if(S.timerSec>0)S.timerSec--;
+      // Count down
+      if(S.timerStartWall){
+        const elapsed=Math.floor((Date.now()-S.timerStartWall)/1000);
+        S.timerSec=Math.max(0,S.timerSecAtStart-elapsed);
+      } else {
+        if(S.timerSec>0)S.timerSec--;
+      }
+      renderTimer();
+      if(S.timerSec<=0){
+        stopLocalTick();S.timerRunning=false;showStartBtn();push();showHalftimeOverlay();return;
+      }
+      if(S.timerSec%5===0)push();
     }
-    renderTimer();
-    if(S.timerSec<=0){stopLocalTick();S.timerRunning=false;showStartBtn();push();showHalftimeOverlay();return;}
-    if(S.timerSec%5===0)push();
   },1000);
   document.getElementById('btnStart').style.display='none';
   document.getElementById('btnPause').style.display='';
@@ -443,7 +460,13 @@ function startTimer(){
   if(ticker)return;
   S.timerRunning=true;
   S.timerStartWall=Date.now();
-  S.timerSecAtStart=S.timerSec;
+  if(S.countUp){
+    S.elapsedSec=S.elapsedSec||0;
+    // Adjust wall start to account for already elapsed time
+    S.timerStartWall=Date.now()-(S.elapsedSec*1000);
+  } else {
+    S.timerSecAtStart=S.timerSec;
+  }
   startLocalTick();push();
 }
 function pauseTimer(){
@@ -456,16 +479,23 @@ function pauseTimer(){
   S.timerRunning=false;S.timerStartWall=null;S.timerSecAtStart=null;
   showStartBtn();push();
 }
+function toggleClockMode(){
+  if(S.timerRunning)return;
+  S.countUp=!S.countUp;
+  if(S.countUp){S.elapsedSec=0;}
+  else{S.timerSec=S.halfMinutes*60;}
+  renderTimer();push();
+}
 function resetTimer(){
   if(!confirm('Restart the timer?'))return;
   stopLocalTick();
-  S.timerRunning=false;S.timerSec=S.halfMinutes*60;
+  S.timerRunning=false;S.timerSec=S.halfMinutes*60;S.elapsedSec=0;
   S.timerStartWall=null;S.timerSecAtStart=null;
   showStartBtn();renderTimer();push();
 }
 function switchHalf(){
   stopLocalTick();S.timerRunning=false;
-  S.half=S.half===1?2:1;S.timerSec=S.halfMinutes*60;
+  S.half=S.half===1?2:1;S.timerSec=S.halfMinutes*60;S.elapsedSec=0;
   S.timerStartWall=null;S.timerSecAtStart=null;
   showStartBtn();renderTimer();renderHalf();showHalftimeOverlay();push();
 }
@@ -478,18 +508,38 @@ function adjustDuration(d){
 function addStoppage(mins){S.timerSec+=mins*60;renderTimer();push();}
 
 function renderTimer(){
-  const m=Math.floor(S.timerSec/60),s=S.timerSec%60;
-  const txt=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
   const el=document.getElementById('timerDigits');
-  el.textContent=txt;el.className='timer-digits';
-  if(S.timerSec<=60)el.classList.add('urgent');
-  else if(S.timerSec<=300)el.classList.add('warning');
+  // FINAL: countdown reached zero at end of 2nd half
+  if(!S.countUp&&S.timerSec<=0&&S.half===2&&!S.timerRunning){
+    el.textContent='FINAL';el.className='timer-digits final';
+    document.getElementById('stoppageRow').style.display='none';
+  } else if(S.countUp){
+    const sec=S.elapsedSec||0;
+    const m=Math.floor(sec/60),s=sec%60;
+    el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    el.className='timer-digits';
+    document.getElementById('stoppageRow').style.display='none';
+  } else {
+    const m=Math.floor(S.timerSec/60),s=S.timerSec%60;
+    el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    el.className='timer-digits';
+    if(S.timerSec<=60)el.classList.add('urgent');
+    else if(S.timerSec<=300)el.classList.add('warning');
+    document.getElementById('stoppageRow').style.display=S.timerSec<=30&&S.timerRunning?'flex':'none';
+  }
   document.getElementById('durDisplay').textContent=`${S.halfMinutes} MIN`;
   document.querySelectorAll('.dur-btn').forEach(b=>{
-    b.style.opacity=S.timerRunning?'0.25':'1';
-    b.style.pointerEvents=S.timerRunning?'none':'auto';
+    b.style.opacity=(S.timerRunning||S.countUp)?'0.25':'1';
+    b.style.pointerEvents=(S.timerRunning||S.countUp)?'none':'auto';
   });
-  document.getElementById('stoppageRow').style.display=S.timerSec<=30?'flex':'none';
+  // Mode button label
+  const mb=document.getElementById('modeBtn');
+  if(mb){
+    mb.textContent=S.countUp?'▼ COUNT DOWN':'▲ COUNT UP';
+    mb.className='timer-mode-btn'+(S.countUp?' countup':'');
+    mb.style.opacity=S.timerRunning?'0.4':'1';
+    mb.style.pointerEvents=S.timerRunning?'none':'auto';
+  }
 }
 function renderHalf(){
   const lbl=S.half===1?'1ST HALF':'2ND HALF';
@@ -579,7 +629,7 @@ function newGame(){
   if(!confirm('Start a new game? Clears scores, goals, cards and shots on all devices.'))return;
   stopLocalTick();showStartBtn();
   S.homeScore=0;S.awayScore=0;S.goals=[];S.half=1;
-  S.timerSec=S.halfMinutes*60;S.timerRunning=false;
+  S.timerSec=S.halfMinutes*60;S.timerRunning=false;S.elapsedSec=0;
   S.timerStartWall=null;S.timerSecAtStart=null;
   S.homeShots=0;S.awayShots=0;S.homeYellow=0;S.homeRed=0;S.awayYellow=0;S.awayRed=0;
   renderAll();push();
@@ -665,6 +715,7 @@ function launchConfetti(){
 
 window.startTimer=startTimer;window.pauseTimer=pauseTimer;window.resetTimer=resetTimer;
 window.switchHalf=switchHalf;window.adjustDuration=adjustDuration;window.addStoppage=addStoppage;
+window.toggleClockMode=toggleClockMode;
 window.addGoal=addGoal;window.undoGoal=undoGoal;window.confirmGoal=confirmGoal;window.cancelGoal=cancelGoal;
 window.newGame=newGame;window.onTeamName=onTeamName;window.copyViewerUrl=copyViewerUrl;
 window.addCard=addCard;window.adjCard=adjCard;window.adjShot=adjShot;
