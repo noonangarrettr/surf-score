@@ -112,7 +112,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     </div>
     <div class="sync-pill" id="syncPill"><div class="sync-dot"></div><span id="syncLabel">SYNC…</span></div>
   </div>
-
+ 
   <div class="scoreboard">
     <div class="match-header">
       <div class="match-league">SDSC Surf · Match Day</div>
@@ -140,7 +140,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
       </div>
     </div>
   </div>
-
+ 
   <div class="timer-card">
     <div class="timer-top">
       <div class="timer-label-text" id="timerHalfLabel">1ST HALF</div>
@@ -158,25 +158,25 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
       <button class="timer-btn btn-reset" onclick="resetTimer()">↺</button>
     </div>
   </div>
-
+ 
   <div class="section">
     <div class="sec-label">Goals Scored</div>
     <div class="goals-card" id="goalsList">
       <div class="empty-goals"><span>⚽</span>No goals yet — kick it off!</div>
     </div>
   </div>
-
+ 
   <div class="share-banner">
     <h4>📲 Share with Parents</h4>
     <p>Send parents the view-only link — they see live updates but can't change anything.</p>
     <div class="share-url" id="viewerUrl">https://yourusername.github.io/surf-score/surf-score-view.html</div>
     <button class="btn-copy" onclick="copyViewerUrl()">📋 Copy Parent Link</button>
   </div>
-
+ 
   <button class="btn-new-game" onclick="newGame()">+ NEW GAME</button>
   <div class="footer-mark">SDSC Surf · ECNL · Match Day</div>
 </div>
-
+ 
 <div class="modal-overlay" id="scorerModal">
   <div class="modal-sheet">
     <div class="modal-pill"></div>
@@ -189,11 +189,11 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     </div>
   </div>
 </div>
-
+ 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getDatabase, ref, onValue, set } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
-
+ 
 const FB = {
   apiKey:            "AIzaSyADA83VqTnTZYawJZEdnAMNzVOgq92PodQ",
   authDomain:        "surf-score-2.firebaseapp.com",
@@ -203,14 +203,14 @@ const FB = {
   messagingSenderId: "1066375405954",
   appId:             "1:1066375405954:web:552acd57a7d66243806f9b"
 };
-
+ 
 let S={homeScore:0,awayScore:0,goals:[],half:1,halfMinutes:30,timerSec:1800,homeTeam:'SDSC Surf',awayTeam:'Opponent'};
 let ticker=null,pendingTeam=null,isSyncing=false;
-
+ 
 const app=initializeApp(FB);
 const db=getDatabase(app);
 const gameRef=ref(db,'surfmatchday/game');
-
+ 
 setSyncStatus('connecting');
 onValue(gameRef,snap=>{
   if(isSyncing)return;
@@ -218,7 +218,7 @@ onValue(gameRef,snap=>{
   if(d){S={...S,...d};renderAll();}
   setSyncStatus('live');
 },()=>setSyncStatus('error'));
-
+ 
 function push(){
   isSyncing=true;
   set(gameRef,{...S,timerRunning:false}).finally(()=>setTimeout(()=>isSyncing=false,350));
@@ -340,3 +340,4 @@ renderAll();
 </script>
 </body>
 </html>
+ 
