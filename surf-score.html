@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -10,335 +9,208 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
 :root{
-  --navy:#0a1628;--navy-mid:#0f2040;--navy-lt:#162d57;--navy-card:#0d1e3a;
-  --blue-acc:#1e4d9a;--surf-blue:#2561c4;--white:#f4f7ff;--off-white:#c8d4ec;
-  --gold:#e8b84b;--red:#d94040;--success:#3dd68c;--muted:#5a7aaa;
+  --navy:#0d1f3c;--navy-mid:#112244;--navy-card:#0a1a33;
+  --surf-blue:#2561c4;--blue-acc:#1e4d9a;--blue-lt:#2d6ee0;
+  --white:#ffffff;--off-white:#dce8ff;--muted:#7a9cc8;
+  --gold:#e8b84b;--red:#e03535;--success:#3dd68c;
   --yellow-card:#f5c518;--red-card:#e03030;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:var(--navy);min-height:100%}
+body{font-family:'Inter',sans-serif;color:var(--white);min-height:100dvh;max-width:430px;margin:0 auto;overflow-x:hidden;position:relative}
 
-/* Full-viewport background — NOT constrained by body max-width */
-html{background:var(–navy);min-height:100%}
-body{font-family:‘Inter’,sans-serif;color:var(–white);min-height:100dvh;max-width:430px;margin:0 auto;overflow-x:hidden;position:relative}
+/* === DEEP BLUE BACKGROUND === */
+html::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(175deg,#1a3a6e 0%,#0d1f3c 45%,#071428 100%)}
+html::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.012) 39px,rgba(255,255,255,.012) 40px)}
 
-/* BACKGROUND LAYERS — attached to html so they fill full viewport */
-html::before{
-content:’’;position:fixed;top:0;left:0;right:0;bottom:0;z-index:0;pointer-events:none;
-background:
-linear-gradient(160deg,#1a4a96 0%,#0a1628 55%),
-var(–navy);
-}
-html::after{
-content:’’;position:fixed;top:0;left:0;right:0;bottom:0;z-index:0;pointer-events:none;
-background:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.015) 39px,rgba(255,255,255,.015) 40px);
-}
-
-/* ANIMATED WAVES — full viewport width */
-.wave-bg{position:fixed;bottom:0;left:0;right:0;z-index:0;pointer-events:none;overflow:hidden;height:160px}
-.wave-bg svg{position:absolute;bottom:0;width:200%;animation:waveScroll 18s linear infinite}
-.wave-bg svg:nth-child(2){animation-duration:24s;animation-direction:reverse;opacity:.6}
-.wave-bg svg:nth-child(3){animation-duration:30s;opacity:.35}
+/* === WHITE/GREY WAVES === */
+.wave-bg{position:fixed;bottom:0;left:0;right:0;z-index:0;pointer-events:none;height:140px;overflow:hidden}
+.wave-bg svg{position:absolute;bottom:0;width:200%;animation:waveScroll 20s linear infinite}
+.wave-bg svg:nth-child(2){animation-duration:28s;animation-direction:reverse;opacity:.5}
+.wave-bg svg:nth-child(3){animation-duration:36s;opacity:.25}
 @keyframes waveScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-.app{position:relative;z-index:1;padding-bottom:48px}
+.app{position:relative;z-index:1;padding-bottom:52px}
 
-/* HEADER */
-.header{display:flex;align-items:center;justify-content:space-between;padding:52px 20px 14px}
-.brand-top{font-family:‘Oswald’,sans-serif;font-size:10px;font-weight:500;letter-spacing:3.5px;text-transform:uppercase;color:var(–gold);opacity:.85}
-.brand-name{font-family:‘Oswald’,sans-serif;font-size:32px;font-weight:700;letter-spacing:1px;color:var(–white);line-height:1.1}
-.brand-name span{color:var(–gold)}
+/* === HEADER === */
+.header{display:flex;align-items:center;justify-content:space-between;padding:52px 20px 16px}
+.brand-top{font-family:'Oswald',sans-serif;font-size:10px;font-weight:500;letter-spacing:3.5px;text-transform:uppercase;color:var(--gold);opacity:.85}
+.brand-name{font-family:'Oswald',sans-serif;font-size:32px;font-weight:700;letter-spacing:1px;color:var(--white);line-height:1.1}
+.brand-name em{font-style:normal;color:var(--gold)}
 .sync-wrap{position:relative;display:flex;align-items:center}
 .sync-ring{position:absolute;inset:-6px;border-radius:50px;border:1.5px solid transparent}
-.sync-wrap.live .sync-ring{border-color:rgba(61,214,140,.4);animation:ringBreath 2s ease-in-out infinite}
-@keyframes ringBreath{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
-.sync-pill{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:5px 12px;font-size:10px;font-weight:600;letter-spacing:1.5px;color:var(–muted);text-transform:uppercase;transition:all .3s}
-.sync-wrap.live .sync-pill{color:var(–success);border-color:rgba(61,214,140,.3);background:rgba(61,214,140,.08)}
-.sync-wrap.error .sync-pill{color:var(–red);border-color:rgba(217,64,64,.3)}
+.sync-wrap.live .sync-ring{border-color:rgba(61,214,140,.45);animation:ringBreath 2s ease-in-out infinite}
+@keyframes ringBreath{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
+.sync-pill{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 12px;font-size:10px;font-weight:600;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;transition:all .3s}
+.sync-wrap.live .sync-pill{color:var(--success);border-color:rgba(61,214,140,.3);background:rgba(61,214,140,.09)}
+.sync-wrap.error .sync-pill{color:var(--red);border-color:rgba(224,53,53,.3)}
 .sync-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
 .sync-wrap.live .sync-dot{animation:dotPulse 1.8s infinite}
 @keyframes dotPulse{0%,100%{opacity:1}50%{opacity:.2}}
 
-/* MATCH META */
-.match-meta{margin:0 16px 12px;display:flex;gap:8px;position:relative}
-.meta-input{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:8px 12px;color:var(–off-white);font-size:12px;font-family:‘Inter’,sans-serif;outline:none;transition:border-color .2s}
-.meta-input:focus{border-color:var(–surf-blue)}
-.meta-input::placeholder{color:var(–muted)}
-.autocomplete-list{position:absolute;top:100%;left:0;right:50%;margin-top:3px;background:rgba(10,22,40,.97);border:1px solid rgba(255,255,255,.12);border-radius:10px;z-index:100;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.5)}
-.autocomplete-item{padding:9px 14px;font-size:13px;color:var(–off-white);cursor:pointer;transition:background .15s}
-.autocomplete-item:hover{background:rgba(37,97,196,.3)}
+/* === SCOREBOARD === */
+.scoreboard{margin:0 16px 14px;background:rgba(13,31,60,.82);border:1px solid rgba(255,255,255,.14);border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.1)}
+.match-header{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:linear-gradient(90deg,#1e4d9a,#162d57);border-bottom:1px solid rgba(255,255,255,.1)}
+.match-league{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold)}
+.match-half{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.55)}
 
-/* SCOREBOARD */
-.scoreboard{margin:0 16px 12px;background:rgba(15,32,64,.75);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.11);border-radius:24px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.09)}
-.match-header{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:linear-gradient(90deg,rgba(30,77,154,.95),rgba(22,45,87,.95));border-bottom:1px solid rgba(255,255,255,.08)}
-.match-league{font-family:‘Oswald’,sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(–gold)}
-.match-half{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5)}
-.scores-row{display:grid;grid-template-columns:1fr 56px 1fr;align-items:center;padding:20px 12px 6px;gap:6px}
+.scores-row{display:grid;grid-template-columns:1fr 52px 1fr;align-items:center;padding:18px 12px 6px;gap:4px}
 .team-col{text-align:center}
-.team-label-input{background:transparent;border:none;outline:none;font-family:‘Oswald’,sans-serif;font-size:19px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(–white);text-align:center;width:100%;cursor:text;padding:3px 4px;border-radius:6px;transition:background .2s}
-.team-label-input:focus{background:rgba(255,255,255,.08)}
-
-/* Score number — simple, large, reliable */
-.score-num{font-family:‘Oswald’,sans-serif;font-size:96px;font-weight:700;line-height:1;color:var(–white);text-align:center;transition:color .25s;text-shadow:0 2px 20px rgba(0,0,0,.4)}
-.score-num.leading{color:var(–gold);text-shadow:0 0 30px rgba(232,184,75,.35)}
-.score-num.losing{color:var(–muted)}
+.team-label-input{background:transparent;border:none;outline:none;font-family:'Oswald',sans-serif;font-size:18px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--white);text-align:center;width:100%;padding:3px 4px;border-radius:6px;transition:background .2s}
+.team-label-input:focus{background:rgba(255,255,255,.09)}
+.score-wrap{position:relative;display:inline-block}
+.score-num{font-family:'Oswald',sans-serif;font-size:96px;font-weight:700;line-height:1;color:var(--white);text-align:center;transition:color .25s}
+.score-num.leading{color:var(--gold);text-shadow:0 0 28px rgba(232,184,75,.4)}
+.score-num.losing{color:var(--muted)}
 .score-num.bump{animation:scorePop .4s cubic-bezier(.36,.07,.19,.97) forwards}
 @keyframes scorePop{0%{transform:scale(1)}35%{transform:scale(1.28)}65%{transform:scale(.96)}100%{transform:scale(1)}}
-.score-ring{position:absolute;inset:-8px;border-radius:50%;border:3px solid var(–gold);opacity:0;pointer-events:none}
+.score-ring{position:absolute;inset:-8px;border-radius:50%;border:3px solid var(--gold);opacity:0;pointer-events:none}
 .score-ring.fire{animation:ringPop .6s ease-out forwards}
 @keyframes ringPop{0%{opacity:.9;transform:scale(.6)}100%{opacity:0;transform:scale(1.8)}}
-.score-wrap{position:relative;display:inline-block}
-.score-sep{font-family:‘Oswald’,sans-serif;font-size:40px;font-weight:300;color:rgba(255,255,255,.22);text-align:center;line-height:1}
-.shots-display{font-size:11px;color:var(–muted);letter-spacing:.5px;margin-top:3px;min-height:16px}
-.shots-display span{color:var(–off-white);font-weight:600}
-.cards-row{display:flex;justify-content:center;gap:5px;margin-top:5px;min-height:22px}
-.card-chip{display:flex;align-items:center;gap:3px;padding:2px 7px;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;border:none;transition:transform .1s,opacity .1s;font-family:‘Inter’,sans-serif}
-.card-chip:active{transform:scale(.9);opacity:.8}
-.card-yellow{background:var(–yellow-card);color:#1a1200}
-.card-red{background:var(–red-card);color:white}
+.score-sep{font-family:'Oswald',sans-serif;font-size:38px;font-weight:300;color:rgba(255,255,255,.25);text-align:center;line-height:1}
 
-/* GOAL BUTTONS */
+/* Shots under score */
+.shots-row{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:4px;min-height:20px}
+.shots-count{font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;color:var(--white)}
+.shots-label{font-size:10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+.btn-shot-adj{width:20px;height:20px;border-radius:4px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:var(--off-white);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.btn-shot-adj:active{opacity:.6}
+
+/* Cards row */
+.cards-row{display:flex;justify-content:center;gap:6px;margin-top:6px;min-height:28px}
+.card-chip{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:transform .1s}
+.card-chip:active{transform:scale(.9)}
+.card-yellow{background:var(--yellow-card);color:#1a1200}
+.card-red-chip{background:var(--red-card);color:white}
+.btn-card-minus{background:rgba(0,0,0,.25);border:none;border-radius:4px;width:18px;height:18px;font-size:12px;font-weight:700;color:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:2px;opacity:.8}
+
+/* Goal buttons */
 .goal-btns-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 14px 14px}
-.goal-group{display:flex;flex-direction:column;gap:5px}
-.btn-goal{border:none;border-radius:12px;padding:11px 8px;font-family:‘Inter’,sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:transform .1s,opacity .1s;display:flex;align-items:center;justify-content:center;gap:5px}
+.goal-group{display:flex;flex-direction:column;gap:6px}
+.btn-goal{border:none;border-radius:12px;padding:14px 8px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:transform .1s,opacity .1s;display:flex;align-items:center;justify-content:center;gap:5px}
 .btn-goal:active{transform:scale(.93);opacity:.8}
-.btn-our-goal{background:var(–surf-blue);color:white;box-shadow:0 4px 16px rgba(37,97,196,.4)}
-.btn-their-goal{background:rgba(255,255,255,.08);color:var(–off-white);border:1px solid rgba(255,255,255,.12)}
-.btn-undo-goal{border:1px solid rgba(255,255,255,.08);border-radius:9px;padding:7px;font-family:‘Inter’,sans-serif;font-size:11px;font-weight:500;cursor:pointer;background:rgba(255,255,255,.05);color:var(–muted);transition:opacity .1s,transform .1s}
+.btn-our-goal{background:var(--surf-blue);color:white;box-shadow:0 4px 18px rgba(37,97,196,.45)}
+.btn-their-goal{background:rgba(255,255,255,.1);color:var(--white);border:1px solid rgba(255,255,255,.18)}
+.btn-undo-goal{border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:9px;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;cursor:pointer;background:rgba(255,255,255,.06);color:var(--off-white);transition:opacity .1s,transform .1s}
 .btn-undo-goal:active{transform:scale(.94);opacity:.7}
+.btn-add-shot{border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:9px 12px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;background:rgba(255,255,255,.06);color:var(--off-white)}
+.btn-add-shot:active{transform:scale(.94);opacity:.7}
 
-/* TIMER */
-.timer-card{margin:0 16px 12px;background:rgba(15,32,64,.75);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.11);border-radius:24px;padding:18px 18px 16px;box-shadow:0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.08)}
+/* === TIMER === */
+.timer-card{margin:0 16px 14px;background:rgba(13,31,60,.82);border:1px solid rgba(255,255,255,.14);border-radius:24px;padding:18px 18px 16px;box-shadow:0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.08)}
 .timer-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.timer-label-text{font-family:‘Oswald’,sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(–muted)}
-.timer-controls-row{display:flex;align-items:center;gap:8px}
-.dur-btn{width:24px;height:24px;border-radius:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:var(–off-white);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.dur-display{font-family:‘Oswald’,sans-serif;font-size:13px;color:var(–gold);font-weight:500;min-width:44px;text-align:center}
-.clock-mode-btn{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:4px 8px;color:var(–muted);cursor:pointer;font-family:‘Inter’,sans-serif}
-.clock-mode-btn.up{color:var(–gold);border-color:rgba(232,184,75,.3);background:rgba(232,184,75,.07)}
-.timer-digits{font-family:‘Oswald’,sans-serif;font-size:74px;font-weight:700;letter-spacing:4px;text-align:center;line-height:1;color:var(–white);transition:color .3s}
-.timer-digits.warning{color:var(–gold)}
-.timer-digits.urgent{color:var(–red);animation:flash 1s infinite}
-@keyframes flash{0%,100%{opacity:1}50%{opacity:.5}}
+.timer-label-text{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted)}
+.timer-duration-control{display:flex;align-items:center;gap:8px}
+.dur-btn{width:26px;height:26px;border-radius:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:var(--white);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.dur-display{font-family:'Oswald',sans-serif;font-size:13px;color:var(--gold);font-weight:500;min-width:44px;text-align:center}
+.timer-digits{font-family:'Oswald',sans-serif;font-size:74px;font-weight:700;letter-spacing:4px;text-align:center;line-height:1;color:var(--white);transition:color .3s}
+.timer-digits.warning{color:var(--gold)}
+.timer-digits.urgent{color:var(--red);animation:flash 1s infinite}
+@keyframes flash{0%,100%{opacity:1}50%{opacity:.45}}
 .stoppage-row{display:flex;gap:6px;justify-content:center;margin-top:10px;align-items:center}
-.btn-stoppage{border:1px solid rgba(232,184,75,.3);border-radius:9px;padding:5px 12px;font-size:11px;font-weight:600;font-family:‘Inter’,sans-serif;background:rgba(232,184,75,.08);color:var(–gold);cursor:pointer}
+.btn-stoppage{border:1px solid rgba(232,184,75,.35);border-radius:9px;padding:6px 14px;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;background:rgba(232,184,75,.1);color:var(--gold);cursor:pointer}
 .timer-btns{display:flex;gap:8px;margin-top:12px}
-.timer-btn{flex:1;border:none;border-radius:12px;padding:13px 6px;font-family:‘Inter’,sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:transform .1s,opacity .1s}
+.timer-btn{flex:1;border:none;border-radius:12px;padding:13px 6px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:transform .1s,opacity .1s;color:var(--white)}
 .timer-btn:active{transform:scale(.95);opacity:.85}
-.btn-start{background:var(–surf-blue);color:white;box-shadow:0 4px 16px rgba(37,97,196,.4)}
-.btn-pause{background:var(–gold);color:#1a1200}
-.btn-half{background:rgba(255,255,255,.08);color:var(–off-white);border:1px solid rgba(255,255,255,.12)}
-.btn-reset{background:rgba(255,255,255,.05);color:var(–muted);border:1px solid rgba(255,255,255,.08)}
+.btn-start{background:var(--surf-blue);box-shadow:0 4px 16px rgba(37,97,196,.45)}
+.btn-pause{background:var(--gold);color:#1a1200}
+.btn-half{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18)}
+.btn-reset{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid rgba(255,255,255,.1)}
 
-/* GOALS LOG */
-.section{margin:0 16px 12px}
-.sec-label{font-family:‘Oswald’,sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(–muted);margin-bottom:9px;padding-left:2px}
-.goals-card{background:rgba(15,32,64,.7);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.09);border-radius:20px;overflow:hidden}
-.goal-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.05);animation:fadeSlide .3s ease}
-@keyframes fadeSlide{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+/* === GOALS LOG === */
+.section{margin:0 16px 14px}
+.sec-label{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:9px;padding-left:2px}
+.goals-card{background:rgba(13,31,60,.75);border:1px solid rgba(255,255,255,.1);border-radius:20px;overflow:hidden}
+.goal-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.06);animation:fadeSlide .3s ease}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
 .goal-item:last-child{border-bottom:none}
 .goal-badge{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.goal-badge.ours{background:rgba(37,97,196,.35)}
-.goal-badge.theirs{background:rgba(255,255,255,.08)}
+.goal-badge.ours{background:rgba(37,97,196,.4)}
+.goal-badge.theirs{background:rgba(255,255,255,.1)}
 .goal-info{flex:1;min-width:0}
-.goal-scorer{font-size:14px;font-weight:600;color:var(–white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.goal-team{font-size:11px;color:var(–muted);margin-top:1px}
-.goal-time{font-family:‘Oswald’,sans-serif;font-size:15px;color:var(–gold);letter-spacing:.5px;flex-shrink:0}
-.empty-goals{text-align:center;padding:24px 16px;color:var(–muted);font-size:13px;line-height:1.7}
+.goal-scorer{font-size:14px;font-weight:600;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.goal-team{font-size:11px;color:var(--muted);margin-top:1px}
+.goal-time{font-family:'Oswald',sans-serif;font-size:15px;color:var(--gold);letter-spacing:.5px;flex-shrink:0}
+.empty-goals{text-align:center;padding:26px 16px;color:var(--muted);font-size:13px;line-height:1.7}
 .empty-goals span{font-size:26px;display:block;margin-bottom:6px}
 
-/* SHARE BANNER */
-.share-banner{margin:0 16px 12px;background:rgba(37,97,196,.13);backdrop-filter:blur(12px);border:1px solid rgba(37,97,196,.28);border-radius:16px;padding:13px 16px}
-.share-banner h4{font-size:13px;font-weight:600;color:var(–off-white);margin-bottom:3px}
-.share-banner p{font-size:12px;color:var(–muted);line-height:1.5;margin-bottom:9px}
-.share-url{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 12px;font-size:11px;color:var(–gold);font-family:‘Inter’,sans-serif;word-break:break-all;margin-bottom:9px;line-height:1.5}
-.btn-copy{width:100%;background:var(–surf-blue);color:white;border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:600;font-family:‘Inter’,sans-serif;cursor:pointer}
+/* === SHARE + NEW GAME === */
+.share-banner{margin:0 16px 14px;background:rgba(37,97,196,.14);border:1px solid rgba(37,97,196,.28);border-radius:16px;padding:14px 16px}
+.share-banner h4{font-size:13px;font-weight:600;color:var(--white);margin-bottom:3px}
+.share-banner p{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:10px}
+.share-url{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:7px 12px;font-size:11px;color:var(--gold);font-family:'Inter',sans-serif;word-break:break-all;margin-bottom:10px;line-height:1.5}
+.btn-copy{width:100%;background:var(--surf-blue);color:white;border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer}
+.btn-new-game{display:block;width:calc(100% - 32px);margin:0 16px 14px;background:transparent;border:1px dashed rgba(255,255,255,.18);border-radius:16px;padding:13px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;letter-spacing:.5px;transition:border-color .2s,color .2s}
+.btn-new-game:hover{border-color:var(--surf-blue);color:var(--white)}
+.footer-mark{text-align:center;padding:4px 0;font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.14)}
 
-/* SEASON HISTORY */
-.history-card{background:rgba(15,32,64,.7);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.09);border-radius:20px;overflow:hidden}
-.history-summary{display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center;border-bottom:1px solid rgba(255,255,255,.07)}
-.hs-cell{padding:14px 8px}
-.hs-num{font-family:‘Oswald’,sans-serif;font-size:34px;font-weight:700;line-height:1}
-.hs-num.w{color:var(–success)}.hs-num.d{color:var(–gold)}.hs-num.l{color:var(–red)}
-.hs-lbl{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(–muted);margin-top:2px}
-.history-list{max-height:220px;overflow-y:auto}
-.history-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04)}
-.history-item:last-child{border-bottom:none}
-.hi-result{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:‘Oswald’,sans-serif;font-size:13px;font-weight:700;flex-shrink:0}
-.hi-result.w{background:rgba(61,214,140,.2);color:var(–success)}
-.hi-result.d{background:rgba(232,184,75,.2);color:var(–gold)}
-.hi-result.l{background:rgba(217,64,64,.2);color:var(–red)}
-.hi-info{flex:1;min-width:0}
-.hi-score{font-weight:700;color:var(–white);font-size:13px}
-.hi-opp{color:var(–muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hi-date{font-size:10px;color:var(–muted);flex-shrink:0}
-.hi-edit{background:transparent;border:none;color:var(–muted);cursor:pointer;font-size:14px;padding:4px;flex-shrink:0}
-.history-add-btn{width:100%;background:transparent;border:none;border-top:1px solid rgba(255,255,255,.07);padding:11px;font-size:12px;font-weight:600;font-family:‘Inter’,sans-serif;color:var(–muted);cursor:pointer;letter-spacing:.5px}
-.history-add-btn:hover{color:var(–gold)}
-
-/* NEW GAME */
-.btn-new-game{display:block;width:calc(100% - 32px);margin:0 16px 12px;background:transparent;border:1px dashed rgba(255,255,255,.13);border-radius:16px;padding:13px;font-family:‘Inter’,sans-serif;font-size:13px;font-weight:500;color:var(–muted);cursor:pointer;letter-spacing:.5px;transition:border-color .2s,color .2s}
-.btn-new-game:hover{border-color:var(–surf-blue);color:var(–off-white)}
-.footer-mark{text-align:center;padding:4px 0;font-family:‘Oswald’,sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.13)}
-
-/* SCORER MODAL */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:200;align-items:flex-end;backdrop-filter:blur(8px)}
+/* === SCORER MODAL === */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:flex-end;backdrop-filter:blur(8px)}
 .modal-overlay.open{display:flex}
-.modal-sheet{background:linear-gradient(160deg,rgba(15,32,64,.98),rgba(13,30,58,.98));backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:28px 28px 0 0;padding:24px 20px 44px;width:100%;animation:sheetUp .28s cubic-bezier(.22,1,.36,1)}
+.modal-sheet{background:linear-gradient(160deg,#112244,#0a1a33);border:1px solid rgba(255,255,255,.14);border-radius:28px 28px 0 0;padding:24px 20px 44px;width:100%;animation:sheetUp .28s cubic-bezier(.22,1,.36,1)}
 @keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.modal-pill{width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,.15);margin:0 auto 20px}
-.modal-title{font-family:‘Oswald’,sans-serif;font-size:22px;font-weight:600;letter-spacing:1px;text-align:center;margin-bottom:16px;color:var(–gold)}
-.modal-input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:15px 16px;color:var(–white);font-size:16px;font-family:‘Inter’,sans-serif;outline:none;margin-bottom:14px;transition:border-color .2s}
-.modal-input:focus{border-color:var(–surf-blue)}
-.modal-input::placeholder{color:var(–muted)}
-.modal-row{display:flex;gap:10px;margin-bottom:14px}
-.modal-row .modal-input{margin-bottom:0}
+.modal-pill{width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,.18);margin:0 auto 20px}
+.modal-title{font-family:'Oswald',sans-serif;font-size:22px;font-weight:600;letter-spacing:1px;text-align:center;margin-bottom:16px;color:var(--gold)}
+.modal-input{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:15px 16px;color:var(--white);font-size:16px;font-family:'Inter',sans-serif;outline:none;margin-bottom:14px;transition:border-color .2s}
+.modal-input:focus{border-color:var(--surf-blue)}
+.modal-input::placeholder{color:var(--muted)}
 .modal-btns{display:flex;gap:10px}
-.btn-confirm{flex:2;background:var(–surf-blue);color:white;border:none;border-radius:14px;padding:15px;font-size:15px;font-weight:600;font-family:‘Inter’,sans-serif;cursor:pointer}
-.btn-cancel-modal{flex:1;background:rgba(255,255,255,.06);color:var(–muted);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:15px;font-size:15px;font-weight:500;font-family:‘Inter’,sans-serif;cursor:pointer}
+.btn-confirm{flex:2;background:var(--surf-blue);color:white;border:none;border-radius:14px;padding:15px;font-size:15px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer}
+.btn-cancel-modal{flex:1;background:rgba(255,255,255,.07);color:var(--muted);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:15px;font-size:15px;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer}
 
-/* HALFTIME OVERLAY */
-.halftime-overlay{position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(5,12,28,.93);backdrop-filter:blur(20px);opacity:0;pointer-events:none;transition:opacity .4s}
+/* === HALFTIME OVERLAY === */
+.halftime-overlay{position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(6,14,32,.94);backdrop-filter:blur(20px);opacity:0;pointer-events:none;transition:opacity .4s}
 .halftime-overlay.show{opacity:1;pointer-events:auto}
-.ht-label{font-family:‘Oswald’,sans-serif;font-size:12px;letter-spacing:5px;text-transform:uppercase;color:var(–gold);opacity:.8;margin-bottom:14px;animation:htFadeUp .6s ease .2s both}
-.ht-banner{font-family:‘Oswald’,sans-serif;font-size:50px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(–white);margin-bottom:20px;animation:htFadeUp .6s ease .35s both}
-.ht-score{font-family:‘Oswald’,sans-serif;font-size:76px;font-weight:700;color:var(–white);letter-spacing:8px;animation:htFadeUp .6s ease .5s both;text-shadow:0 0 40px rgba(232,184,75,.3)}
-.ht-teams{font-family:‘Oswald’,sans-serif;font-size:15px;letter-spacing:2px;color:var(–muted);margin-top:8px;animation:htFadeUp .6s ease .6s both}
-@keyframes htFadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.ht-label{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);opacity:.85;margin-bottom:14px;animation:htUp .6s ease .2s both}
+.ht-banner{font-family:'Oswald',sans-serif;font-size:52px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--white);margin-bottom:20px;animation:htUp .6s ease .35s both}
+.ht-score{font-family:'Oswald',sans-serif;font-size:88px;font-weight:700;color:var(--white);letter-spacing:8px;animation:htUp .6s ease .5s both}
+.ht-teams{font-family:'Oswald',sans-serif;font-size:15px;letter-spacing:2px;color:var(--muted);margin-top:8px;animation:htUp .6s ease .6s both}
+.ht-dismiss{margin-top:28px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:10px 28px;color:var(--white);font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;animation:htUp .6s ease .7s both}
+@keyframes htUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 
-/* POST-MATCH SUMMARY */
-.summary-overlay{position:fixed;inset:0;z-index:310;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(5,12,28,.96);backdrop-filter:blur(24px);opacity:0;pointer-events:none;transition:opacity .4s;padding:20px;overflow-y:auto}
-.summary-overlay.show{opacity:1;pointer-events:auto}
-.summary-card{background:rgba(15,32,64,.92);border:1px solid rgba(255,255,255,.11);border-radius:28px;padding:28px 24px;width:100%;max-width:380px;box-shadow:0 32px 80px rgba(0,0,0,.7)}
-.summary-header{text-align:center;margin-bottom:20px}
-.summary-league{font-family:‘Oswald’,sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(–gold);opacity:.8;margin-bottom:6px}
-.summary-title{font-family:‘Oswald’,sans-serif;font-size:28px;font-weight:700;color:var(–white)}
-.summary-scoreline{display:flex;align-items:center;justify-content:center;gap:16px;margin:20px 0}
-.summary-score-block{text-align:center}
-.summary-team{font-family:‘Oswald’,sans-serif;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(–muted);margin-bottom:4px}
-.summary-score-big{font-family:‘Oswald’,sans-serif;font-size:72px;font-weight:700;line-height:1;color:var(–white)}
-.summary-sep{font-family:‘Oswald’,sans-serif;font-size:36px;color:rgba(255,255,255,.2)}
-.summary-result-badge{text-align:center;margin-bottom:20px}
-.result-pill{display:inline-block;font-family:‘Oswald’,sans-serif;font-size:14px;font-weight:600;letter-spacing:3px;text-transform:uppercase;padding:6px 20px;border-radius:20px}
-.result-pill.win{background:rgba(61,214,140,.15);color:var(–success);border:1px solid rgba(61,214,140,.3)}
-.result-pill.loss{background:rgba(217,64,64,.12);color:var(–red);border:1px solid rgba(217,64,64,.25)}
-.result-pill.draw{background:rgba(232,184,75,.12);color:var(–gold);border:1px solid rgba(232,184,75,.25)}
-.summary-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
-.stat-item{background:rgba(255,255,255,.04);border-radius:12px;padding:10px 12px;text-align:center}
-.stat-val{font-family:‘Oswald’,sans-serif;font-size:22px;font-weight:600;color:var(–white)}
-.stat-lbl{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(–muted);margin-top:2px}
-.summary-scorers{margin-bottom:20px}
-.summary-scorers-title{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(–muted);margin-bottom:8px}
-.scorer-line{font-size:13px;color:var(–off-white);padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between}
-.scorer-line:last-child{border-bottom:none}
-.summary-btns{display:flex;gap:10px}
-.btn-save-game{flex:2;background:var(–surf-blue);color:white;border:none;border-radius:14px;padding:14px;font-size:14px;font-weight:600;font-family:‘Inter’,sans-serif;cursor:pointer}
-.btn-dismiss-summary{flex:1;background:rgba(255,255,255,.06);color:var(–muted);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px;font-size:14px;font-weight:500;font-family:‘Inter’,sans-serif;cursor:pointer}
-
-/* GOAL FLASH */
+/* === CELEBRATION === */
 .goal-flash{position:fixed;inset:0;z-index:250;pointer-events:none;opacity:0}
 .goal-flash.fire{animation:flashBurst .5s ease-out forwards}
-@keyframes flashBurst{0%{opacity:.7;background:radial-gradient(circle,rgba(232,184,75,.5) 0%,transparent 70%)}100%{opacity:0}}
+@keyframes flashBurst{0%{opacity:.6;background:radial-gradient(circle,rgba(232,184,75,.45) 0%,transparent 70%)}100%{opacity:0}}
 canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
 </style>
-
 </head>
 <body>
 
-<!-- Waves — full viewport -->
-
+<!-- White/grey waves -->
 <div class="wave-bg">
-  <svg viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="height:120px"><path d="M0,60 C180,100 360,20 540,60 C720,100 900,20 1080,60 C1260,100 1350,40 1440,60 L1440,120 L0,120Z" fill="rgba(37,97,196,0.22)"/></svg>
-  <svg viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="height:100px"><path d="M0,40 C200,80 400,10 600,50 C800,90 1000,15 1200,55 C1320,75 1380,35 1440,45 L1440,120 L0,120Z" fill="rgba(30,77,154,0.18)"/></svg>
-  <svg viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="height:80px"><path d="M0,70 C160,30 320,90 480,55 C640,20 800,80 960,50 C1120,20 1280,70 1440,55 L1440,120 L0,120Z" fill="rgba(15,50,120,0.14)"/></svg>
+  <svg viewBox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="height:100px">
+    <path d="M0,50 C180,90 360,15 540,55 C720,95 900,15 1080,55 C1260,95 1360,35 1440,55 L1440,100 L0,100Z" fill="rgba(255,255,255,0.07)"/>
+  </svg>
+  <svg viewBox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="height:80px">
+    <path d="M0,35 C200,75 400,8 600,45 C800,82 1000,12 1200,50 C1320,72 1380,30 1440,42 L1440,100 L0,100Z" fill="rgba(220,232,255,0.05)"/>
+  </svg>
+  <svg viewBox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="height:65px">
+    <path d="M0,60 C160,25 320,80 480,48 C640,16 800,72 960,44 C1120,16 1280,62 1440,48 L1440,100 L0,100Z" fill="rgba(200,220,255,0.04)"/>
+  </svg>
 </div>
 
-<!-- FX -->
-
+<!-- Celebration -->
 <div class="goal-flash" id="goalFlash"></div>
 <canvas id="confetti"></canvas>
 
-<!-- Halftime Overlay -->
-
+<!-- Halftime overlay -->
 <div class="halftime-overlay" id="htOverlay">
   <div class="ht-label">SDSC Surf · ECNL</div>
   <div class="ht-banner" id="htBanner">HALF TIME</div>
   <div class="ht-score" id="htScore">0 : 0</div>
   <div class="ht-teams" id="htTeams">SDSC SURF vs OPPONENT</div>
-</div>
-
-<!-- Post-Match Summary -->
-
-<div class="summary-overlay" id="summaryOverlay">
-  <div class="summary-card">
-    <div class="summary-header">
-      <div class="summary-league">SDSC Surf · ECNL · Match Day</div>
-      <div class="summary-title">MATCH SUMMARY</div>
-    </div>
-    <div class="summary-scoreline">
-      <div class="summary-score-block">
-        <div class="summary-team" id="sumHomeTeam">SDSC SURF</div>
-        <div class="summary-score-big" id="sumHomeScore">0</div>
-      </div>
-      <div class="summary-sep">:</div>
-      <div class="summary-score-block">
-        <div class="summary-team" id="sumAwayTeam">OPPONENT</div>
-        <div class="summary-score-big" id="sumAwayScore">0</div>
-      </div>
-    </div>
-    <div class="summary-result-badge"><div class="result-pill" id="sumResultPill">DRAW</div></div>
-    <div class="summary-stats">
-      <div class="stat-item"><div class="stat-val" id="sumHomeShots">0</div><div class="stat-lbl">Surf Shots</div></div>
-      <div class="stat-item"><div class="stat-val" id="sumAwayShots">0</div><div class="stat-lbl">Opp Shots</div></div>
-      <div class="stat-item"><div class="stat-val" id="sumDate">—</div><div class="stat-lbl">Date</div></div>
-      <div class="stat-item"><div class="stat-val" id="sumDuration">—</div><div class="stat-lbl">Duration</div></div>
-    </div>
-    <div class="summary-scorers" id="sumScorers"></div>
-    <div class="summary-btns">
-      <button class="btn-save-game" onclick="saveMatchToHistory()">💾 Save to Season</button>
-      <button class="btn-dismiss-summary" onclick="dismissSummary()">Dismiss</button>
-    </div>
-  </div>
-</div>
-
-<!-- History Edit Modal -->
-
-<div class="modal-overlay" id="histEditModal">
-  <div class="modal-sheet">
-    <div class="modal-pill"></div>
-    <div class="modal-title">EDIT MATCH</div>
-    <input class="modal-input" id="heDate" placeholder="Date">
-    <input class="modal-input" id="heOpponent" placeholder="Opponent">
-    <div class="modal-row">
-      <input class="modal-input" id="heHomeSc" placeholder="Surf score" type="number" min="0" max="20">
-      <input class="modal-input" id="heAwaySc" placeholder="Opp score" type="number" min="0" max="20">
-    </div>
-    <div class="modal-btns">
-      <button class="btn-confirm" onclick="saveHistEdit()">Save Changes</button>
-      <button class="btn-cancel-modal" onclick="closeHistEdit()">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- Scorer Modal -->
-
-<div class="modal-overlay" id="scorerModal">
-  <div class="modal-sheet">
-    <div class="modal-pill"></div>
-    <div class="modal-title" id="modalTitle">WHO SCORED?</div>
-    <input class="modal-input" id="scorerInput" placeholder="Player name or number (optional)" maxlength="30"
-      onkeydown="if(event.key==='Enter')confirmGoal()">
-    <div class="modal-btns">
-      <button class="btn-confirm" onclick="confirmGoal()">⚽ Confirm Goal</button>
-      <button class="btn-cancel-modal" onclick="cancelGoal()">Cancel</button>
-    </div>
-  </div>
+  <button class="ht-dismiss" onclick="document.getElementById('htOverlay').classList.remove('show')">Dismiss</button>
 </div>
 
 <div class="app">
+  <!-- Header -->
   <div class="header">
     <div class="brand">
       <div class="brand-top">ECNL · Boys</div>
-      <div class="brand-name">SDSC <span>Surf</span></div>
+      <div class="brand-name">SDSC <em>Surf</em></div>
     </div>
     <div class="sync-wrap" id="syncWrap">
       <div class="sync-ring"></div>
@@ -346,70 +218,89 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
     </div>
   </div>
 
-  <div class="match-meta" id="metaRow">
-    <input class="meta-input" id="metaDate" placeholder="Date (e.g. Mar 29)" maxlength="20" oninput="onMeta()" autocomplete="off">
-    <input class="meta-input" id="metaOpponent" placeholder="Opponent" maxlength="30" oninput="onMetaOpponent()" autocomplete="off">
-    <div class="autocomplete-list" id="acList" style="display:none"></div>
-  </div>
-
+  <!-- Scoreboard -->
   <div class="scoreboard">
     <div class="match-header">
       <div class="match-league">SDSC Surf · Match Day</div>
       <div class="match-half" id="halfBadge">1ST HALF</div>
     </div>
     <div class="scores-row">
+      <!-- Home -->
       <div class="team-col">
         <input class="team-label-input" id="homeInput" value="SDSC Surf" maxlength="14" oninput="onTeamName()">
         <div class="score-wrap">
           <div class="score-num" id="homeScore">0</div>
           <div class="score-ring" id="homeRing"></div>
         </div>
-        <div class="shots-display" id="homeShots"></div>
-        <div class="cards-row">
-          <button class="card-chip card-yellow" onclick="addCard('home','yellow')">🟨 <span id="hYC">0</span></button>
-          <button class="card-chip card-red" onclick="addCard('home','red')">🟥 <span id="hRC">0</span></button>
+        <!-- Shots with +/- -->
+        <div class="shots-row">
+          <button class="btn-shot-adj" onclick="adjShot('home',-1)">−</button>
+          <span class="shots-count" id="homeShotsCount">0</span>
+          <span class="shots-label">shots</span>
+          <button class="btn-shot-adj" onclick="adjShot('home',1)">+</button>
+        </div>
+        <!-- Cards with minus correction -->
+        <div class="cards-row" id="homeCardsRow">
+          <button class="card-chip card-yellow" onclick="addCard('home','yellow')">
+            🟨 <span id="hYC">0</span>
+            <span class="btn-card-minus" onclick="adjCard(event,'home','yellow',-1)">−</span>
+          </button>
+          <button class="card-chip card-red-chip" onclick="addCard('home','red')">
+            🟥 <span id="hRC">0</span>
+            <span class="btn-card-minus" onclick="adjCard(event,'home','red',-1)">−</span>
+          </button>
         </div>
       </div>
+
       <div class="score-sep">:</div>
+
+      <!-- Away -->
       <div class="team-col">
         <input class="team-label-input" id="awayInput" value="Opponent" maxlength="14" oninput="onTeamName()">
         <div class="score-wrap">
           <div class="score-num" id="awayScore">0</div>
           <div class="score-ring" id="awayRing"></div>
         </div>
-        <div class="shots-display" id="awayShots"></div>
-        <div class="cards-row">
-          <button class="card-chip card-yellow" onclick="addCard('away','yellow')">🟨 <span id="aYC">0</span></button>
-          <button class="card-chip card-red" onclick="addCard('away','red')">🟥 <span id="aRC">0</span></button>
+        <div class="shots-row">
+          <button class="btn-shot-adj" onclick="adjShot('away',-1)">−</button>
+          <span class="shots-count" id="awayShotsCount">0</span>
+          <span class="shots-label">shots</span>
+          <button class="btn-shot-adj" onclick="adjShot('away',1)">+</button>
+        </div>
+        <div class="cards-row" id="awayCardsRow">
+          <button class="card-chip card-yellow" onclick="addCard('away','yellow')">
+            🟨 <span id="aYC">0</span>
+            <span class="btn-card-minus" onclick="adjCard(event,'away','yellow',-1)">−</span>
+          </button>
+          <button class="card-chip card-red-chip" onclick="addCard('away','red')">
+            🟥 <span id="aRC">0</span>
+            <span class="btn-card-minus" onclick="adjCard(event,'away','red',-1)">−</span>
+          </button>
         </div>
       </div>
     </div>
+
+    <!-- Goal + action buttons -->
     <div class="goal-btns-row">
       <div class="goal-group">
-        <button class="btn-goal btn-our-goal" onclick="addGoal('home')">⚽ Surf Goal</button>
-        <div style="display:flex;gap:5px">
-          <button class="btn-undo-goal" style="flex:1" onclick="undoGoal('home')">↩ Undo Goal</button>
-          <button class="btn-undo-goal" onclick="addShot('home')">🎯+</button>
-        </div>
+        <button class="btn-goal btn-our-goal" id="btnHomeGoal" onclick="addGoal('home')">⚽ Surf Goal</button>
+        <button class="btn-undo-goal" onclick="undoGoal('home')">↩ Undo Goal</button>
       </div>
       <div class="goal-group">
-        <button class="btn-goal btn-their-goal" onclick="addGoal('away')">⚽ Their Goal</button>
-        <div style="display:flex;gap:5px">
-          <button class="btn-undo-goal" style="flex:1" onclick="undoGoal('away')">↩ Undo Goal</button>
-          <button class="btn-undo-goal" onclick="addShot('away')">🎯+</button>
-        </div>
+        <button class="btn-goal btn-their-goal" id="btnAwayGoal" onclick="addGoal('away')">⚽ Their Goal</button>
+        <button class="btn-undo-goal" onclick="undoGoal('away')">↩ Undo Goal</button>
       </div>
     </div>
   </div>
 
+  <!-- Timer -->
   <div class="timer-card">
     <div class="timer-top">
       <div class="timer-label-text" id="timerHalfLabel">1ST HALF</div>
-      <div class="timer-controls-row">
+      <div class="timer-duration-control">
         <button class="dur-btn" onclick="adjustDuration(-5)">−</button>
         <div class="dur-display" id="durDisplay">30 MIN</div>
         <button class="dur-btn" onclick="adjustDuration(5)">+</button>
-        <button class="clock-mode-btn" id="clockModeBtn" onclick="toggleClockMode()">▲ UP</button>
       </div>
     </div>
     <div class="timer-digits" id="timerDigits">30:00</div>
@@ -427,6 +318,7 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
     </div>
   </div>
 
+  <!-- Goals Log -->
   <div class="section">
     <div class="sec-label">Goals Scored</div>
     <div class="goals-card" id="goalsList">
@@ -434,29 +326,30 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
     </div>
   </div>
 
-  <div class="section">
-    <div class="sec-label">Season Record</div>
-    <div class="history-card">
-      <div class="history-summary">
-        <div class="hs-cell"><div class="hs-num w" id="hsW">0</div><div class="hs-lbl">Wins</div></div>
-        <div class="hs-cell"><div class="hs-num d" id="hsD">0</div><div class="hs-lbl">Draws</div></div>
-        <div class="hs-cell"><div class="hs-num l" id="hsL">0</div><div class="hs-lbl">Losses</div></div>
-      </div>
-      <div class="history-list" id="historyList"></div>
-      <button class="history-add-btn" onclick="showSummary()">+ Save / Review Current Match</button>
-    </div>
-  </div>
-
+  <!-- Share -->
   <div class="share-banner">
     <h4>📲 Share with Parents</h4>
-    <p>Live view — scores update instantly, no controls.</p>
+    <p>Live view — updates instantly, no controls.</p>
     <div class="share-url" id="viewerUrl">https://noonangarrettr.github.io/surf-score/surf-score-view.html</div>
     <button class="btn-copy" onclick="copyViewerUrl()">📋 Copy Parent Link</button>
   </div>
 
-<button class="btn-new-game" onclick="newGame()">+ NEW GAME</button>
-
+  <button class="btn-new-game" onclick="newGame()">+ NEW GAME</button>
   <div class="footer-mark">SDSC Surf · ECNL · Match Day</div>
+</div>
+
+<!-- Scorer Modal -->
+<div class="modal-overlay" id="scorerModal">
+  <div class="modal-sheet">
+    <div class="modal-pill"></div>
+    <div class="modal-title" id="modalTitle">WHO SCORED?</div>
+    <input class="modal-input" id="scorerInput" placeholder="Player name or number (optional)" maxlength="30"
+      onkeydown="if(event.key==='Enter')confirmGoal()">
+    <div class="modal-btns">
+      <button class="btn-confirm" onclick="confirmGoal()">⚽ Confirm Goal</button>
+      <button class="btn-cancel-modal" onclick="cancelGoal()">Cancel</button>
+    </div>
+  </div>
 </div>
 
 <script type="module">
@@ -475,13 +368,12 @@ const FB={
 
 let S={
   homeScore:0,awayScore:0,goals:[],half:1,halfMinutes:30,timerSec:1800,
-  timerRunning:false,clockUp:false,elapsedSec:0,
+  timerRunning:false,timerStartWall:null,
   homeTeam:'SDSC Surf',awayTeam:'Opponent',
-  homeShots:0,awayShots:0,homeYellow:0,homeRed:0,awayYellow:0,awayRed:0,
-  metaDate:'',metaLocation:''
+  homeShots:0,awayShots:0,
+  homeYellow:0,homeRed:0,awayYellow:0,awayRed:0
 };
-let history=JSON.parse(localStorage.getItem('surfHistory')||'[]');
-let ticker=null,pendingTeam=null,isSyncing=false,editingHistIdx=-1;
+let ticker=null,pendingTeam=null,isSyncing=false;
 
 const fbApp=initializeApp(FB);
 const db=getDatabase(fbApp);
@@ -493,8 +385,16 @@ onValue(gameRef,snap=>{
   const d=snap.val();
   if(d){
     S={...S,...d};
-    if(S.timerRunning&&!ticker)startLocalTick();
-    else if(!S.timerRunning&&ticker){clearInterval(ticker);ticker=null;showStartBtn();}
+    // Re-sync timer: if running use wall-clock to correct drift
+    if(S.timerRunning){
+      if(S.timerStartWall){
+        const elapsed=Math.floor((Date.now()-S.timerStartWall)/1000);
+        S.timerSec=Math.max(0,S.timerSecAtStart-(elapsed));
+      }
+      if(!ticker)startLocalTick();
+    } else {
+      if(ticker){clearInterval(ticker);ticker=null;showStartBtn();}
+    }
     renderAll();
   }
   setSyncStatus('live');
@@ -504,8 +404,6 @@ function push(){
   isSyncing=true;
   set(gameRef,{...S}).finally(()=>setTimeout(()=>isSyncing=false,350));
 }
-function saveHistory(){localStorage.setItem('surfHistory',JSON.stringify(history));}
-
 function setSyncStatus(s){
   const w=document.getElementById('syncWrap'),l=document.getElementById('syncLabel');
   w.className='sync-wrap';
@@ -514,31 +412,61 @@ function setSyncStatus(s){
   else{l.textContent='SYNC…';}
 }
 
-/* TIMER */
+/* ── TIMER ──
+   Background-safe approach: store the wall-clock start time in Firebase.
+   Any device (or the same device after lock) recalculates correct time from Date.now().
+*/
 function startLocalTick(){
   if(ticker)return;
   ticker=setInterval(()=>{
-    if(S.clockUp){S.elapsedSec=(S.elapsedSec||0)+1;}
-    else{if(S.timerSec<=0){stopLocalTick();S.timerRunning=false;push();showHalftimeOverlay();return;}S.timerSec--;}
+    if(!S.timerRunning){stopLocalTick();showStartBtn();return;}
+    // Always recompute from wall clock so lock screen doesn't break it
+    if(S.timerStartWall){
+      const elapsed=Math.floor((Date.now()-S.timerStartWall)/1000);
+      S.timerSec=Math.max(0,S.timerSecAtStart-elapsed);
+    } else {
+      if(S.timerSec>0)S.timerSec--;
+    }
     renderTimer();
-    const t=S.clockUp?S.elapsedSec:S.timerSec;
-    if(t%5===0)push();
+    if(S.timerSec<=0){stopLocalTick();S.timerRunning=false;showStartBtn();push();showHalftimeOverlay();return;}
+    if(S.timerSec%5===0)push();
   },1000);
   document.getElementById('btnStart').style.display='none';
   document.getElementById('btnPause').style.display='';
 }
 function stopLocalTick(){clearInterval(ticker);ticker=null;}
-function showStartBtn(){document.getElementById('btnStart').style.display='';document.getElementById('btnPause').style.display='none';}
-function startTimer(){if(ticker)return;S.timerRunning=true;startLocalTick();push();}
-function pauseTimer(){stopLocalTick();S.timerRunning=false;showStartBtn();push();}
+function showStartBtn(){
+  document.getElementById('btnStart').style.display='';
+  document.getElementById('btnPause').style.display='none';
+}
+function startTimer(){
+  if(ticker)return;
+  S.timerRunning=true;
+  S.timerStartWall=Date.now();
+  S.timerSecAtStart=S.timerSec;
+  startLocalTick();push();
+}
+function pauseTimer(){
+  stopLocalTick();
+  // Save remaining time accurately before pausing
+  if(S.timerStartWall){
+    const elapsed=Math.floor((Date.now()-S.timerStartWall)/1000);
+    S.timerSec=Math.max(0,S.timerSecAtStart-elapsed);
+  }
+  S.timerRunning=false;S.timerStartWall=null;S.timerSecAtStart=null;
+  showStartBtn();push();
+}
 function resetTimer(){
   if(!confirm('Restart the timer?'))return;
-  stopLocalTick();S.timerRunning=false;S.timerSec=S.halfMinutes*60;S.elapsedSec=0;
+  stopLocalTick();
+  S.timerRunning=false;S.timerSec=S.halfMinutes*60;
+  S.timerStartWall=null;S.timerSecAtStart=null;
   showStartBtn();renderTimer();push();
 }
 function switchHalf(){
-  stopLocalTick();S.timerRunning=false;S.half=S.half===1?2:1;
-  S.timerSec=S.halfMinutes*60;S.elapsedSec=0;
+  stopLocalTick();S.timerRunning=false;
+  S.half=S.half===1?2:1;S.timerSec=S.halfMinutes*60;
+  S.timerStartWall=null;S.timerSecAtStart=null;
   showStartBtn();renderTimer();renderHalf();showHalftimeOverlay();push();
 }
 function adjustDuration(d){
@@ -548,30 +476,20 @@ function adjustDuration(d){
   S.halfMinutes=n;S.timerSec=n*60;renderTimer();push();
 }
 function addStoppage(mins){S.timerSec+=mins*60;renderTimer();push();}
-function toggleClockMode(){
-  S.clockUp=!S.clockUp;S.elapsedSec=0;
-  if(!S.clockUp)S.timerSec=S.halfMinutes*60;
-  renderTimer();push();
-}
+
 function renderTimer(){
-  const sec=S.clockUp?(S.elapsedSec||0):S.timerSec;
-  const m=Math.floor(sec/60),s=sec%60;
+  const m=Math.floor(S.timerSec/60),s=S.timerSec%60;
+  const txt=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
   const el=document.getElementById('timerDigits');
-  el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-  el.className='timer-digits';
-  if(!S.clockUp){
-    if(sec<=60)el.classList.add('urgent');
-    else if(sec<=300)el.classList.add('warning');
-  }
+  el.textContent=txt;el.className='timer-digits';
+  if(S.timerSec<=60)el.classList.add('urgent');
+  else if(S.timerSec<=300)el.classList.add('warning');
   document.getElementById('durDisplay').textContent=`${S.halfMinutes} MIN`;
   document.querySelectorAll('.dur-btn').forEach(b=>{
     b.style.opacity=S.timerRunning?'0.25':'1';
     b.style.pointerEvents=S.timerRunning?'none':'auto';
   });
-  document.getElementById('stoppageRow').style.display=(!S.clockUp&&S.timerSec<=30)?'flex':'none';
-  const mb=document.getElementById('clockModeBtn');
-  mb.textContent=S.clockUp?'▼ DOWN':'▲ UP';
-  mb.className='clock-mode-btn'+(S.clockUp?' up':'');
+  document.getElementById('stoppageRow').style.display=S.timerSec<=30?'flex':'none';
 }
 function renderHalf(){
   const lbl=S.half===1?'1ST HALF':'2ND HALF';
@@ -580,102 +498,34 @@ function renderHalf(){
   document.querySelector('.btn-half').textContent=S.half===1?'⇄ 2nd Half':'⇄ 1st Half';
 }
 
-/* HALFTIME */
+/* ── HALFTIME OVERLAY ── */
 function showHalftimeOverlay(){
-  const ov=document.getElementById('htOverlay');
-  document.getElementById('htBanner').textContent=S.half===2?'2ND HALF':'FULL TIME';
+  document.getElementById('htBanner').textContent=S.timerSec<=0&&S.half===2?'FULL TIME':'HALF TIME';
   document.getElementById('htScore').textContent=`${S.homeScore} : ${S.awayScore}`;
   document.getElementById('htTeams').textContent=`${S.homeTeam.toUpperCase()} vs ${S.awayTeam.toUpperCase()}`;
-  ov.classList.add('show');setTimeout(()=>ov.classList.remove('show'),4000);
+  const ov=document.getElementById('htOverlay');
+  ov.classList.add('show');
+  setTimeout(()=>ov.classList.remove('show'),6000);
 }
 
-/* SUMMARY */
-function showSummary(){
-  const h=S.homeScore,a=S.awayScore;
-  document.getElementById('sumHomeTeam').textContent=S.homeTeam.toUpperCase();
-  document.getElementById('sumAwayTeam').textContent=S.awayTeam.toUpperCase();
-  document.getElementById('sumHomeScore').textContent=h;
-  document.getElementById('sumAwayScore').textContent=a;
-  document.getElementById('sumHomeShots').textContent=S.homeShots||0;
-  document.getElementById('sumAwayShots').textContent=S.awayShots||0;
-  document.getElementById('sumDate').textContent=S.metaDate||'—';
-  document.getElementById('sumDuration').textContent=`${S.halfMinutes*2}m`;
-  const pill=document.getElementById('sumResultPill');
-  if(h>a){pill.textContent='WIN';pill.className='result-pill win';}
-  else if(a>h){pill.textContent='LOSS';pill.className='result-pill loss';}
-  else{pill.textContent='DRAW';pill.className='result-pill draw';}
-  const gs=S.goals.filter(g=>g.team==='home');
-  const sd=document.getElementById('sumScorers');
-  sd.innerHTML=gs.length?`<div class="summary-scorers-title">Surf Scorers</div>`+gs.map(g=>`<div class="scorer-line"><span>${g.scorer}</span><span style="color:var(--muted)">${g.time}</span></div>`).join(''):'';
-  document.getElementById('summaryOverlay').classList.add('show');
-}
-function dismissSummary(){document.getElementById('summaryOverlay').classList.remove('show');}
-function saveMatchToHistory(){
-  const h=S.homeScore,a=S.awayScore;
-  history.unshift({
-    date:S.metaDate||new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}),
-    opponent:S.awayTeam,homeScore:h,awayScore:a,
-    result:h>a?'w':h<a?'l':'d',id:Date.now()
-  });
-  saveHistory();renderHistory();dismissSummary();
-}
-
-/* HISTORY */
-function renderHistory(){
-  const w=history.filter(m=>m.result==='w').length;
-  const d=history.filter(m=>m.result==='d').length;
-  const l=history.filter(m=>m.result==='l').length;
-  document.getElementById('hsW').textContent=w;
-  document.getElementById('hsD').textContent=d;
-  document.getElementById('hsL').textContent=l;
-  const list=document.getElementById('historyList');
-  if(!history.length){list.innerHTML='<div style="text-align:center;padding:16px;color:var(--muted);font-size:12px">No matches saved yet</div>';return;}
-  list.innerHTML=history.map((m,i)=>`
-    <div class="history-item">
-      <div class="hi-result ${m.result}">${m.result.toUpperCase()}</div>
-      <div class="hi-info">
-        <div class="hi-score">${m.homeScore} – ${m.awayScore}</div>
-        <div class="hi-opp">vs ${m.opponent}</div>
-      </div>
-      <div class="hi-date">${m.date}</div>
-      <button class="hi-edit" onclick="openHistEdit(${i})">✏️</button>
-    </div>`).join('');
-}
-function openHistEdit(i){
-  editingHistIdx=i;
-  const m=history[i];
-  document.getElementById('heDate').value=m.date;
-  document.getElementById('heOpponent').value=m.opponent;
-  document.getElementById('heHomeSc').value=m.homeScore;
-  document.getElementById('heAwaySc').value=m.awayScore;
-  document.getElementById('histEditModal').classList.add('open');
-}
-function saveHistEdit(){
-  const m=history[editingHistIdx];
-  m.date=document.getElementById('heDate').value||m.date;
-  m.opponent=document.getElementById('heOpponent').value||m.opponent;
-  m.homeScore=parseInt(document.getElementById('heHomeSc').value)||0;
-  m.awayScore=parseInt(document.getElementById('heAwaySc').value)||0;
-  m.result=m.homeScore>m.awayScore?'w':m.homeScore<m.awayScore?'l':'d';
-  saveHistory();renderHistory();closeHistEdit();
-}
-function closeHistEdit(){document.getElementById('histEditModal').classList.remove('open');}
-
-/* GOALS */
+/* ── GOALS ── */
 function addGoal(team){
   pendingTeam=team;
-  document.getElementById('modalTitle').textContent=`${team==='home'?S.homeTeam:S.awayTeam} SCORED!`;
+  const nm=team==='home'?S.homeTeam:S.awayTeam;
+  document.getElementById('modalTitle').textContent=`${nm} SCORED!`;
   document.getElementById('scorerInput').value='';
   document.getElementById('scorerModal').classList.add('open');
   setTimeout(()=>document.getElementById('scorerInput').focus(),320);
 }
 function confirmGoal(){
   const name=document.getElementById('scorerInput').value.trim()||'—';
-  const elapsed=S.clockUp?(S.elapsedSec||0):(S.halfMinutes*60-(S.timerSec||0));
+  const elapsed=S.halfMinutes*60-S.timerSec;
   const m=Math.floor(elapsed/60),s=elapsed%60;
-  S.goals.push({team:pendingTeam,scorer:name,time:`${S.half===1?'1H':'2H'} ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`,id:Date.now()});
-  if(pendingTeam==='home')S.homeScore++;else S.awayScore++;
-  cancelGoal();renderScores();renderGoals();push();
+  S.goals.push({team:pendingTeam,scorer:name,
+    time:`${S.half===1?'1H':'2H'} ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`,id:Date.now()});
+  if(pendingTeam==='home'){S.homeScore++;S.homeShots++;}
+  else{S.awayScore++;S.awayShots++;}
+  cancelGoal();renderScores();renderGoals();renderShots();push();
   fireGoalCelebration(pendingTeam);
   if(navigator.vibrate)navigator.vibrate([80,40,160]);
 }
@@ -688,6 +538,15 @@ function undoGoal(team){
   renderScores();renderGoals();push();
 }
 function cancelGoal(){document.getElementById('scorerModal').classList.remove('open');pendingTeam=null;}
+
+/* ── SHOTS (with +/−) ── */
+function adjShot(team,delta){
+  if(team==='home')S.homeShots=Math.max(0,S.homeShots+delta);
+  else S.awayShots=Math.max(0,S.awayShots+delta);
+  renderShots();push();
+}
+
+/* ── CARDS (with +/−) ── */
 function addCard(team,color){
   if(team==='home'&&color==='yellow')S.homeYellow++;
   else if(team==='home'&&color==='red')S.homeRed++;
@@ -695,33 +554,38 @@ function addCard(team,color){
   else S.awayRed++;
   renderCards();push();
 }
-function addShot(team){if(team==='home')S.homeShots++;else S.awayShots++;renderShots();push();}
-
-/* META */
-function onMeta(){S.metaDate=document.getElementById('metaDate').value;push();}
-function onMetaOpponent(){
-  const val=document.getElementById('metaOpponent').value;
-  S.awayTeam=val||'Opponent';
-  document.getElementById('awayInput').value=S.awayTeam;
-  push();
-  const past=[...new Set(history.map(m=>m.opponent))];
-  const matches=past.filter(o=>o.toLowerCase().startsWith(val.toLowerCase())&&val.length>0);
-  const ac=document.getElementById('acList');
-  if(matches.length){
-    ac.style.display='block';
-    ac.innerHTML=matches.slice(0,5).map(o=>`<div class="autocomplete-item" onclick="selectOpponent('${o}')">${o}</div>`).join('');
-  } else {ac.style.display='none';}
+function adjCard(e,team,color,delta){
+  e.stopPropagation();
+  if(team==='home'&&color==='yellow')S.homeYellow=Math.max(0,S.homeYellow+delta);
+  else if(team==='home'&&color==='red')S.homeRed=Math.max(0,S.homeRed+delta);
+  else if(team==='away'&&color==='yellow')S.awayYellow=Math.max(0,S.awayYellow+delta);
+  else S.awayRed=Math.max(0,S.awayRed+delta);
+  renderCards();push();
 }
-function selectOpponent(name){
-  document.getElementById('metaOpponent').value=name;
-  document.getElementById('awayInput').value=name;
-  S.awayTeam=name;
-  document.getElementById('acList').style.display='none';
-  push();
-}
-document.addEventListener('click',e=>{if(!e.target.closest('#metaRow'))document.getElementById('acList').style.display='none';});
 
-/* RENDER */
+/* ── TEAM NAMES → update goal buttons ── */
+function onTeamName(){
+  S.homeTeam=document.getElementById('homeInput').value||'SDSC Surf';
+  S.awayTeam=document.getElementById('awayInput').value||'Opponent';
+  updateGoalBtnLabels();push();
+}
+function updateGoalBtnLabels(){
+  document.getElementById('btnHomeGoal').innerHTML=`⚽ ${S.homeTeam} Goal`;
+  document.getElementById('btnAwayGoal').innerHTML=`⚽ ${S.awayTeam} Goal`;
+}
+
+/* ── NEW GAME ── */
+function newGame(){
+  if(!confirm('Start a new game? Clears scores, goals, cards and shots on all devices.'))return;
+  stopLocalTick();showStartBtn();
+  S.homeScore=0;S.awayScore=0;S.goals=[];S.half=1;
+  S.timerSec=S.halfMinutes*60;S.timerRunning=false;
+  S.timerStartWall=null;S.timerSecAtStart=null;
+  S.homeShots=0;S.awayShots=0;S.homeYellow=0;S.homeRed=0;S.awayYellow=0;S.awayRed=0;
+  renderAll();push();
+}
+
+/* ── RENDER ── */
 function renderScores(){
   const h=S.homeScore,a=S.awayScore;
   const hEl=document.getElementById('homeScore'),aEl=document.getElementById('awayScore');
@@ -750,8 +614,8 @@ function renderGoals(){
     </div>`).join('');
 }
 function renderShots(){
-  document.getElementById('homeShots').innerHTML=S.homeShots>0?`<span>${S.homeShots}</span> shots`:'';
-  document.getElementById('awayShots').innerHTML=S.awayShots>0?`<span>${S.awayShots}</span> shots`:'';
+  document.getElementById('homeShotsCount').textContent=S.homeShots||0;
+  document.getElementById('awayShotsCount').textContent=S.awayShots||0;
 }
 function renderCards(){
   document.getElementById('hYC').textContent=S.homeYellow||0;
@@ -760,36 +624,22 @@ function renderCards(){
   document.getElementById('aRC').textContent=S.awayRed||0;
 }
 function renderAll(){
-  renderScores();renderGoals();renderTimer();renderHalf();renderShots();renderCards();renderHistory();
+  renderScores();renderGoals();renderTimer();renderHalf();renderShots();renderCards();
   document.getElementById('homeInput').value=S.homeTeam;
   document.getElementById('awayInput').value=S.awayTeam;
-  document.getElementById('metaDate').value=S.metaDate||'';
-  document.getElementById('metaOpponent').value=S.awayTeam!=='Opponent'?S.awayTeam:'';
-}
-function onTeamName(){
-  S.homeTeam=document.getElementById('homeInput').value||'SDSC Surf';
-  S.awayTeam=document.getElementById('awayInput').value||'Opponent';
-  push();
-}
-function newGame(){
-  if(!confirm('Start a new game? This clears scores, goals, cards and shots on all devices.'))return;
-  showSummary();
-  stopLocalTick();showStartBtn();
-  S.homeScore=0;S.awayScore=0;S.goals=[];S.half=1;
-  S.timerSec=S.halfMinutes*60;S.timerRunning=false;S.elapsedSec=0;
-  S.homeShots=0;S.awayShots=0;S.homeYellow=0;S.homeRed=0;S.awayYellow=0;S.awayRed=0;
-  renderAll();push();
+  updateGoalBtnLabels();
 }
 function copyViewerUrl(){
   const url=document.getElementById('viewerUrl').innerText;
   navigator.clipboard.writeText(url).then(()=>alert('Copied!')).catch(()=>alert('Copy the link manually.'));
 }
 
+/* ── CONFETTI ── */
 function launchConfetti(){
   const canvas=document.getElementById('confetti');
   const ctx=canvas.getContext('2d');
   canvas.width=window.innerWidth;canvas.height=window.innerHeight;
-  const colors=['#e8b84b','#f4f7ff','#2561c4','#3dd68c','#ffffff'];
+  const colors=['#e8b84b','#ffffff','#2561c4','#3dd68c','#dce8ff'];
   const particles=Array.from({length:90},()=>({
     x:Math.random()*canvas.width,y:Math.random()*canvas.height*.35,
     vx:(Math.random()-.5)*8,vy:Math.random()*4+2,size:Math.random()*7+3,
@@ -815,16 +665,10 @@ function launchConfetti(){
 
 window.startTimer=startTimer;window.pauseTimer=pauseTimer;window.resetTimer=resetTimer;
 window.switchHalf=switchHalf;window.adjustDuration=adjustDuration;window.addStoppage=addStoppage;
-window.toggleClockMode=toggleClockMode;
 window.addGoal=addGoal;window.undoGoal=undoGoal;window.confirmGoal=confirmGoal;window.cancelGoal=cancelGoal;
 window.newGame=newGame;window.onTeamName=onTeamName;window.copyViewerUrl=copyViewerUrl;
-window.addCard=addCard;window.addShot=addShot;window.onMeta=onMeta;window.onMetaOpponent=onMetaOpponent;
-window.selectOpponent=selectOpponent;
-window.saveMatchToHistory=saveMatchToHistory;window.dismissSummary=dismissSummary;
-window.showSummary=showSummary;
-window.openHistEdit=openHistEdit;window.saveHistEdit=saveHistEdit;window.closeHistEdit=closeHistEdit;
+window.addCard=addCard;window.adjCard=adjCard;window.adjShot=adjShot;
 renderAll();
 </script>
-
 </body>
 </html>
