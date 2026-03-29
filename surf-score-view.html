@@ -75,9 +75,9 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     </div>
     <div class="sync-pill" id="syncPill"><div class="sync-dot"></div><span id="syncLabel">SYNC…</span></div>
   </div>
-
+ 
   <div class="view-badge">👁 Live View · Read Only</div>
-
+ 
   <div class="scoreboard" id="mainContent" style="display:none">
     <div class="match-header">
       <div class="match-league">SDSC Surf · Live Score</div>
@@ -95,30 +95,30 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
       </div>
     </div>
   </div>
-
+ 
   <div class="loading-state" id="loadingState">
     <span>⚽</span>Waiting for match data…
   </div>
-
+ 
   <div class="timer-card" id="timerCard" style="display:none">
     <div class="timer-label-text" id="timerHalfLabel">1ST HALF</div>
     <div class="timer-digits" id="timerDigits">30:00</div>
   </div>
-
+ 
   <div class="section" id="goalsSection" style="display:none">
     <div class="sec-label">Goals Scored</div>
     <div class="goals-card" id="goalsList">
       <div class="empty-goals"><span>⚽</span>No goals yet</div>
     </div>
   </div>
-
+ 
   <div class="footer-mark" id="footerMark" style="display:none">SDSC Surf · ECNL · Live Score</div>
 </div>
-
+ 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
-
+ 
 const FB = {
   apiKey:            "AIzaSyADA83VqTnTZYawJZEdnAMNzVOgq92PodQ",
   authDomain:        "surf-score-2.firebaseapp.com",
@@ -128,13 +128,13 @@ const FB = {
   messagingSenderId: "1066375405954",
   appId:             "1:1066375405954:web:552acd57a7d66243806f9b"
 };
-
-let prevHome=0, prevAway=0, S=null;
-
+ 
+let prevHome=0, prevAway=0, S=null, viewTicker=null;
+ 
 const app=initializeApp(FB);
 const db=getDatabase(app);
 const gameRef=ref(db,'surfmatchday/game');
-
+ 
 setSyncStatus('connecting');
 onValue(gameRef,snap=>{
   const d=snap.val();
@@ -151,8 +151,16 @@ onValue(gameRef,snap=>{
   S=d;
   renderAll();
   setSyncStatus('live');
+  if(S.timerRunning&&!viewTicker){
+    viewTicker=setInterval(()=>{
+      if(!S||!S.timerRunning){clearInterval(viewTicker);viewTicker=null;return;}
+      if(S.timerSec>0){S.timerSec--;renderTimerOnly();}
+    },1000);
+  } else if(!S.timerRunning&&viewTicker){
+    clearInterval(viewTicker);viewTicker=null;
+  }
 },()=>setSyncStatus('error'));
-
+ 
 function setSyncStatus(s){
   const pill=document.getElementById('syncPill'),lbl=document.getElementById('syncLabel');
   pill.className='sync-pill';
@@ -163,6 +171,16 @@ function setSyncStatus(s){
 function bumpScore(team){
   const el=document.getElementById(team==='home'?'homeScore':'awayScore');
   el.classList.add('bump');setTimeout(()=>el.classList.remove('bump'),200);
+}
+function renderTimerOnly(){
+  if(!S)return;
+  const sec=S.timerSec??0;
+  const m=Math.floor(sec/60),s=sec%60;
+  const el=document.getElementById('timerDigits');
+  el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  el.className='timer-digits';
+  if(sec<=60)el.classList.add('urgent');
+  else if(sec<=300)el.classList.add('warning');
 }
 function renderAll(){
   if(!S)return;
