@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>SDSC Surf · Live Score</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+:root {
+  --navy:#0a1628; --navy-mid:#0f2040; --navy-lt:#162d57; --navy-card:#0d1e3a;
+  --blue-acc:#1e4d9a; --surf-blue:#2561c4; --white:#f4f7ff; --off-white:#c8d4ec;
+  --gold:#e8b84b; --red:#d94040; --success:#3dd68c; --muted:#5a7aaa;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{font-family:'Inter',sans-serif;background:var(--navy);color:var(--white);min-height:100dvh;max-width:430px;margin:0 auto;overflow-x:hidden}
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:340px;background:linear-gradient(160deg,#1e4d9a 0%,#0a1628 60%);clip-path:ellipse(120% 100% at 50% 0%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.018) 39px,rgba(255,255,255,.018) 40px);pointer-events:none;z-index:0}
+.app{position:relative;z-index:1;padding-bottom:40px}
+.header{display:flex;align-items:center;justify-content:space-between;padding:52px 20px 16px}
+.brand{display:flex;flex-direction:column}
+.brand-top{font-family:'Oswald',sans-serif;font-size:11px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--gold);opacity:.85}
+.brand-name{font-family:'Oswald',sans-serif;font-size:30px;font-weight:700;letter-spacing:1px;color:var(--white);line-height:1.1}
+.brand-name span{color:var(--gold)}
+.sync-pill{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:5px 11px;font-size:10px;font-weight:600;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;transition:all .3s}
+.sync-pill.live{color:var(--success);border-color:rgba(61,214,140,.25);background:rgba(61,214,140,.07)}
+.sync-pill.error{color:var(--red);border-color:rgba(217,64,64,.25)}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.sync-pill.live .sync-dot{animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.view-badge{display:flex;align-items:center;justify-content:center;gap:6px;margin:0 16px 14px;background:rgba(232,184,75,.08);border:1px solid rgba(232,184,75,.2);border-radius:12px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+.scoreboard{margin:0 16px 16px;background:linear-gradient(145deg,var(--navy-mid),var(--navy-card));border:1px solid rgba(255,255,255,.08);border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.match-header{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:linear-gradient(90deg,var(--blue-acc),var(--navy-lt));border-bottom:1px solid rgba(255,255,255,.06)}
+.match-league{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold)}
+.match-half{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.scores-row{display:grid;grid-template-columns:1fr 56px 1fr;align-items:center;padding:24px 16px 24px;gap:8px}
+.team-col{text-align:center}
+.team-name-display{font-family:'Oswald',sans-serif;font-size:19px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--white);margin-bottom:8px;line-height:1.1}
+.score-num{font-family:'Oswald',sans-serif;font-size:96px;font-weight:700;line-height:1;color:var(--white);text-align:center;transition:transform .15s,color .15s}
+.score-num.bump{transform:scale(1.15);color:var(--gold)}
+.score-sep{font-family:'Oswald',sans-serif;font-size:44px;font-weight:300;color:rgba(255,255,255,.2);text-align:center;line-height:1}
+.timer-card{margin:0 16px 16px;background:linear-gradient(145deg,var(--navy-mid),var(--navy-card));border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:20px;box-shadow:0 8px 30px rgba(0,0,0,.3);text-align:center}
+.timer-label-text{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.timer-digits{font-family:'Oswald',sans-serif;font-size:80px;font-weight:700;letter-spacing:4px;line-height:1;color:var(--white);transition:color .3s}
+.timer-digits.warning{color:var(--gold)}
+.timer-digits.urgent{color:var(--red);animation:flash 1s infinite}
+@keyframes flash{0%,100%{opacity:1}50%{opacity:.55}}
+.section{margin:0 16px 16px}
+.sec-label{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-left:2px}
+.goals-card{background:linear-gradient(145deg,var(--navy-mid),var(--navy-card));border:1px solid rgba(255,255,255,.08);border-radius:20px;overflow:hidden}
+.goal-item{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.05);animation:fadeSlide .4s ease}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.goal-item:last-child{border-bottom:none}
+.goal-badge{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.goal-badge.ours{background:rgba(37,97,196,.3)}
+.goal-badge.theirs{background:rgba(255,255,255,.07)}
+.goal-info{flex:1;min-width:0}
+.goal-scorer{font-size:14px;font-weight:600;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.goal-team{font-size:11px;color:var(--muted);margin-top:1px}
+.goal-time{font-family:'Oswald',sans-serif;font-size:15px;color:var(--gold);letter-spacing:.5px;flex-shrink:0}
+.empty-goals{text-align:center;padding:28px 16px;color:var(--muted);font-size:13px;line-height:1.7}
+.empty-goals span{font-size:28px;display:block;margin-bottom:6px}
+.loading-state{text-align:center;padding:60px 20px;color:var(--muted);font-size:13px}
+.loading-state span{font-size:32px;display:block;margin-bottom:12px}
+.footer-mark{text-align:center;padding:8px 0 4px;font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.15)}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="brand">
+      <div class="brand-top">ECNL · Boys</div>
+      <div class="brand-name">SDSC <span>Surf</span></div>
+    </div>
+    <div class="sync-pill" id="syncPill"><div class="sync-dot"></div><span id="syncLabel">SYNC…</span></div>
+  </div>
+
+  <div class="view-badge">👁 Live View · Read Only</div>
+
+  <div class="scoreboard" id="mainContent" style="display:none">
+    <div class="match-header">
+      <div class="match-league">SDSC Surf · Live Score</div>
+      <div class="match-half" id="halfBadge">1ST HALF</div>
+    </div>
+    <div class="scores-row">
+      <div class="team-col">
+        <div class="team-name-display" id="homeLabel">SDSC Surf</div>
+        <div class="score-num" id="homeScore">0</div>
+      </div>
+      <div class="score-sep">:</div>
+      <div class="team-col">
+        <div class="team-name-display" id="awayLabel">Opponent</div>
+        <div class="score-num" id="awayScore">0</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading-state" id="loadingState">
+    <span>⚽</span>Waiting for match data…
+  </div>
+
+  <div class="timer-card" id="timerCard" style="display:none">
+    <div class="timer-label-text" id="timerHalfLabel">1ST HALF</div>
+    <div class="timer-digits" id="timerDigits">30:00</div>
+  </div>
+
+  <div class="section" id="goalsSection" style="display:none">
+    <div class="sec-label">Goals Scored</div>
+    <div class="goals-card" id="goalsList">
+      <div class="empty-goals"><span>⚽</span>No goals yet</div>
+    </div>
+  </div>
+
+  <div class="footer-mark" id="footerMark" style="display:none">SDSC Surf · ECNL · Live Score</div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+const FB = {
+  apiKey:            "AIzaSyADA83VqTnTZYawJZEdnAMNzVOgq92PodQ",
+  authDomain:        "surf-score-2.firebaseapp.com",
+  databaseURL:       "https://surf-score-2-default-rtdb.firebaseio.com",
+  projectId:         "surf-score-2",
+  storageBucket:     "surf-score-2.firebasestorage.app",
+  messagingSenderId: "1066375405954",
+  appId:             "1:1066375405954:web:552acd57a7d66243806f9b"
+};
+
+let prevHome=0, prevAway=0, S=null;
+
+const app=initializeApp(FB);
+const db=getDatabase(app);
+const gameRef=ref(db,'surfmatchday/game');
+
+setSyncStatus('connecting');
+onValue(gameRef,snap=>{
+  const d=snap.val();
+  if(!d){setSyncStatus('live');return;}
+  document.getElementById('loadingState').style.display='none';
+  document.getElementById('mainContent').style.display='';
+  document.getElementById('timerCard').style.display='';
+  document.getElementById('goalsSection').style.display='';
+  document.getElementById('footerMark').style.display='';
+  if(S&&d.homeScore>prevHome)bumpScore('home');
+  if(S&&d.awayScore>prevAway)bumpScore('away');
+  prevHome=d.homeScore||0;
+  prevAway=d.awayScore||0;
+  S=d;
+  renderAll();
+  setSyncStatus('live');
+},()=>setSyncStatus('error'));
+
+function setSyncStatus(s){
+  const pill=document.getElementById('syncPill'),lbl=document.getElementById('syncLabel');
+  pill.className='sync-pill';
+  if(s==='live'){pill.classList.add('live');lbl.textContent='LIVE';}
+  else if(s==='error'){pill.classList.add('error');lbl.textContent='ERROR';}
+  else{lbl.textContent='SYNC…';}
+}
+function bumpScore(team){
+  const el=document.getElementById(team==='home'?'homeScore':'awayScore');
+  el.classList.add('bump');setTimeout(()=>el.classList.remove('bump'),200);
+}
+function renderAll(){
+  if(!S)return;
+  document.getElementById('homeScore').textContent=S.homeScore||0;
+  document.getElementById('awayScore').textContent=S.awayScore||0;
+  document.getElementById('homeLabel').textContent=(S.homeTeam||'SDSC Surf').toUpperCase();
+  document.getElementById('awayLabel').textContent=(S.awayTeam||'Opponent').toUpperCase();
+  const half=S.half||1;
+  const halfLbl=half===1?'1ST HALF':'2ND HALF';
+  document.getElementById('halfBadge').textContent=halfLbl;
+  document.getElementById('timerHalfLabel').textContent=halfLbl;
+  const sec=S.timerSec??((S.halfMinutes||30)*60);
+  const m=Math.floor(sec/60),s=sec%60;
+  const el=document.getElementById('timerDigits');
+  el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  el.className='timer-digits';
+  if(sec<=60)el.classList.add('urgent');
+  else if(sec<=300)el.classList.add('warning');
+  const goals=S.goals||[];
+  const list=document.getElementById('goalsList');
+  if(!goals.length){list.innerHTML='<div class="empty-goals"><span>⚽</span>No goals yet</div>';return;}
+  list.innerHTML=[...goals].reverse().map(g=>`
+    <div class="goal-item">
+      <div class="goal-badge ${g.team==='home'?'ours':'theirs'}">${g.team==='home'?'⚽':'🔵'}</div>
+      <div class="goal-info">
+        <div class="goal-scorer">${g.scorer}</div>
+        <div class="goal-team">${g.team==='home'?(S.homeTeam||'SDSC Surf'):(S.awayTeam||'Opponent')}</div>
+      </div>
+      <div class="goal-time">${g.time}</div>
+    </div>`).join('');
+}
+</script>
+</body>
+</html>
