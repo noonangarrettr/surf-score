@@ -56,6 +56,12 @@ html::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .match-league{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold)}
 .match-half{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.55)}
 
+/* Unified team grid — same columns for scores and buttons */
+.team-grid{display:grid;grid-template-columns:1fr 44px 1fr;align-items:start;padding:16px 10px 14px;gap:4px}
+.team-full-col{display:flex;flex-direction:column;align-items:center;width:100%;overflow:hidden}
+.score-sep-col{display:flex;justify-content:center;padding-top:26px}
+.team-goal-btns{display:flex;flex-direction:column;gap:5px;width:100%;margin-top:10px;padding:0 4px}
+/* keep old rules for compat */
 .scores-row{display:grid;grid-template-columns:1fr 52px 1fr;align-items:start;padding:18px 12px 6px;gap:4px}
 .team-col{text-align:center;width:100%;overflow:hidden}
 .team-label-input{background:transparent;border:none;outline:none;font-family:'Oswald',sans-serif;font-size:18px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--white);text-align:center;width:100%;padding:3px 4px;border-radius:6px;transition:background .2s}
@@ -86,14 +92,12 @@ html::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .card-red-chip{background:var(--red-card);color:white}
 .btn-card-minus{background:rgba(0,0,0,.25);border:none;border-radius:4px;width:18px;height:18px;font-size:12px;font-weight:700;color:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:2px;opacity:.8}
 
-/* Goal buttons */
-.goal-btns-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 14px 14px}
-.goal-group{display:flex;flex-direction:column;gap:6px}
-.btn-goal{border:none;border-radius:12px;padding:14px 8px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:transform .1s,opacity .1s;display:flex;align-items:center;justify-content:center;gap:5px}
+/* Goal buttons — full width inside team column */
+.btn-goal{border:none;border-radius:12px;padding:14px 8px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:transform .1s,opacity .1s;display:flex;align-items:center;justify-content:center;gap:5px;width:100%}
 .btn-goal:active{transform:scale(.93);opacity:.8}
 .btn-our-goal{background:var(--surf-blue);color:white;box-shadow:0 4px 18px rgba(37,97,196,.45)}
 .btn-their-goal{background:rgba(255,255,255,.1);color:var(--white);border:1px solid rgba(255,255,255,.18)}
-.btn-undo-goal{border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:9px;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;cursor:pointer;background:rgba(255,255,255,.06);color:var(--off-white);transition:opacity .1s,transform .1s}
+.btn-undo-goal{border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:9px;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;cursor:pointer;background:rgba(255,255,255,.06);color:var(--off-white);transition:opacity .1s,transform .1s;width:100%;text-align:center}
 .btn-undo-goal:active{transform:scale(.94);opacity:.7}
 .btn-add-shot{border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:9px 12px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;background:rgba(255,255,255,.06);color:var(--off-white)}
 .btn-add-shot:active{transform:scale(.94);opacity:.7}
@@ -227,23 +231,23 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
       <div class="match-league">SDSC Surf · Match Day</div>
       <div class="match-half" id="halfBadge">1ST HALF</div>
     </div>
-    <div class="scores-row">
-      <!-- Home -->
-      <div class="team-col">
+    <!-- Unified layout: each team column contains name/score/shots/cards/button -->
+    <div class="team-grid">
+
+      <!-- Home column -->
+      <div class="team-full-col">
         <input class="team-label-input" id="homeInput" value="SDSC Surf" maxlength="14" oninput="onTeamName()">
         <div class="score-wrap">
           <div class="score-num" id="homeScore">0</div>
           <div class="score-ring" id="homeRing"></div>
         </div>
-        <!-- Shots with +/- -->
         <div class="shots-row">
           <button class="btn-shot-adj" onclick="adjShot('home',-1)">−</button>
           <span class="shots-count" id="homeShotsCount">0</span>
           <span class="shots-label">shots</span>
           <button class="btn-shot-adj" onclick="adjShot('home',1)">+</button>
         </div>
-        <!-- Cards with minus correction -->
-        <div class="cards-row" id="homeCardsRow">
+        <div class="cards-row">
           <button class="card-chip card-yellow" onclick="addCard('home','yellow')">
             🟨 <span id="hYC">0</span>
             <span class="btn-card-minus" onclick="adjCard(event,'home','yellow',-1)">−</span>
@@ -253,12 +257,19 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
             <span class="btn-card-minus" onclick="adjCard(event,'home','red',-1)">−</span>
           </button>
         </div>
+        <div class="team-goal-btns">
+          <button class="btn-goal btn-our-goal" id="btnHomeGoal" onclick="addGoal('home')">⚽ Surf Goal</button>
+          <button class="btn-undo-goal" onclick="undoGoal('home')">↩ Undo</button>
+        </div>
       </div>
 
-      <div class="score-sep">:</div>
+      <!-- Centre colon -->
+      <div class="score-sep-col">
+        <div class="score-sep">:</div>
+      </div>
 
-      <!-- Away -->
-      <div class="team-col">
+      <!-- Away column -->
+      <div class="team-full-col">
         <input class="team-label-input" id="awayInput" value="Opponent" maxlength="14" oninput="onTeamName()">
         <div class="score-wrap">
           <div class="score-num" id="awayScore">0</div>
@@ -270,7 +281,7 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
           <span class="shots-label">shots</span>
           <button class="btn-shot-adj" onclick="adjShot('away',1)">+</button>
         </div>
-        <div class="cards-row" id="awayCardsRow">
+        <div class="cards-row">
           <button class="card-chip card-yellow" onclick="addCard('away','yellow')">
             🟨 <span id="aYC">0</span>
             <span class="btn-card-minus" onclick="adjCard(event,'away','yellow',-1)">−</span>
@@ -280,20 +291,12 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
             <span class="btn-card-minus" onclick="adjCard(event,'away','red',-1)">−</span>
           </button>
         </div>
+        <div class="team-goal-btns">
+          <button class="btn-goal btn-their-goal" id="btnAwayGoal" onclick="addGoal('away')">⚽ Their Goal</button>
+          <button class="btn-undo-goal" onclick="undoGoal('away')">↩ Undo</button>
+        </div>
       </div>
-    </div>
-
-    <!-- Goal + action buttons -->
-    <div class="goal-btns-row">
-      <div class="goal-group">
-        <button class="btn-goal btn-our-goal" id="btnHomeGoal" onclick="addGoal('home')">⚽ Surf Goal</button>
-        <button class="btn-undo-goal" onclick="undoGoal('home')">↩ Undo Goal</button>
-      </div>
-      <div class="goal-group">
-        <button class="btn-goal btn-their-goal" id="btnAwayGoal" onclick="addGoal('away')">⚽ Their Goal</button>
-        <button class="btn-undo-goal" onclick="undoGoal('away')">↩ Undo Goal</button>
-      </div>
-    </div>
+    </div>    </div>
   </div>
 
   <!-- Timer -->
@@ -442,9 +445,19 @@ function startLocalTick(){
         if(S.timerSec>0)S.timerSec--;
       }
       renderTimer();
-      if(S.timerSec<=0){
-        stopLocalTick();S.timerRunning=false;showStartBtn();push();showHalftimeOverlay();return;
+    if(S.timerSec<=0){
+      stopLocalTick();S.timerRunning=false;showStartBtn();
+      // Auto-advance to 2nd half if we just finished 1st half
+      if(S.half===1){
+        S.half=2;S.timerSec=S.halfMinutes*60;S.elapsedSec=0;
+        S.timerStartWall=null;S.timerSecAtStart=null;
+        renderHalf();renderTimer();
+        showHalftimeOverlay();
+      } else {
+        showHalftimeOverlay();
       }
+      push();return;
+    }
       if(S.timerSec%5===0)push();
     }
   },1000);
