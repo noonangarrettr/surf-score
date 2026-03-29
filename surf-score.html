@@ -155,7 +155,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
       <button class="timer-btn btn-start" id="btnStart" onclick="startTimer()">▶ Start</button>
       <button class="timer-btn btn-pause" id="btnPause" onclick="pauseTimer()" style="display:none">⏸ Pause</button>
       <button class="timer-btn btn-half" onclick="switchHalf()">⇄ 2nd Half</button>
-      <button class="timer-btn btn-reset" onclick="resetTimer()">↺</button>
+      <button class="timer-btn btn-reset" onclick="resetTimer()">Restart</button>
     </div>
   </div>
  
@@ -169,7 +169,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   <div class="share-banner">
     <h4>📲 Share with Parents</h4>
     <p>Send parents the view-only link — they see live updates but can't change anything.</p>
-    <div class="share-url" id="viewerUrl">https://noonangarrettr.github.io/surf-score/surf-score-view.html</div>
+    <div class="share-url" id="viewerUrl">https://yourusername.github.io/surf-score/surf-score-view.html</div>
     <button class="btn-copy" onclick="copyViewerUrl()">📋 Copy Parent Link</button>
   </div>
  
@@ -204,7 +204,7 @@ const FB = {
   appId:             "1:1066375405954:web:552acd57a7d66243806f9b"
 };
  
-let S={homeScore:0,awayScore:0,goals:[],half:1,halfMinutes:30,timerSec:1800,homeTeam:'SDSC Surf',awayTeam:'Opponent'};
+let S={homeScore:0,awayScore:0,goals:[],half:1,halfMinutes:30,timerSec:1800,timerRunning:false,timerStart:null,homeTeam:'SDSC Surf',awayTeam:'Opponent'};
 let ticker=null,pendingTeam=null,isSyncing=false;
  
 const app=initializeApp(FB);
@@ -215,13 +215,24 @@ setSyncStatus('connecting');
 onValue(gameRef,snap=>{
   if(isSyncing)return;
   const d=snap.val();
-  if(d){S={...S,...d};renderAll();}
+  if(d){
+    S={...S,...d};
+    // If timer is running on Firebase, restart local tick from synced state
+    if(S.timerRunning&&!ticker){
+      startLocalTick();
+    } else if(!S.timerRunning&&ticker){
+      clearInterval(ticker);ticker=null;
+      document.getElementById('btnStart').style.display='';
+      document.getElementById('btnPause').style.display='none';
+    }
+    renderAll();
+  }
   setSyncStatus('live');
 },()=>setSyncStatus('error'));
  
 function push(){
   isSyncing=true;
-  set(gameRef,{...S,timerRunning:false}).finally(()=>setTimeout(()=>isSyncing=false,350));
+  set(gameRef,{...S}).finally(()=>setTimeout(()=>isSyncing=false,350));
 }
 function setSyncStatus(s){
   const pill=document.getElementById('syncPill'),lbl=document.getElementById('syncLabel');
@@ -230,27 +241,54 @@ function setSyncStatus(s){
   else if(s==='error'){pill.classList.add('error');lbl.textContent='ERROR';}
   else{lbl.textContent='SYNC…';}
 }
-function startTimer(){
+function startLocalTick(){
   if(ticker)return;
-  ticker=setInterval(()=>{if(S.timerSec<=0){pauseTimer();return;}S.timerSec--;renderTimer();},1000);
+  ticker=setInterval(()=>{
+    if(S.timerSec<=0){stopLocalTick();S.timerRunning=false;push();return;}
+    S.timerSec--;
+    renderTimer();
+    // Push to Firebase every 5 seconds to keep devices in sync
+    if(S.timerSec%5===0)push();
+  },1000);
   document.getElementById('btnStart').style.display='none';
   document.getElementById('btnPause').style.display='';
 }
-function pauseTimer(){
+function stopLocalTick(){
   clearInterval(ticker);ticker=null;
   document.getElementById('btnStart').style.display='';
   document.getElementById('btnPause').style.display='none';
+}
+function startTimer(){
+  if(ticker)return;
+  S.timerRunning=true;
+  startLocalTick();
   push();
 }
-function resetTimer(){pauseTimer();S.timerSec=S.halfMinutes*60;renderTimer();push();}
+function pauseTimer(){
+  stopLocalTick();
+  S.timerRunning=false;
+  push();
+}
+function resetTimer(){
+  if(!confirm('Restart the timer?'))return;
+  stopLocalTick();
+  S.timerRunning=false;
+  S.timerSec=S.halfMinutes*60;
+  renderTimer();push();
+}
 function switchHalf(){
-  pauseTimer();S.half=S.half===1?2:1;S.timerSec=S.halfMinutes*60;
+  stopLocalTick();
+  S.timerRunning=false;
+  S.half=S.half===1?2:1;
+  S.timerSec=S.halfMinutes*60;
   renderTimer();renderHalf();push();
 }
 function adjustDuration(d){
   const n=Math.max(5,Math.min(60,S.halfMinutes+d));
   if(n===S.halfMinutes)return;
-  S.halfMinutes=n;S.timerSec=n*60;pauseTimer();renderTimer();push();
+  S.halfMinutes=n;S.timerSec=n*60;
+  stopLocalTick();S.timerRunning=false;
+  renderTimer();push();
 }
 function renderTimer(){
   const m=Math.floor(S.timerSec/60),s=S.timerSec%60;
@@ -323,9 +361,11 @@ function onTeamName(){
   push();
 }
 function newGame(){
-  if(!confirm('Reset scores for a new game?'))return;
-  S.homeScore=0;S.awayScore=0;S.goals=[];S.half=1;S.timerSec=S.halfMinutes*60;
-  pauseTimer();renderAll();push();
+  if(!confirm('Reset scores for a new game? This will clear goals and timer on all devices.'))return;
+  stopLocalTick();
+  S.homeScore=0;S.awayScore=0;S.goals=[];S.half=1;
+  S.timerSec=S.halfMinutes*60;S.timerRunning=false;
+  renderAll();push();
 }
 function copyViewerUrl(){
   const url=document.getElementById('viewerUrl').innerText;
@@ -340,4 +380,3 @@ renderAll();
 </script>
 </body>
 </html>
- 
