@@ -1,3 +1,6 @@
+core · HTML
+Copy
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -169,7 +172,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   <div class="share-banner">
     <h4>📲 Share with Parents</h4>
     <p>Send parents the view-only link — they see live updates but can't change anything.</p>
-    <div class="share-url" id="viewerUrl">https://noonangarrettr.github.io/surf-score/surf-score-view.html</div>
+    <div class="share-url" id="viewerUrl">https://yourusername.github.io/surf-score/surf-score-view.html</div>
     <button class="btn-copy" onclick="copyViewerUrl()">📋 Copy Parent Link</button>
   </div>
  
@@ -284,10 +287,10 @@ function switchHalf(){
   renderTimer();renderHalf();push();
 }
 function adjustDuration(d){
+  if(S.timerRunning)return;
   const n=Math.max(5,Math.min(60,S.halfMinutes+d));
   if(n===S.halfMinutes)return;
   S.halfMinutes=n;S.timerSec=n*60;
-  stopLocalTick();S.timerRunning=false;
   renderTimer();push();
 }
 function renderTimer(){
@@ -298,6 +301,11 @@ function renderTimer(){
   if(S.timerSec<=60)el.classList.add('urgent');
   else if(S.timerSec<=300)el.classList.add('warning');
   document.getElementById('durDisplay').textContent=`${S.halfMinutes} MIN`;
+  // Visually lock +/- buttons when timer is running
+  document.querySelectorAll('.dur-btn').forEach(btn=>{
+    btn.style.opacity=S.timerRunning?'0.25':'1';
+    btn.style.pointerEvents=S.timerRunning?'none':'auto';
+  });
 }
 function renderHalf(){
   const lbl=S.half===1?'1ST HALF':'2ND HALF';
