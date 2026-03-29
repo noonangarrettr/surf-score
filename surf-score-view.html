@@ -1,155 +1,147 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>SDSC Surf · Live Score</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
 :root{
-  --navy:#0a1628;--navy-mid:#0f2040;--navy-lt:#162d57;--navy-card:#0d1e3a;
-  --blue-acc:#1e4d9a;--surf-blue:#2561c4;--white:#f4f7ff;--off-white:#c8d4ec;
-  --gold:#e8b84b;--red:#d94040;--success:#3dd68c;--muted:#5a7aaa;
+  --navy:#0d1f3c;--navy-card:#0a1a33;
+  --surf-blue:#2561c4;--blue-acc:#1e4d9a;
+  --white:#ffffff;--off-white:#dce8ff;--muted:#7a9cc8;
+  --gold:#e8b84b;--red:#e03535;--success:#3dd68c;
   --yellow-card:#f5c518;--red-card:#e03030;
 }
 *{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--navy);min-height:100%}
+body{font-family:'Inter',sans-serif;color:var(--white);min-height:100vh;overflow-x:hidden}
 
-/* Full viewport background — no max-width constraint on html */
-html{background:var(–navy);min-height:100%}
-body{font-family:‘Inter’,sans-serif;color:var(–white);min-height:100vh;overflow-x:hidden;position:relative}
+html::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(175deg,#1a3a6e 0%,#0d1f3c 45%,#071428 100%)}
+html::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.012) 39px,rgba(255,255,255,.012) 40px)}
 
-html::before{
-content:’’;position:fixed;top:0;left:0;right:0;bottom:0;z-index:0;pointer-events:none;
-background:linear-gradient(160deg,#1a4a96 0%,#0a1628 55%);
-}
-html::after{
-content:’’;position:fixed;top:0;left:0;right:0;bottom:0;z-index:0;pointer-events:none;
-background:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.015) 39px,rgba(255,255,255,.015) 40px);
-}
-
-.wave-bg{position:fixed;bottom:0;left:0;right:0;z-index:0;pointer-events:none;overflow:hidden;height:160px}
-.wave-bg svg{position:absolute;bottom:0;width:200%;animation:waveScroll 18s linear infinite}
-.wave-bg svg:nth-child(2){animation-duration:24s;animation-direction:reverse;opacity:.6}
-.wave-bg svg:nth-child(3){animation-duration:30s;opacity:.35}
+/* White/grey waves */
+.wave-bg{position:fixed;bottom:0;left:0;right:0;z-index:0;pointer-events:none;height:140px;overflow:hidden}
+.wave-bg svg{position:absolute;bottom:0;width:200%;animation:waveScroll 20s linear infinite}
+.wave-bg svg:nth-child(2){animation-duration:28s;animation-direction:reverse;opacity:.5}
+.wave-bg svg:nth-child(3){animation-duration:36s;opacity:.25}
 @keyframes waveScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-.app{position:relative;z-index:1;padding-bottom:48px;max-width:720px;margin:0 auto}
+/* Broadcast: full width, centered, no phone constraint */
+.app{position:relative;z-index:1;max-width:680px;margin:0 auto;padding-bottom:52px}
 
 /* HEADER */
-.header{display:flex;align-items:center;justify-content:space-between;padding:40px 32px 20px}
-.brand-top{font-family:‘Oswald’,sans-serif;font-size:11px;font-weight:500;letter-spacing:3.5px;text-transform:uppercase;color:var(–gold);opacity:.8}
-.brand-name{font-family:‘Oswald’,sans-serif;font-size:34px;font-weight:700;letter-spacing:1px;color:var(–white);line-height:1.1}
-.brand-name span{color:var(–gold)}
-
-/* ANIMATED LIVE BADGE */
-.header-right{display:flex;align-items:center;gap:14px}
-.live-badge{display:none;align-items:center;gap:8px}
-.live-badge.visible{display:flex}
-.live-dot-wrap{position:relative;width:16px;height:16px}
-.live-dot{width:10px;height:10px;border-radius:50%;background:var(–red);position:absolute;top:3px;left:3px}
-.live-ring{position:absolute;inset:0;border-radius:50%;border:2px solid var(–red);opacity:0;animation:liveRingPulse 2s ease-out infinite}
-.live-ring2{animation-delay:.7s}
-@keyframes liveRingPulse{0%{opacity:.85;transform:scale(.4)}100%{opacity:0;transform:scale(1.9)}}
-.live-text{font-family:‘Oswald’,sans-serif;font-size:13px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(–red)}
-
-/* SYNC PILL */
+.header{display:flex;align-items:center;justify-content:space-between;padding:40px 32px 18px}
+.brand-top{font-family:'Oswald',sans-serif;font-size:10px;font-weight:500;letter-spacing:3.5px;text-transform:uppercase;color:var(--gold);opacity:.85}
+.brand-name{font-family:'Oswald',sans-serif;font-size:34px;font-weight:700;letter-spacing:1px;color:var(--white);line-height:1.1}
+.brand-name em{font-style:normal;color:var(--gold)}
 .sync-wrap{position:relative;display:flex;align-items:center}
 .sync-ring{position:absolute;inset:-6px;border-radius:50px;border:1.5px solid transparent}
-.sync-wrap.live .sync-ring{border-color:rgba(61,214,140,.4);animation:ringBreath 2s ease-in-out infinite}
-@keyframes ringBreath{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
-.sync-pill{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:6px 14px;font-size:11px;font-weight:600;letter-spacing:1.5px;color:var(–muted);text-transform:uppercase;transition:all .3s}
-.sync-wrap.live .sync-pill{color:var(–success);border-color:rgba(61,214,140,.3);background:rgba(61,214,140,.08)}
-.sync-wrap.error .sync-pill{color:var(–red);border-color:rgba(217,64,64,.3)}
+.sync-wrap.live .sync-ring{border-color:rgba(61,214,140,.45);animation:ringBreath 2s ease-in-out infinite}
+@keyframes ringBreath{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
+.sync-pill{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:6px 14px;font-size:11px;font-weight:600;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;transition:all .3s}
+.sync-wrap.live .sync-pill{color:var(--success);border-color:rgba(61,214,140,.3);background:rgba(61,214,140,.09)}
+.sync-wrap.error .sync-pill{color:var(--red);border-color:rgba(224,53,53,.3)}
 .sync-dot{width:7px;height:7px;border-radius:50%;background:currentColor}
 .sync-wrap.live .sync-dot{animation:dotPulse 1.8s infinite}
 @keyframes dotPulse{0%,100%{opacity:1}50%{opacity:.2}}
 
-/* TOP BAR */
-.top-bar{display:flex;align-items:center;justify-content:space-between;margin:0 32px 16px;flex-wrap:wrap;gap:10px}
-.view-badge{display:flex;align-items:center;gap:8px;background:rgba(232,184,75,.07);border:1px solid rgba(232,184,75,.2);border-radius:10px;padding:6px 14px;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(–gold)}
-.meta-display{font-size:12px;color:var(–muted);letter-spacing:.5px}
+/* VIEW BADGE */
+.view-badge{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 32px 18px;background:rgba(232,184,75,.07);border:1px solid rgba(232,184,75,.2);border-radius:12px;padding:9px 20px;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+
+/* LOADING */
+.loading-state{text-align:center;padding:80px 20px;color:var(--muted);font-size:14px}
+.loading-state span{font-size:36px;display:block;margin-bottom:14px}
 
 /* SCOREBOARD */
-.scoreboard{margin:0 32px 18px;background:rgba(15,32,64,.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.11);border-radius:28px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.09)}
-.match-header{display:flex;justify-content:space-between;align-items:center;padding:12px 24px;background:linear-gradient(90deg,rgba(30,77,154,.95),rgba(22,45,87,.95));border-bottom:1px solid rgba(255,255,255,.08)}
-.match-league{font-family:‘Oswald’,sans-serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(–gold)}
-.match-half{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5)}
-.scores-row{display:grid;grid-template-columns:1fr 80px 1fr;align-items:center;padding:32px 24px 16px;gap:12px}
-.team-col{text-align:center}
-.team-name-display{font-family:‘Oswald’,sans-serif;font-size:22px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(–white);margin-bottom:10px;line-height:1.1}
+.scoreboard{margin:0 32px 18px;background:rgba(10,26,51,.85);border:1px solid rgba(255,255,255,.16);border-radius:28px;overflow:hidden;box-shadow:0 28px 72px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.1)}
+.match-header{display:flex;justify-content:space-between;align-items:center;padding:12px 24px;background:linear-gradient(90deg,#1e4d9a,#162d57);border-bottom:1px solid rgba(255,255,255,.1)}
+.match-league{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--gold)}
+.match-half{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.55)}
 
-/* Simple reliable score — no odometer */
-.score-num{font-family:‘Oswald’,sans-serif;font-size:120px;font-weight:700;line-height:1;color:var(–white);text-align:center;transition:color .25s;text-shadow:0 2px 20px rgba(0,0,0,.4)}
-.score-num.leading{color:var(–gold);text-shadow:0 0 50px rgba(232,184,75,.35)}
-.score-num.losing{color:var(–muted)}
+.scores-row{display:grid;grid-template-columns:1fr 80px 1fr;align-items:center;padding:28px 24px 20px;gap:12px}
+.team-col{text-align:center}
+.team-name-display{font-family:'Oswald',sans-serif;font-size:22px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--white);margin-bottom:10px;line-height:1.1}
+.score-wrap{position:relative;display:inline-block}
+.score-num{font-family:'Oswald',sans-serif;font-size:128px;font-weight:700;line-height:1;color:var(--white);transition:color .25s}
+.score-num.leading{color:var(--gold);text-shadow:0 0 50px rgba(232,184,75,.4)}
+.score-num.losing{color:var(--muted)}
 .score-num.bump{animation:scorePop .4s cubic-bezier(.36,.07,.19,.97) forwards}
 @keyframes scorePop{0%{transform:scale(1)}35%{transform:scale(1.22)}65%{transform:scale(.97)}100%{transform:scale(1)}}
-.score-ring{position:absolute;inset:-10px;border-radius:50%;border:3px solid var(–gold);opacity:0;pointer-events:none}
+.score-ring{position:absolute;inset:-10px;border-radius:50%;border:3px solid var(--gold);opacity:0;pointer-events:none}
 .score-ring.fire{animation:ringPop .6s ease-out forwards}
-@keyframes ringPop{0%{opacity:.9;transform:scale(.6)}100%{opacity:0;transform:scale(1.8)}}
-.score-wrap{position:relative;display:inline-block}
-.score-sep{font-family:‘Oswald’,sans-serif;font-size:52px;font-weight:300;color:rgba(255,255,255,.22);text-align:center;line-height:1}
+@keyframes ringPop{0%{opacity:.9;transform:scale(.6)}100%{opacity:0;transform:scale(1.9)}}
+.score-sep{font-family:'Oswald',sans-serif;font-size:52px;font-weight:300;color:rgba(255,255,255,.25);text-align:center;line-height:1}
 
-.shots-display{font-size:13px;color:var(–muted);letter-spacing:.5px;margin-top:4px;min-height:20px}
-.shots-display span{color:var(–off-white);font-weight:600}
-.cards-display{display:flex;justify-content:center;gap:6px;margin-top:8px;min-height:28px;flex-wrap:wrap}
-.card-chip-view{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:700}
-.cyellow{background:var(–yellow-card);color:#1a1200}
-.cred{background:var(–red-card);color:white}
+/* Shots */
+.shots-info{font-size:13px;color:var(--muted);margin-top:5px;min-height:20px}
+.shots-info strong{color:var(--white);font-weight:600}
+
+/* Cards */
+.cards-info{display:flex;justify-content:center;gap:8px;margin-top:8px;min-height:28px;flex-wrap:wrap}
+.card-badge{display:flex;align-items:center;gap:4px;padding:4px 12px;border-radius:7px;font-size:13px;font-weight:700}
+.cb-yellow{background:var(--yellow-card);color:#1a1200}
+.cb-red{background:var(--red-card);color:white}
 
 /* TIMER */
-.timer-card{margin:0 32px 18px;background:rgba(15,32,64,.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.11);border-radius:24px;padding:24px 32px;box-shadow:0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.08);text-align:center}
-.timer-label-text{font-family:‘Oswald’,sans-serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(–muted);margin-bottom:10px}
-.timer-digits{font-family:‘Oswald’,sans-serif;font-size:100px;font-weight:700;letter-spacing:6px;line-height:1;color:var(–white);transition:color .3s}
-.timer-digits.warning{color:var(–gold)}
-.timer-digits.urgent{color:var(–red);animation:flash 1s infinite}
-@keyframes flash{0%,100%{opacity:1}50%{opacity:.5}}
+.timer-card{margin:0 32px 18px;background:rgba(10,26,51,.85);border:1px solid rgba(255,255,255,.16);border-radius:24px;padding:24px 32px;box-shadow:0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.08);text-align:center}
+.timer-label-text{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.timer-digits{font-family:'Oswald',sans-serif;font-size:100px;font-weight:700;letter-spacing:6px;line-height:1;color:var(--white);transition:color .3s}
+.timer-digits.warning{color:var(--gold)}
+.timer-digits.urgent{color:var(--red);animation:flash 1s infinite}
+@keyframes flash{0%,100%{opacity:1}50%{opacity:.45}}
 
 /* GOALS */
 .section{margin:0 32px 18px}
-.sec-label{font-family:‘Oswald’,sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(–muted);margin-bottom:10px;padding-left:2px}
-.goals-card{background:rgba(15,32,64,.7);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.09);border-radius:20px;overflow:hidden}
-.goal-item{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.05);animation:fadeSlide .4s ease}
-@keyframes fadeSlide{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.sec-label{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-left:2px}
+.goals-card{background:rgba(10,26,51,.8);border:1px solid rgba(255,255,255,.1);border-radius:22px;overflow:hidden}
+.goal-item{display:flex;align-items:center;gap:14px;padding:14px 22px;border-bottom:1px solid rgba(255,255,255,.06);animation:fadeSlide .4s ease}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
 .goal-item:last-child{border-bottom:none}
-.goal-badge{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.goal-badge.ours{background:rgba(37,97,196,.35)}
-.goal-badge.theirs{background:rgba(255,255,255,.08)}
+.goal-badge{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.goal-badge.ours{background:rgba(37,97,196,.4)}
+.goal-badge.theirs{background:rgba(255,255,255,.1)}
 .goal-info{flex:1;min-width:0}
-.goal-scorer{font-size:15px;font-weight:600;color:var(–white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.goal-team{font-size:12px;color:var(–muted);margin-top:1px}
-.goal-time{font-family:‘Oswald’,sans-serif;font-size:16px;color:var(–gold);letter-spacing:.5px;flex-shrink:0}
-.empty-goals{text-align:center;padding:32px 20px;color:var(–muted);font-size:14px;line-height:1.7}
+.goal-scorer{font-size:16px;font-weight:600;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.goal-team{font-size:12px;color:var(--muted);margin-top:2px}
+.goal-time{font-family:'Oswald',sans-serif;font-size:17px;color:var(--gold);letter-spacing:.5px;flex-shrink:0}
+.empty-goals{text-align:center;padding:34px 20px;color:var(--muted);font-size:14px;line-height:1.7}
 .empty-goals span{font-size:30px;display:block;margin-bottom:8px}
-.loading-state{text-align:center;padding:80px 20px;color:var(–muted);font-size:14px}
-.loading-state span{font-size:36px;display:block;margin-bottom:14px}
 
-/* HALFTIME */
-.halftime-overlay{position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(5,12,28,.93);backdrop-filter:blur(20px);opacity:0;pointer-events:none;transition:opacity .4s}
+/* HALFTIME OVERLAY */
+.halftime-overlay{position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(6,14,32,.94);backdrop-filter:blur(20px);opacity:0;pointer-events:none;transition:opacity .4s}
 .halftime-overlay.show{opacity:1;pointer-events:auto}
-.ht-label{font-family:‘Oswald’,sans-serif;font-size:13px;letter-spacing:5px;text-transform:uppercase;color:var(–gold);opacity:.8;margin-bottom:16px;animation:htFadeUp .6s ease .2s both}
-.ht-banner{font-family:‘Oswald’,sans-serif;font-size:64px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(–white);margin-bottom:24px;animation:htFadeUp .6s ease .35s both}
-.ht-score{font-family:‘Oswald’,sans-serif;font-size:100px;font-weight:700;color:var(–white);letter-spacing:10px;animation:htFadeUp .6s ease .5s both;text-shadow:0 0 60px rgba(232,184,75,.3)}
-.ht-teams{font-family:‘Oswald’,sans-serif;font-size:18px;letter-spacing:2px;color:var(–muted);margin-top:10px;animation:htFadeUp .6s ease .6s both}
-@keyframes htFadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.ht-label{font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);opacity:.85;margin-bottom:16px;animation:htUp .6s ease .2s both}
+.ht-banner{font-family:'Oswald',sans-serif;font-size:64px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--white);margin-bottom:24px;animation:htUp .6s ease .35s both}
+.ht-score{font-family:'Oswald',sans-serif;font-size:110px;font-weight:700;color:var(--white);letter-spacing:10px;animation:htUp .6s ease .5s both;line-height:1}
+.ht-teams{font-family:'Oswald',sans-serif;font-size:18px;letter-spacing:2px;color:var(--muted);margin-top:10px;animation:htUp .6s ease .6s both}
+@keyframes htUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 
-/* GOAL FX */
+/* GOAL FLASH + CONFETTI */
 .goal-flash{position:fixed;inset:0;z-index:250;pointer-events:none;opacity:0}
 .goal-flash.fire{animation:flashBurst .5s ease-out forwards}
-@keyframes flashBurst{0%{opacity:.6;background:radial-gradient(circle,rgba(232,184,75,.5) 0%,transparent 70%)}100%{opacity:0}}
+@keyframes flashBurst{0%{opacity:.55;background:radial-gradient(circle,rgba(232,184,75,.4) 0%,transparent 70%)}100%{opacity:0}}
 canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
-.footer-mark{text-align:center;padding:8px 0 4px;font-family:‘Oswald’,sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.13)}
-</style>
 
+.footer-mark{text-align:center;padding:4px 0;font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.14)}
+</style>
 </head>
 <body>
 
 <div class="wave-bg">
-  <svg viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="height:120px"><path d="M0,60 C180,100 360,20 540,60 C720,100 900,20 1080,60 C1260,100 1350,40 1440,60 L1440,120 L0,120Z" fill="rgba(37,97,196,0.22)"/></svg>
-  <svg viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="height:100px"><path d="M0,40 C200,80 400,10 600,50 C800,90 1000,15 1200,55 C1320,75 1380,35 1440,45 L1440,120 L0,120Z" fill="rgba(30,77,154,0.18)"/></svg>
-  <svg viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="height:80px"><path d="M0,70 C160,30 320,90 480,55 C640,20 800,80 960,50 C1120,20 1280,70 1440,55 L1440,120 L0,120Z" fill="rgba(15,50,120,0.14)"/></svg>
+  <svg viewBox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="height:100px">
+    <path d="M0,50 C180,90 360,15 540,55 C720,95 900,15 1080,55 C1260,95 1360,35 1440,55 L1440,100 L0,100Z" fill="rgba(255,255,255,0.07)"/>
+  </svg>
+  <svg viewBox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="height:80px">
+    <path d="M0,35 C200,75 400,8 600,45 C800,82 1000,12 1200,50 C1320,72 1380,30 1440,42 L1440,100 L0,100Z" fill="rgba(220,232,255,0.05)"/>
+  </svg>
+  <svg viewBox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="height:65px">
+    <path d="M0,60 C160,25 320,80 480,48 C640,16 800,72 960,44 C1120,16 1280,62 1440,48 L1440,100 L0,100Z" fill="rgba(200,220,255,0.04)"/>
+  </svg>
 </div>
 
 <div class="goal-flash" id="goalFlash"></div>
@@ -166,29 +158,15 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
   <div class="header">
     <div class="brand">
       <div class="brand-top">ECNL · Boys · Live</div>
-      <div class="brand-name">SDSC <span>Surf</span></div>
+      <div class="brand-name">SDSC <em>Surf</em></div>
     </div>
-    <div class="header-right">
-      <div class="live-badge" id="liveBadge">
-        <div class="live-dot-wrap">
-          <div class="live-dot"></div>
-          <div class="live-ring"></div>
-          <div class="live-ring live-ring2"></div>
-        </div>
-        <div class="live-text">LIVE</div>
-      </div>
-      <div class="sync-wrap" id="syncWrap">
-        <div class="sync-ring"></div>
-        <div class="sync-pill"><div class="sync-dot"></div><span id="syncLabel">SYNC…</span></div>
-      </div>
+    <div class="sync-wrap" id="syncWrap">
+      <div class="sync-ring"></div>
+      <div class="sync-pill"><div class="sync-dot"></div><span id="syncLabel">SYNC…</span></div>
     </div>
   </div>
 
-  <div class="top-bar">
-    <div class="view-badge">👁 Live View · Read Only</div>
-    <div class="meta-display" id="metaDisplay"></div>
-  </div>
-
+  <div class="view-badge">👁 Live View · Read Only</div>
   <div class="loading-state" id="loadingState"><span>⚽</span>Waiting for match data…</div>
 
   <div id="mainContent" style="display:none">
@@ -204,8 +182,8 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
             <div class="score-num" id="homeScore">0</div>
             <div class="score-ring" id="homeRing"></div>
           </div>
-          <div class="shots-display" id="homeShots"></div>
-          <div class="cards-display" id="homeCards"></div>
+          <div class="shots-info" id="homeShots"></div>
+          <div class="cards-info" id="homeCards"></div>
         </div>
         <div class="score-sep">:</div>
         <div class="team-col">
@@ -214,28 +192,25 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
             <div class="score-num" id="awayScore">0</div>
             <div class="score-ring" id="awayRing"></div>
           </div>
-          <div class="shots-display" id="awayShots"></div>
-          <div class="cards-display" id="awayCards"></div>
+          <div class="shots-info" id="awayShots"></div>
+          <div class="cards-info" id="awayCards"></div>
         </div>
       </div>
     </div>
 
-```
-<div class="timer-card">
-  <div class="timer-label-text" id="timerHalfLabel">1ST HALF</div>
-  <div class="timer-digits" id="timerDigits">30:00</div>
-</div>
+    <div class="timer-card">
+      <div class="timer-label-text" id="timerHalfLabel">1ST HALF</div>
+      <div class="timer-digits" id="timerDigits">30:00</div>
+    </div>
 
-<div class="section">
-  <div class="sec-label">Goals Scored</div>
-  <div class="goals-card" id="goalsList">
-    <div class="empty-goals"><span>⚽</span>No goals yet</div>
-  </div>
-</div>
+    <div class="section">
+      <div class="sec-label">Goals Scored</div>
+      <div class="goals-card" id="goalsList">
+        <div class="empty-goals"><span>⚽</span>No goals yet</div>
+      </div>
+    </div>
 
-<div class="footer-mark">SDSC Surf · ECNL · Live Score</div>
-```
-
+    <div class="footer-mark">SDSC Surf · ECNL · Live Score</div>
   </div>
 </div>
 
@@ -266,22 +241,23 @@ onValue(gameRef,snap=>{
   document.getElementById('loadingState').style.display='none';
   document.getElementById('mainContent').style.display='';
 
-  const goalHome=S&&d.homeScore>prevHome;
-  const goalAway=S&&d.awayScore>prevAway;
+  const goalAdded=S&&(d.homeScore>prevHome||d.awayScore>prevAway);
   const halfChanged=S&&d.half!==prevHalf;
-
-  if(goalHome)fireGoalCelebration('home');
-  if(goalAway)fireGoalCelebration('away');
-  if(halfChanged)showHalftimeOverlay(d);
+  if(d.homeScore>prevHome)fireGoalCelebration('home');
+  if(d.awayScore>prevAway)fireGoalCelebration('away');
+  if(halfChanged&&S)showHalftimeOverlay(d);
 
   prevHome=d.homeScore||0;prevAway=d.awayScore||0;prevHalf=d.half||1;
   S=d;renderAll();setSyncStatus('live');
 
+  // Wall-clock based smooth timer for viewer
   if(S.timerRunning&&!viewTicker){
     viewTicker=setInterval(()=>{
       if(!S||!S.timerRunning){clearInterval(viewTicker);viewTicker=null;return;}
-      if(S.clockUp){S.elapsedSec=(S.elapsedSec||0)+1;}
-      else if(S.timerSec>0){S.timerSec--;}
+      if(S.timerStartWall){
+        const elapsed=Math.floor((Date.now()-S.timerStartWall)/1000);
+        S.timerSec=Math.max(0,S.timerSecAtStart-elapsed);
+      } else if(S.timerSec>0){S.timerSec--;}
       renderTimerOnly();
     },1000);
   } else if(!S.timerRunning&&viewTicker){
@@ -291,50 +267,35 @@ onValue(gameRef,snap=>{
 
 function setSyncStatus(s){
   const w=document.getElementById('syncWrap'),l=document.getElementById('syncLabel');
-  const lb=document.getElementById('liveBadge');
   w.className='sync-wrap';
-  if(s==='live'){
-    w.classList.add('live');l.textContent='LIVE';
-    lb.classList.add('visible');
-  } else if(s==='error'){
-    w.classList.add('error');l.textContent='ERROR';
-    lb.classList.remove('visible');
-  } else {
-    l.textContent='SYNC…';lb.classList.remove('visible');
-  }
+  if(s==='live'){w.classList.add('live');l.textContent='LIVE';}
+  else if(s==='error'){w.classList.add('error');l.textContent='ERROR';}
+  else{l.textContent='SYNC…';}
 }
-
 function fireGoalCelebration(team){
-  const el=document.getElementById(team==='home'?'homeScore':'awayScore');
+  if(!S)return;
   const ring=document.getElementById(team==='home'?'homeRing':'awayRing');
-  el.classList.add('bump');ring.classList.add('fire');
-  setTimeout(()=>{el.classList.remove('bump');ring.classList.remove('fire');},600);
+  ring.classList.add('fire');setTimeout(()=>ring.classList.remove('fire'),600);
   document.getElementById('goalFlash').classList.add('fire');
   setTimeout(()=>document.getElementById('goalFlash').classList.remove('fire'),500);
   launchConfetti();
 }
-
 function showHalftimeOverlay(d){
-  const ov=document.getElementById('htOverlay');
   document.getElementById('htBanner').textContent=(d.half||1)===2?'2ND HALF':'FULL TIME';
   document.getElementById('htScore').textContent=`${d.homeScore||0} : ${d.awayScore||0}`;
   document.getElementById('htTeams').textContent=`${(d.homeTeam||'SDSC SURF').toUpperCase()} vs ${(d.awayTeam||'OPPONENT').toUpperCase()}`;
-  ov.classList.add('show');setTimeout(()=>ov.classList.remove('show'),4000);
+  const ov=document.getElementById('htOverlay');
+  ov.classList.add('show');setTimeout(()=>ov.classList.remove('show'),6000);
 }
-
 function renderTimerOnly(){
   if(!S)return;
-  const sec=S.clockUp?(S.elapsedSec||0):(S.timerSec??0);
-  const m=Math.floor(sec/60),s=sec%60;
+  const sec=S.timerSec??0,m=Math.floor(sec/60),s=sec%60;
   const el=document.getElementById('timerDigits');
   el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
   el.className='timer-digits';
-  if(!S.clockUp){
-    if(sec<=60)el.classList.add('urgent');
-    else if(sec<=300)el.classList.add('warning');
-  }
+  if(sec<=60)el.classList.add('urgent');
+  else if(sec<=300)el.classList.add('warning');
 }
-
 function renderAll(){
   if(!S)return;
   const h=S.homeScore||0,a=S.awayScore||0;
@@ -342,33 +303,29 @@ function renderAll(){
   hEl.textContent=h;aEl.textContent=a;
   hEl.className='score-num'+(h>a?' leading':h<a?' losing':'');
   aEl.className='score-num'+(a>h?' leading':a<h?' losing':'');
-
   document.getElementById('homeLabel').textContent=(S.homeTeam||'SDSC Surf').toUpperCase();
   document.getElementById('awayLabel').textContent=(S.awayTeam||'Opponent').toUpperCase();
-
-  const half=S.half||1;
-  const halfLbl=half===1?'1ST HALF':'2ND HALF';
-  document.getElementById('halfBadge').textContent=halfLbl;
-  document.getElementById('timerHalfLabel').textContent=halfLbl;
+  const half=S.half||1,lbl=half===1?'1ST HALF':'2ND HALF';
+  document.getElementById('halfBadge').textContent=lbl;
+  document.getElementById('timerHalfLabel').textContent=lbl;
   renderTimerOnly();
 
-  document.getElementById('homeShots').innerHTML=S.homeShots>0?`<span>${S.homeShots}</span> shots`:'';
-  document.getElementById('awayShots').innerHTML=S.awayShots>0?`<span>${S.awayShots}</span> shots`:'';
+  // Shots
+  const hs=S.homeShots||0,as=S.awayShots||0;
+  document.getElementById('homeShots').innerHTML=hs>0?`<strong>${hs}</strong> shots on goal`:'';
+  document.getElementById('awayShots').innerHTML=as>0?`<strong>${as}</strong> shots on goal`:'';
 
+  // Cards
   function cardsHtml(y,r){
     let h='';
-    if(y>0)h+=`<div class="card-chip-view cyellow">🟨 ${y}</div>`;
-    if(r>0)h+=`<div class="card-chip-view cred">🟥 ${r}</div>`;
+    if(y>0)h+=`<div class="card-badge cb-yellow">🟨 ${y}</div>`;
+    if(r>0)h+=`<div class="card-badge cb-red">🟥 ${r}</div>`;
     return h;
   }
   document.getElementById('homeCards').innerHTML=cardsHtml(S.homeYellow||0,S.homeRed||0);
   document.getElementById('awayCards').innerHTML=cardsHtml(S.awayYellow||0,S.awayRed||0);
 
-  const meta=[];
-  if(S.metaDate)meta.push(S.metaDate);
-  if(S.metaLocation)meta.push(S.metaLocation);
-  document.getElementById('metaDisplay').textContent=meta.join(' · ');
-
+  // Goals
   const goals=S.goals||[];
   const list=document.getElementById('goalsList');
   if(!goals.length){list.innerHTML='<div class="empty-goals"><span>⚽</span>No goals yet</div>';return;}
@@ -382,14 +339,13 @@ function renderAll(){
       <div class="goal-time">${g.time}</div>
     </div>`).join('');
 }
-
 function launchConfetti(){
   const canvas=document.getElementById('confetti');
   const ctx=canvas.getContext('2d');
   canvas.width=window.innerWidth;canvas.height=window.innerHeight;
-  const colors=['#e8b84b','#f4f7ff','#2561c4','#3dd68c','#ffffff'];
+  const colors=['#e8b84b','#ffffff','#2561c4','#3dd68c','#dce8ff'];
   const particles=Array.from({length:100},()=>({
-    x:Math.random()*canvas.width,y:Math.random()*canvas.height*.4,
+    x:Math.random()*canvas.width,y:Math.random()*canvas.height*.35,
     vx:(Math.random()-.5)*10,vy:Math.random()*5+2,size:Math.random()*8+3,
     color:colors[Math.floor(Math.random()*colors.length)],
     rot:Math.random()*360,rotV:(Math.random()-.5)*10,alpha:1,shape:Math.random()>.5?'rect':'circle'
@@ -411,6 +367,5 @@ function launchConfetti(){
   })();
 }
 </script>
-
 </body>
 </html>
