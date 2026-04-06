@@ -541,7 +541,7 @@ function renderTimer(){
   const el=document.getElementById('timerDigits');
   // FINAL: manually ended or countdown reached zero at end of 2nd half
   if(S.gameFinal||(!S.countUp&&S.timerSec<=0&&S.half===2&&!S.timerRunning)){
-    el.textContent='FINAL';el.className='timer-digits final';
+    el.textContent='FULL TIME';el.className='timer-digits final';
     document.getElementById('stoppageRow').style.display='none';
     // Disable timer controls when game is final
     const btnStart=document.getElementById('btnStart');

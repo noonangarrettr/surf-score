@@ -309,7 +309,7 @@ function renderTimerOnly(){
   const el=document.getElementById('timerDigits');
   // FINAL: manually ended OR countdown at zero at end of 2nd half
   if(S.gameFinal||(!S.countUp&&S.timerSec<=0&&S.half===2&&!S.timerRunning)){
-    el.textContent='FINAL';el.className='timer-digits final';return;
+    el.textContent='FULL TIME';el.className='timer-digits final';return;
   }
   if(S.countUp){
     const sec=S.elapsedSec||0,m=Math.floor(sec/60),s=sec%60;
