@@ -81,7 +81,7 @@ html::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .shots-row{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:4px;min-height:20px}
 .shots-count{font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;color:var(--white)}
 .shots-label{font-size:10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
-.btn-shot-adj{width:20px;height:20px;border-radius:4px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:var(--off-white);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.btn-shot-adj{width:28px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:var(--off-white);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
 .btn-shot-adj:active{opacity:.6}
 
 /* Cards row */
@@ -125,6 +125,7 @@ html::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .btn-pause{background:var(--gold);color:#1a1200}
 .btn-half{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18)}
 .btn-reset{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid rgba(255,255,255,.1)}
+.btn-final{background:rgba(232,184,75,.1);color:var(--gold);border:1px solid rgba(232,184,75,.28)}
 
 /* === GOALS LOG === */
 .section{margin:0 16px 14px}
@@ -320,8 +321,11 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
     <div class="timer-btns">
       <button class="timer-btn btn-start" id="btnStart" onclick="startTimer()">▶ Start</button>
       <button class="timer-btn btn-pause" id="btnPause" onclick="pauseTimer()" style="display:none">⏸ Pause</button>
-      <button class="timer-btn btn-half" onclick="switchHalf()">⇄ 2nd Half</button>
+      <button class="timer-btn btn-half" id="btnHalf" onclick="switchHalf()">⇄ 2nd Half</button>
       <button class="timer-btn btn-reset" onclick="resetTimer()">Restart</button>
+    </div>
+    <div class="timer-btns" style="margin-top:6px">
+      <button class="timer-btn btn-final" id="btnFinal" onclick="endGame()">🏁 Final</button>
     </div>
   </div>
 
@@ -378,7 +382,8 @@ let S={
   timerRunning:false,timerStartWall:null,countUp:false,elapsedSec:0,
   homeTeam:'SDSC Surf',awayTeam:'Opponent',
   homeShots:0,awayShots:0,
-  homeYellow:0,homeRed:0,awayYellow:0,awayRed:0
+  homeYellow:0,homeRed:0,awayYellow:0,awayRed:0,
+  gameFinal:false
 };
 let ticker=null,pendingTeam=null,isSyncing=false;
 
@@ -512,6 +517,18 @@ function switchHalf(){
   S.timerStartWall=null;S.timerSecAtStart=null;
   showStartBtn();renderTimer();renderHalf();showHalftimeOverlay();push();
 }
+function endGame(){
+  if(!confirm('End the game and mark as Final?'))return;
+  stopLocalTick();S.timerRunning=false;S.gameFinal=true;
+  S.timerStartWall=null;S.timerSecAtStart=null;
+  showStartBtn();
+  document.getElementById('htBanner').textContent='FULL TIME';
+  document.getElementById('htScore').textContent=`${S.homeScore} : ${S.awayScore}`;
+  document.getElementById('htTeams').textContent=`${S.homeTeam.toUpperCase()} vs ${S.awayTeam.toUpperCase()}`;
+  const ov=document.getElementById('htOverlay');
+  ov.classList.add('show');setTimeout(()=>ov.classList.remove('show'),6000);
+  renderTimer();push();
+}
 function adjustDuration(d){
   if(S.timerRunning)return;
   const n=Math.max(5,Math.min(60,S.halfMinutes+d));
@@ -522,11 +539,30 @@ function addStoppage(mins){S.timerSec+=mins*60;renderTimer();push();}
 
 function renderTimer(){
   const el=document.getElementById('timerDigits');
-  // FINAL: countdown reached zero at end of 2nd half
-  if(!S.countUp&&S.timerSec<=0&&S.half===2&&!S.timerRunning){
+  // FINAL: manually ended or countdown reached zero at end of 2nd half
+  if(S.gameFinal||(!S.countUp&&S.timerSec<=0&&S.half===2&&!S.timerRunning)){
     el.textContent='FINAL';el.className='timer-digits final';
     document.getElementById('stoppageRow').style.display='none';
-  } else if(S.countUp){
+    // Disable timer controls when game is final
+    const btnStart=document.getElementById('btnStart');
+    const btnHalf=document.getElementById('btnHalf');
+    const btnFinal=document.getElementById('btnFinal');
+    if(btnStart){btnStart.disabled=true;btnStart.style.opacity='0.3';}
+    if(btnHalf){btnHalf.disabled=true;btnHalf.style.opacity='0.3';}
+    if(btnFinal){btnFinal.disabled=true;btnFinal.style.opacity='0.3';}
+  } else {
+    const btnStart=document.getElementById('btnStart');
+    const btnHalf=document.getElementById('btnHalf');
+    const btnFinal=document.getElementById('btnFinal');
+    if(btnStart){btnStart.disabled=false;btnStart.style.opacity='';}
+    if(btnHalf){btnHalf.disabled=false;btnHalf.style.opacity='';}
+    if(btnFinal){btnFinal.disabled=false;btnFinal.style.opacity='';}
+  }
+  if(S.gameFinal){
+    document.getElementById('durDisplay').textContent=`${S.halfMinutes} MIN`;
+    return;
+  }
+  if(S.countUp){
     const sec=S.elapsedSec||0;
     const m=Math.floor(sec/60),s=sec%60;
     el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
@@ -563,7 +599,7 @@ function renderHalf(){
 
 /* ── HALFTIME OVERLAY ── */
 function showHalftimeOverlay(){
-  document.getElementById('htBanner').textContent=S.timerSec<=0&&S.half===2?'FULL TIME':'HALF TIME';
+  document.getElementById('htBanner').textContent=(S.gameFinal||(!S.countUp&&S.timerSec<=0&&S.half===2))?'FULL TIME':'HALF TIME';
   document.getElementById('htScore').textContent=`${S.homeScore} : ${S.awayScore}`;
   document.getElementById('htTeams').textContent=`${S.homeTeam.toUpperCase()} vs ${S.awayTeam.toUpperCase()}`;
   const ov=document.getElementById('htOverlay');
@@ -582,7 +618,7 @@ function addGoal(team){
 }
 function confirmGoal(){
   const name=document.getElementById('scorerInput').value.trim()||'—';
-  const elapsed=S.halfMinutes*60-S.timerSec;
+  const elapsed=S.countUp?(S.elapsedSec||0):(S.halfMinutes*60-S.timerSec);
   const m=Math.floor(elapsed/60),s=elapsed%60;
   S.goals.push({team:pendingTeam,scorer:name,
     time:`${S.half===1?'1H':'2H'} ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`,id:Date.now()});
@@ -643,7 +679,7 @@ function newGame(){
   stopLocalTick();showStartBtn();
   S.homeScore=0;S.awayScore=0;S.goals=[];S.half=1;
   S.timerSec=S.halfMinutes*60;S.timerRunning=false;S.elapsedSec=0;
-  S.timerStartWall=null;S.timerSecAtStart=null;
+  S.timerStartWall=null;S.timerSecAtStart=null;S.gameFinal=false;
   S.homeShots=0;S.awayShots=0;S.homeYellow=0;S.homeRed=0;S.awayYellow=0;S.awayRed=0;
   renderAll();push();
 }
@@ -728,7 +764,7 @@ function launchConfetti(){
 
 window.startTimer=startTimer;window.pauseTimer=pauseTimer;window.resetTimer=resetTimer;
 window.switchHalf=switchHalf;window.adjustDuration=adjustDuration;window.addStoppage=addStoppage;
-window.toggleClockMode=toggleClockMode;
+window.toggleClockMode=toggleClockMode;window.endGame=endGame;
 window.addGoal=addGoal;window.undoGoal=undoGoal;window.confirmGoal=confirmGoal;window.cancelGoal=cancelGoal;
 window.newGame=newGame;window.onTeamName=onTeamName;window.copyViewerUrl=copyViewerUrl;
 window.addCard=addCard;window.adjCard=adjCard;window.adjShot=adjShot;
