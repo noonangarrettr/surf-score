@@ -149,7 +149,7 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
 <canvas id="confetti"></canvas>
 
 <div class="halftime-overlay" id="htOverlay">
-  <div class="ht-label">SDSC Surf · ECNL</div>
+  <div class="ht-label">SDSC Surf</div>
   <div class="ht-banner" id="htBanner">HALF TIME</div>
   <div class="ht-score" id="htScore">0 : 0</div>
   <div class="ht-teams" id="htTeams">SDSC SURF vs OPPONENT</div>
@@ -158,7 +158,7 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
 <div class="app">
   <div class="header">
     <div class="brand">
-      <div class="brand-top">ECNL · Boys · Live</div>
+      <div class="brand-top">Boys · Live</div>
       <div class="brand-name">SDSC <em>Surf</em></div>
     </div>
     <div class="sync-wrap" id="syncWrap">
@@ -211,7 +211,7 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
       </div>
     </div>
 
-    <div class="footer-mark">SDSC Surf · ECNL · Live Score</div>
+    <div class="footer-mark">SDSC Surf · Live Score</div>
   </div>
 </div>
 
@@ -242,11 +242,12 @@ onValue(gameRef,snap=>{
   document.getElementById('loadingState').style.display='none';
   document.getElementById('mainContent').style.display='';
 
-  const goalAdded=S&&(d.homeScore>prevHome||d.awayScore>prevAway);
   const halfChanged=S&&d.half!==prevHalf;
+  const justFinal=S&&!S.gameFinal&&d.gameFinal;
   if(d.homeScore>prevHome)fireGoalCelebration('home');
   if(d.awayScore>prevAway)fireGoalCelebration('away');
   if(halfChanged&&S)showHalftimeOverlay(d);
+  if(justFinal)showFinalOverlay(d);
 
   prevHome=d.homeScore||0;prevAway=d.awayScore||0;prevHalf=d.half||1;
   S=d;renderAll();setSyncStatus('live');
@@ -290,17 +291,24 @@ function fireGoalCelebration(team){
   launchConfetti();
 }
 function showHalftimeOverlay(d){
-  document.getElementById('htBanner').textContent=(d.half||1)===2?'2ND HALF':'FULL TIME';
+  document.getElementById('htBanner').textContent=(d.half||1)===2?'HALF TIME':'2ND HALF';
   document.getElementById('htScore').textContent=`${d.homeScore||0} : ${d.awayScore||0}`;
   document.getElementById('htTeams').textContent=`${(d.homeTeam||'SDSC SURF').toUpperCase()} vs ${(d.awayTeam||'OPPONENT').toUpperCase()}`;
   const ov=document.getElementById('htOverlay');
   ov.classList.add('show');setTimeout(()=>ov.classList.remove('show'),6000);
 }
+function showFinalOverlay(d){
+  document.getElementById('htBanner').textContent='FULL TIME';
+  document.getElementById('htScore').textContent=`${d.homeScore||0} : ${d.awayScore||0}`;
+  document.getElementById('htTeams').textContent=`${(d.homeTeam||'SDSC SURF').toUpperCase()} vs ${(d.awayTeam||'OPPONENT').toUpperCase()}`;
+  const ov=document.getElementById('htOverlay');
+  ov.classList.add('show');setTimeout(()=>ov.classList.remove('show'),8000);
+}
 function renderTimerOnly(){
   if(!S)return;
   const el=document.getElementById('timerDigits');
-  // FINAL: countdown at zero, 2nd half, not running
-  if(!S.countUp&&(S.timerSec<=0)&&S.half===2&&!S.timerRunning){
+  // FINAL: manually ended OR countdown at zero at end of 2nd half
+  if(S.gameFinal||(!S.countUp&&S.timerSec<=0&&S.half===2&&!S.timerRunning)){
     el.textContent='FINAL';el.className='timer-digits final';return;
   }
   if(S.countUp){
@@ -323,7 +331,8 @@ function renderAll(){
   aEl.className='score-num'+(a>h?' leading':a<h?' losing':'');
   document.getElementById('homeLabel').textContent=(S.homeTeam||'SDSC Surf').toUpperCase();
   document.getElementById('awayLabel').textContent=(S.awayTeam||'Opponent').toUpperCase();
-  const half=S.half||1,lbl=half===1?'1ST HALF':'2ND HALF';
+  const half=S.half||1;
+  const lbl=S.gameFinal?'FINAL':(half===1?'1ST HALF':'2ND HALF');
   document.getElementById('halfBadge').textContent=lbl;
   document.getElementById('timerHalfLabel').textContent=lbl;
   renderTimerOnly();
