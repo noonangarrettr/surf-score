@@ -2,9 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0d1f3c">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 <title>SDSC Surf · Match Day</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
@@ -81,16 +86,16 @@ html::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .shots-row{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:4px;min-height:20px}
 .shots-count{font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;color:var(--white)}
 .shots-label{font-size:10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
-.btn-shot-adj{width:28px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:var(--off-white);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.btn-shot-adj{width:38px;height:38px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:var(--off-white);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
 .btn-shot-adj:active{opacity:.6}
 
 /* Cards row */
 .cards-row{display:flex;justify-content:center;gap:4px;margin-top:6px;min-height:28px;flex-wrap:nowrap;max-width:100%}
-.card-chip{display:flex;align-items:center;gap:3px;padding:4px 7px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:transform .1s;flex-shrink:1;min-width:0}
+.card-chip{display:flex;align-items:center;gap:4px;padding:8px 9px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:transform .1s;flex-shrink:1;min-width:0}
 .card-chip:active{transform:scale(.9)}
 .card-yellow{background:var(--yellow-card);color:#1a1200}
 .card-red-chip{background:var(--red-card);color:white}
-.btn-card-minus{background:rgba(0,0,0,.25);border:none;border-radius:4px;width:18px;height:18px;font-size:12px;font-weight:700;color:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:2px;opacity:.8}
+.btn-card-minus{background:rgba(0,0,0,.25);border:none;border-radius:5px;width:26px;height:26px;font-size:14px;font-weight:700;color:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:2px;opacity:.8}
 
 /* Goal buttons — full width inside team column */
 .btn-goal{border:none;border-radius:12px;padding:14px 8px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:transform .1s,opacity .1s;display:flex;align-items:center;justify-content:center;gap:5px;width:100%}
@@ -107,7 +112,7 @@ html::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .timer-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .timer-label-text{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted)}
 .timer-duration-control{display:flex;align-items:center;gap:8px}
-.dur-btn{width:26px;height:26px;border-radius:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:var(--white);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.dur-btn{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:var(--white);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .dur-display{font-family:'Oswald',sans-serif;font-size:13px;color:var(--gold);font-weight:500;min-width:44px;text-align:center}
 .timer-digits{font-family:'Oswald',sans-serif;font-size:74px;font-weight:700;letter-spacing:4px;text-align:center;line-height:1;color:var(--white);transition:color .3s}
 .timer-digits.warning{color:var(--gold)}
@@ -206,7 +211,7 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
 
 <!-- Halftime overlay -->
 <div class="halftime-overlay" id="htOverlay">
-  <div class="ht-label">SDSC Surf · ECNL</div>
+  <div class="ht-label">SDSC Surf</div>
   <div class="ht-banner" id="htBanner">HALF TIME</div>
   <div class="ht-score" id="htScore">0 : 0</div>
   <div class="ht-teams" id="htTeams">SDSC SURF vs OPPONENT</div>
@@ -217,7 +222,7 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
   <!-- Header -->
   <div class="header">
     <div class="brand">
-      <div class="brand-top">ECNL · Boys</div>
+      <div class="brand-top">Boys · Match Day</div>
       <div class="brand-name">SDSC <em>Surf</em></div>
     </div>
     <div class="sync-wrap" id="syncWrap">
@@ -297,7 +302,7 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
           <button class="btn-undo-goal" onclick="undoGoal('away')">↩ Undo</button>
         </div>
       </div>
-    </div>    </div>
+    </div>
   </div>
 
   <!-- Timer -->
@@ -346,7 +351,7 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
   </div>
 
   <button class="btn-new-game" onclick="newGame()">+ NEW GAME</button>
-  <div class="footer-mark">SDSC Surf · ECNL · Match Day</div>
+  <div class="footer-mark">SDSC Surf · Match Day</div>
 </div>
 
 <!-- Scorer Modal -->
@@ -365,7 +370,7 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getDatabase, ref, onValue, set } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+import { getDatabase, ref, onValue, set, update } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
 const FB={
   apiKey:"AIzaSyADA83VqTnTZYawJZEdnAMNzVOgq92PodQ",
@@ -377,97 +382,98 @@ const FB={
   appId:"1:1066375405954:web:552acd57a7d66243806f9b"
 };
 
-let S={
+/* Realtime Database never stores null or empty values, so incoming snapshots
+   are merged over these defaults — an absent key means "reset to default",
+   never "keep whatever this device had before". */
+const DEFAULT_STATE={
   homeScore:0,awayScore:0,goals:[],half:1,halfMinutes:30,timerSec:1800,
-  timerRunning:false,timerStartWall:null,countUp:false,elapsedSec:0,
+  timerRunning:false,timerStartWall:null,timerSecAtStart:null,countUp:false,elapsedSec:0,
   homeTeam:'SDSC Surf',awayTeam:'Opponent',
   homeShots:0,awayShots:0,
   homeYellow:0,homeRed:0,awayYellow:0,awayRed:0,
-  gameFinal:false
+  gameFinal:false,stoppageSec:0,timerOwner:null
 };
-let ticker=null,pendingTeam=null,isSyncing=false;
+let S={...DEFAULT_STATE};
+let ticker=null,pendingTeam=null,nameDebounce=null,serverOffset=0,wakeLock=null;
+const CLIENT_ID=(self.crypto&&crypto.randomUUID)?crypto.randomUUID():'c'+Math.random().toString(36).slice(2);
 
 const fbApp=initializeApp(FB);
 const db=getDatabase(fbApp);
 const gameRef=ref(db,'surfmatchday/game');
 
 setSyncStatus('connecting');
+/* All devices agree on time via Firebase's measured clock offset */
+function serverNow(){return Date.now()+serverOffset;}
+onValue(ref(db,'.info/serverTimeOffset'),snap=>{serverOffset=snap.val()||0;});
+/* Drive the sync pill from the real connection state — data snapshots keep
+   firing from local cache while offline, so they can't be trusted for this. */
+onValue(ref(db,'.info/connected'),snap=>{setSyncStatus(snap.val()?'live':'offline');});
+
 onValue(gameRef,snap=>{
-  if(isSyncing)return;
   const d=snap.val();
-  if(d){
-    S={...S,...d};
-    // Re-sync timer: if running use wall-clock to correct drift
-    if(S.timerRunning){
-      if(S.timerStartWall){
-        const elapsed=Math.floor((Date.now()-S.timerStartWall)/1000);
-        S.timerSec=Math.max(0,S.timerSecAtStart-(elapsed));
-      }
-      if(!ticker)startLocalTick();
-    } else {
-      if(ticker){clearInterval(ticker);ticker=null;showStartBtn();}
-    }
-    renderAll();
+  // goals:[] gives each merge a fresh array — never a mutable alias of the defaults
+  S={...DEFAULT_STATE,goals:[],...(d||{})};
+  if(S.timerRunning){
+    syncClockFromWall();
+    if(!ticker)startLocalTick();
+  } else if(ticker){
+    stopLocalTick();showStartBtn();
   }
-  setSyncStatus('live');
+  renderAll();
 },()=>setSyncStatus('error'));
 
-function push(){
-  isSyncing=true;
-  set(gameRef,{...S}).finally(()=>setTimeout(()=>isSyncing=false,350));
+/* Field-level writes: devices editing different things at the same time no
+   longer clobber each other with stale full-state snapshots. */
+function pushFields(...keys){
+  const payload={};
+  keys.forEach(k=>payload[k]=S[k]===undefined?null:S[k]);
+  update(gameRef,payload).catch(()=>setSyncStatus('error'));
+}
+function pushAll(){
+  set(gameRef,JSON.parse(JSON.stringify(S))).catch(()=>setSyncStatus('error'));
 }
 function setSyncStatus(s){
   const w=document.getElementById('syncWrap'),l=document.getElementById('syncLabel');
   w.className='sync-wrap';
   if(s==='live'){w.classList.add('live');l.textContent='LIVE';}
+  else if(s==='offline'){w.classList.add('error');l.textContent='OFFLINE';}
   else if(s==='error'){w.classList.add('error');l.textContent='ERROR';}
   else{l.textContent='SYNC…';}
 }
 
 /* ── TIMER ──
-   Background-safe approach: store the wall-clock start time in Firebase.
-   Any device (or the same device after lock) recalculates correct time from Date.now().
-*/
+   The server-corrected wall-clock start (timerStartWall + timerSecAtStart)
+   is the single source of truth while running. Every device derives the
+   display from it locally — the ticking clock itself is never pushed. */
+function syncClockFromWall(){
+  if(!S.timerStartWall)return;
+  const elapsed=Math.floor((serverNow()-S.timerStartWall)/1000);
+  if(S.countUp)S.elapsedSec=Math.max(0,elapsed);
+  else if(S.timerSecAtStart!=null)S.timerSec=Math.max(0,S.timerSecAtStart-elapsed);
+}
 function startLocalTick(){
   if(ticker)return;
   ticker=setInterval(()=>{
     if(!S.timerRunning){stopLocalTick();showStartBtn();return;}
-    if(S.countUp){
-      // Count up: elapsed since start
-      if(S.timerStartWall){
-        S.elapsedSec=Math.floor((Date.now()-S.timerStartWall)/1000);
-      } else {
-        S.elapsedSec=(S.elapsedSec||0)+1;
-      }
-      renderTimer();
-      if(S.elapsedSec%5===0)push();
-    } else {
-      // Count down
-      if(S.timerStartWall){
-        const elapsed=Math.floor((Date.now()-S.timerStartWall)/1000);
-        S.timerSec=Math.max(0,S.timerSecAtStart-elapsed);
-      } else {
-        if(S.timerSec>0)S.timerSec--;
-      }
-      renderTimer();
-    if(S.timerSec<=0){
-      stopLocalTick();S.timerRunning=false;showStartBtn();
-      // Auto-advance to 2nd half if we just finished 1st half
-      if(S.half===1){
-        S.half=2;S.timerSec=S.halfMinutes*60;S.elapsedSec=0;
-        S.timerStartWall=null;S.timerSecAtStart=null;
-        renderHalf();renderTimer();
-        showHalftimeOverlay();
-      } else {
-        showHalftimeOverlay();
-      }
-      push();return;
-    }
-      if(S.timerSec%5===0)push();
-    }
+    syncClockFromWall();
+    renderTimer();
+    if(!S.countUp&&S.timerSec<=0)onCountdownExpired();
   },1000);
   document.getElementById('btnStart').style.display='none';
   document.getElementById('btnPause').style.display='';
+}
+function onCountdownExpired(){
+  stopLocalTick();showStartBtn();
+  /* Only the device that started the timer advances the game, so several
+     open devices don't race each other with conflicting writes. */
+  if(S.timerOwner&&S.timerOwner!==CLIENT_ID)return;
+  S.timerRunning=false;S.timerStartWall=null;S.timerSecAtStart=null;S.timerOwner=null;
+  if(S.half===1){
+    S.half=2;S.timerSec=S.halfMinutes*60;S.elapsedSec=0;S.stoppageSec=0;
+    renderHalf();
+  }
+  renderTimer();showHalftimeOverlay();releaseWakeLock();
+  pushFields('timerRunning','timerStartWall','timerSecAtStart','timerOwner','half','timerSec','elapsedSec','stoppageSec');
 }
 function stopLocalTick(){clearInterval(ticker);ticker=null;}
 function showStartBtn(){
@@ -475,67 +481,88 @@ function showStartBtn(){
   document.getElementById('btnPause').style.display='none';
 }
 function startTimer(){
-  if(ticker)return;
-  S.timerRunning=true;
-  S.timerStartWall=Date.now();
+  if(ticker||S.gameFinal)return;
+  S.timerRunning=true;S.timerOwner=CLIENT_ID;
   if(S.countUp){
     S.elapsedSec=S.elapsedSec||0;
-    // Adjust wall start to account for already elapsed time
-    S.timerStartWall=Date.now()-(S.elapsedSec*1000);
+    S.timerStartWall=serverNow()-S.elapsedSec*1000;
   } else {
+    S.timerStartWall=serverNow();
     S.timerSecAtStart=S.timerSec;
   }
-  startLocalTick();push();
+  startLocalTick();requestWakeLock();
+  pushFields('timerRunning','timerOwner','timerStartWall','timerSecAtStart','timerSec','elapsedSec');
 }
 function pauseTimer(){
   stopLocalTick();
-  // Save remaining time accurately before pausing
-  if(S.timerStartWall){
-    const elapsed=Math.floor((Date.now()-S.timerStartWall)/1000);
-    S.timerSec=Math.max(0,S.timerSecAtStart-elapsed);
-  }
-  S.timerRunning=false;S.timerStartWall=null;S.timerSecAtStart=null;
-  showStartBtn();push();
+  syncClockFromWall();
+  S.timerRunning=false;S.timerStartWall=null;S.timerSecAtStart=null;S.timerOwner=null;
+  showStartBtn();renderTimer();releaseWakeLock();
+  pushFields('timerRunning','timerStartWall','timerSecAtStart','timerOwner','timerSec','elapsedSec');
 }
 function toggleClockMode(){
   if(S.timerRunning)return;
   S.countUp=!S.countUp;
   if(S.countUp){S.elapsedSec=0;}
   else{S.timerSec=S.halfMinutes*60;}
-  renderTimer();push();
+  renderTimer();pushFields('countUp','timerSec','elapsedSec');
 }
 function resetTimer(){
   if(!confirm('Restart the timer?'))return;
   stopLocalTick();
-  S.timerRunning=false;S.timerSec=S.halfMinutes*60;S.elapsedSec=0;
-  S.timerStartWall=null;S.timerSecAtStart=null;
-  showStartBtn();renderTimer();push();
+  S.timerRunning=false;S.timerSec=S.halfMinutes*60;S.elapsedSec=0;S.stoppageSec=0;
+  S.timerStartWall=null;S.timerSecAtStart=null;S.timerOwner=null;
+  showStartBtn();renderTimer();releaseWakeLock();
+  pushFields('timerRunning','timerSec','elapsedSec','stoppageSec','timerStartWall','timerSecAtStart','timerOwner');
 }
 function switchHalf(){
   stopLocalTick();S.timerRunning=false;
-  S.half=S.half===1?2:1;S.timerSec=S.halfMinutes*60;S.elapsedSec=0;
-  S.timerStartWall=null;S.timerSecAtStart=null;
-  showStartBtn();renderTimer();renderHalf();showHalftimeOverlay();push();
+  S.half=S.half===1?2:1;S.timerSec=S.halfMinutes*60;S.elapsedSec=0;S.stoppageSec=0;
+  S.timerStartWall=null;S.timerSecAtStart=null;S.timerOwner=null;
+  showStartBtn();renderTimer();renderHalf();showHalftimeOverlay();releaseWakeLock();
+  pushFields('half','timerRunning','timerSec','elapsedSec','stoppageSec','timerStartWall','timerSecAtStart','timerOwner');
 }
 function endGame(){
   if(!confirm('End the game and mark as Final?'))return;
-  stopLocalTick();S.timerRunning=false;S.gameFinal=true;
-  S.timerStartWall=null;S.timerSecAtStart=null;
-  showStartBtn();
+  stopLocalTick();
+  syncClockFromWall();
+  S.timerRunning=false;S.gameFinal=true;
+  S.timerStartWall=null;S.timerSecAtStart=null;S.timerOwner=null;
+  showStartBtn();releaseWakeLock();
   document.getElementById('htBanner').textContent='FULL TIME';
   document.getElementById('htScore').textContent=`${S.homeScore} : ${S.awayScore}`;
   document.getElementById('htTeams').textContent=`${S.homeTeam.toUpperCase()} vs ${S.awayTeam.toUpperCase()}`;
   const ov=document.getElementById('htOverlay');
   ov.classList.add('show');setTimeout(()=>ov.classList.remove('show'),6000);
-  renderTimer();push();
+  renderTimer();renderHalf();
+  pushFields('gameFinal','timerRunning','timerStartWall','timerSecAtStart','timerOwner','timerSec','elapsedSec');
 }
 function adjustDuration(d){
-  if(S.timerRunning)return;
+  if(S.timerRunning||S.countUp)return;
   const n=Math.max(5,Math.min(60,S.halfMinutes+d));
   if(n===S.halfMinutes)return;
-  S.halfMinutes=n;S.timerSec=n*60;renderTimer();push();
+  S.halfMinutes=n;S.timerSec=n*60;renderTimer();pushFields('halfMinutes','timerSec');
 }
-function addStoppage(mins){S.timerSec+=mins*60;renderTimer();push();}
+function addStoppage(mins){
+  /* While running the display is derived from timerSecAtStart, so extend
+     that too — bumping timerSec alone is overwritten on the next tick. */
+  if(S.timerRunning&&S.timerSecAtStart!=null)S.timerSecAtStart+=mins*60;
+  S.timerSec+=mins*60;
+  S.stoppageSec=(S.stoppageSec||0)+mins*60;
+  renderTimer();pushFields('timerSec','timerSecAtStart','stoppageSec');
+}
+
+/* ── SCREEN WAKE LOCK — keep the phone awake while the clock runs ── */
+async function requestWakeLock(){
+  try{if('wakeLock' in navigator)wakeLock=await navigator.wakeLock.request('screen');}catch(e){}
+}
+function releaseWakeLock(){
+  try{if(wakeLock){wakeLock.release();wakeLock=null;}}catch(e){}
+}
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState!=='visible')return;
+  if(S.timerRunning){syncClockFromWall();renderTimer();requestWakeLock();}
+});
 
 function renderTimer(){
   const el=document.getElementById('timerDigits');
@@ -566,7 +593,8 @@ function renderTimer(){
     const sec=S.elapsedSec||0;
     const m=Math.floor(sec/60),s=sec%60;
     el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-    el.className='timer-digits';
+    // Past the configured half length: cue the coach that time is up
+    el.className='timer-digits'+(sec>=S.halfMinutes*60?' warning':'');
     document.getElementById('stoppageRow').style.display='none';
   } else {
     const m=Math.floor(S.timerSec/60),s=S.timerSec%60;
@@ -574,7 +602,7 @@ function renderTimer(){
     el.className='timer-digits';
     if(S.timerSec<=60)el.classList.add('urgent');
     else if(S.timerSec<=300)el.classList.add('warning');
-    document.getElementById('stoppageRow').style.display=S.timerSec<=30&&S.timerRunning?'flex':'none';
+    document.getElementById('stoppageRow').style.display=S.timerSec<=300&&S.timerRunning?'flex':'none';
   }
   document.getElementById('durDisplay').textContent=`${S.halfMinutes} MIN`;
   document.querySelectorAll('.dur-btn').forEach(b=>{
@@ -591,7 +619,7 @@ function renderTimer(){
   }
 }
 function renderHalf(){
-  const lbl=S.half===1?'1ST HALF':'2ND HALF';
+  const lbl=S.gameFinal?'FINAL':(S.half===1?'1ST HALF':'2ND HALF');
   document.getElementById('halfBadge').textContent=lbl;
   document.getElementById('timerHalfLabel').textContent=lbl;
   document.querySelector('.btn-half').textContent=S.half===1?'⇄ 2nd Half':'⇄ 1st Half';
@@ -617,38 +645,48 @@ function addGoal(team){
   setTimeout(()=>document.getElementById('scorerInput').focus(),320);
 }
 function confirmGoal(){
+  if(!pendingTeam)return; // guard: double-tap/Enter+tap must not double-record
+  const team=pendingTeam;
   const name=document.getElementById('scorerInput').value.trim()||'—';
   let elapsed;
   if(S.countUp){
     // Use wall-clock for accuracy if running, else use last stored elapsed
     elapsed=S.timerRunning&&S.timerStartWall
-      ?Math.floor((Date.now()-S.timerStartWall)/1000)
+      ?Math.floor((serverNow()-S.timerStartWall)/1000)
       :(S.elapsedSec||0);
   } else {
     // Compute remaining time from wall-clock if running for accuracy
     let curSec=S.timerSec;
     if(S.timerRunning&&S.timerStartWall&&S.timerSecAtStart!=null){
-      const wallElapsed=Math.floor((Date.now()-S.timerStartWall)/1000);
-      curSec=Math.max(0,S.timerSecAtStart-wallElapsed);
+      curSec=Math.max(0,S.timerSecAtStart-Math.floor((serverNow()-S.timerStartWall)/1000));
     }
-    elapsed=Math.max(0,S.halfMinutes*60-curSec);
+    // Include added stoppage so goals in added time don't clamp to 00:00
+    elapsed=Math.max(0,S.halfMinutes*60+(S.stoppageSec||0)-curSec);
   }
   const m=Math.floor(elapsed/60),s=elapsed%60;
-  S.goals.push({team:pendingTeam,scorer:name,
+  S.goals=S.goals||[];
+  S.goals.push({team,scorer:name,
     time:`${S.half===1?'1H':'2H'} ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`,id:Date.now()});
-  if(pendingTeam==='home'){S.homeScore++;S.homeShots++;}
+  if(team==='home'){S.homeScore++;S.homeShots++;}
   else{S.awayScore++;S.awayShots++;}
-  cancelGoal();renderScores();renderGoals();renderShots();push();
-  fireGoalCelebration(pendingTeam);
+  cancelGoal();renderScores();renderGoals();renderShots();
+  pushFields('goals','homeScore','awayScore','homeShots','awayShots');
+  fireGoalCelebration(team);
   if(navigator.vibrate)navigator.vibrate([80,40,160]);
 }
 function undoGoal(team){
-  const idx=[...S.goals].reverse().findIndex(g=>g.team===team);
+  const idx=[...(S.goals||[])].reverse().findIndex(g=>g.team===team);
   if(idx===-1)return;
   S.goals.splice(S.goals.length-1-idx,1);
-  if(team==='home'&&S.homeScore>0)S.homeScore--;
-  else if(team==='away'&&S.awayScore>0)S.awayScore--;
-  renderScores();renderGoals();push();
+  if(team==='home'){
+    if(S.homeScore>0)S.homeScore--;
+    if(S.homeShots>0)S.homeShots--; // the goal counted as a shot too
+  } else {
+    if(S.awayScore>0)S.awayScore--;
+    if(S.awayShots>0)S.awayShots--;
+  }
+  renderScores();renderGoals();renderShots();
+  pushFields('goals','homeScore','awayScore','homeShots','awayShots');
 }
 function cancelGoal(){document.getElementById('scorerModal').classList.remove('open');pendingTeam=null;}
 
@@ -656,7 +694,7 @@ function cancelGoal(){document.getElementById('scorerModal').classList.remove('o
 function adjShot(team,delta){
   if(team==='home')S.homeShots=Math.max(0,S.homeShots+delta);
   else S.awayShots=Math.max(0,S.awayShots+delta);
-  renderShots();push();
+  renderShots();pushFields('homeShots','awayShots');
 }
 
 /* ── CARDS (with +/−) ── */
@@ -665,7 +703,7 @@ function addCard(team,color){
   else if(team==='home'&&color==='red')S.homeRed++;
   else if(team==='away'&&color==='yellow')S.awayYellow++;
   else S.awayRed++;
-  renderCards();push();
+  renderCards();pushFields('homeYellow','homeRed','awayYellow','awayRed');
 }
 function adjCard(e,team,color,delta){
   e.stopPropagation();
@@ -673,32 +711,35 @@ function adjCard(e,team,color,delta){
   else if(team==='home'&&color==='red')S.homeRed=Math.max(0,S.homeRed+delta);
   else if(team==='away'&&color==='yellow')S.awayYellow=Math.max(0,S.awayYellow+delta);
   else S.awayRed=Math.max(0,S.awayRed+delta);
-  renderCards();push();
+  renderCards();pushFields('homeYellow','homeRed','awayYellow','awayRed');
 }
 
 /* ── TEAM NAMES → update goal buttons ── */
 function onTeamName(){
   S.homeTeam=document.getElementById('homeInput').value||'SDSC Surf';
   S.awayTeam=document.getElementById('awayInput').value||'Opponent';
-  updateGoalBtnLabels();push();
+  updateGoalBtnLabels();
+  clearTimeout(nameDebounce);
+  nameDebounce=setTimeout(()=>pushFields('homeTeam','awayTeam'),400);
 }
 function updateGoalBtnLabels(){
-  document.getElementById('btnHomeGoal').innerHTML=`⚽ ${S.homeTeam} Goal`;
-  document.getElementById('btnAwayGoal').innerHTML=`⚽ ${S.awayTeam} Goal`;
+  document.getElementById('btnHomeGoal').textContent=`⚽ ${S.homeTeam} Goal`;
+  document.getElementById('btnAwayGoal').textContent=`⚽ ${S.awayTeam} Goal`;
 }
 
 /* ── NEW GAME ── */
 function newGame(){
   if(!confirm('Start a new game? Clears scores, goals, cards and shots on all devices.'))return;
-  stopLocalTick();showStartBtn();
+  stopLocalTick();showStartBtn();releaseWakeLock();
   S.homeScore=0;S.awayScore=0;S.goals=[];S.half=1;
-  S.timerSec=S.halfMinutes*60;S.timerRunning=false;S.elapsedSec=0;
-  S.timerStartWall=null;S.timerSecAtStart=null;S.gameFinal=false;
+  S.timerSec=S.halfMinutes*60;S.timerRunning=false;S.elapsedSec=0;S.stoppageSec=0;
+  S.timerStartWall=null;S.timerSecAtStart=null;S.timerOwner=null;S.gameFinal=false;
   S.homeShots=0;S.awayShots=0;S.homeYellow=0;S.homeRed=0;S.awayYellow=0;S.awayRed=0;
-  renderAll();push();
+  renderAll();pushAll();
 }
 
 /* ── RENDER ── */
+function esc(t){return String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function renderScores(){
   const h=S.homeScore,a=S.awayScore;
   const hEl=document.getElementById('homeScore'),aEl=document.getElementById('awayScore');
@@ -715,15 +756,16 @@ function fireGoalCelebration(team){
 }
 function renderGoals(){
   const el=document.getElementById('goalsList');
-  if(!S.goals.length){el.innerHTML='<div class="empty-goals"><span>⚽</span>No goals yet — kick it off!</div>';return;}
-  el.innerHTML=[...S.goals].reverse().map(g=>`
+  const goals=S.goals||[];
+  if(!goals.length){el.innerHTML='<div class="empty-goals"><span>⚽</span>No goals yet — kick it off!</div>';return;}
+  el.innerHTML=[...goals].reverse().map(g=>`
     <div class="goal-item">
       <div class="goal-badge ${g.team==='home'?'ours':'theirs'}">${g.team==='home'?'⚽':'🔵'}</div>
       <div class="goal-info">
-        <div class="goal-scorer">${g.scorer}</div>
-        <div class="goal-team">${g.team==='home'?S.homeTeam:S.awayTeam}</div>
+        <div class="goal-scorer">${esc(g.scorer)}</div>
+        <div class="goal-team">${esc(g.team==='home'?S.homeTeam:S.awayTeam)}</div>
       </div>
-      <div class="goal-time">${g.time}</div>
+      <div class="goal-time">${esc(g.time)}</div>
     </div>`).join('');
 }
 function renderShots(){
@@ -738,8 +780,10 @@ function renderCards(){
 }
 function renderAll(){
   renderScores();renderGoals();renderTimer();renderHalf();renderShots();renderCards();
-  document.getElementById('homeInput').value=S.homeTeam;
-  document.getElementById('awayInput').value=S.awayTeam;
+  // Don't yank the caret while the coach is typing a team name
+  const hi=document.getElementById('homeInput'),ai=document.getElementById('awayInput');
+  if(document.activeElement!==hi)hi.value=S.homeTeam;
+  if(document.activeElement!==ai)ai.value=S.awayTeam;
   updateGoalBtnLabels();
 }
 function copyViewerUrl(){
