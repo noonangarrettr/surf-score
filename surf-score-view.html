@@ -87,8 +87,8 @@ html::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 @keyframes ringPop{0%{opacity:.9;transform:scale(.6)}100%{opacity:0;transform:scale(1.9)}}
 .score-sep{grid-column:2;grid-row:2;justify-self:center;align-self:center;font-family:'Oswald',sans-serif;font-size:52px;font-weight:300;color:rgba(255,255,255,.25);text-align:center;line-height:1}
 
-/* Shots */
-.shots-info{font-size:13px;color:var(--muted);margin-top:5px;min-height:20px}
+/* Shots — extra breathing room below the big score digits */
+.shots-info{font-size:13px;color:var(--muted);margin-top:16px;min-height:20px}
 .shots-info strong{color:var(--white);font-weight:600}
 
 /* Cards */
@@ -102,9 +102,7 @@ html::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .timer-label-text{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
 .timer-digits{font-family:'Oswald',sans-serif;font-size:100px;font-weight:700;letter-spacing:6px;line-height:1;color:var(--white);transition:color .3s}
 .timer-digits.warning{color:var(--gold)}
-.timer-digits.urgent{color:var(--red);animation:flash 1s infinite}
 .timer-digits.final{color:var(--white);animation:none;font-size:64px;letter-spacing:6px}
-@keyframes flash{0%,100%{opacity:1}50%{opacity:.45}}
 
 /* GOALS */
 .section{margin:0 32px 18px}
@@ -122,6 +120,9 @@ html::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .goal-time{font-family:'Oswald',sans-serif;font-size:17px;color:var(--gold);letter-spacing:.5px;flex-shrink:0}
 .empty-goals{text-align:center;padding:34px 20px;color:var(--muted);font-size:14px;line-height:1.7}
 .empty-goals span{font-size:30px;display:block;margin-bottom:8px}
+.card-badge-log{width:24px;height:34px;border-radius:5px;flex-shrink:0}
+.card-badge-log.yellow{background:var(--yellow-card)}
+.card-badge-log.red{background:var(--red-card)}
 
 /* HALFTIME OVERLAY */
 .halftime-overlay{position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(6,14,32,.94);backdrop-filter:blur(20px);opacity:0;pointer-events:none;transition:opacity .4s}
@@ -168,7 +169,7 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
 <div class="app">
   <div class="header">
     <div class="brand">
-      <div class="brand-top">Boys · Live</div>
+      <div class="brand-top">Live</div>
       <div class="brand-name">SDSC <em>Surf</em></div>
     </div>
     <div class="sync-wrap" id="syncWrap">
@@ -221,6 +222,11 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
       </div>
     </div>
 
+    <div class="section" id="cardsSection" style="display:none">
+      <div class="sec-label">Cards</div>
+      <div class="goals-card" id="cardsList"></div>
+    </div>
+
     <div class="footer-mark">SDSC Surf · Live Score</div>
   </div>
 </div>
@@ -242,12 +248,12 @@ const FB={
 /* Realtime Database never stores null or empty values, so incoming snapshots
    are merged over these defaults — an absent key means "reset to default". */
 const DEFAULT_STATE={
-  homeScore:0,awayScore:0,goals:[],half:1,halfMinutes:30,timerSec:1800,
-  timerRunning:false,timerStartWall:null,timerSecAtStart:null,countUp:false,elapsedSec:0,
+  homeScore:0,awayScore:0,goals:[],cards:[],half:1,halfMinutes:30,
+  timerRunning:false,timerStartWall:null,elapsedSec:0,
   homeTeam:'SDSC Surf',awayTeam:'Opponent',
   homeShots:0,awayShots:0,
   homeYellow:0,homeRed:0,awayYellow:0,awayRed:0,
-  gameFinal:false,stoppageSec:0,timerOwner:null
+  gameFinal:false,timerOwner:null
 };
 let S=null,prevHome=0,prevAway=0,prevHalf=1,viewTicker=null,serverOffset=0;
 
@@ -265,7 +271,7 @@ onValue(ref(db,'.info/connected'),snap=>{setSyncStatus(snap.val()?'live':'offlin
 onValue(gameRef,snap=>{
   const raw=snap.val();
   if(!raw)return;
-  const d={...DEFAULT_STATE,goals:[],...raw};
+  const d={...DEFAULT_STATE,goals:[],cards:[],...raw};
   document.getElementById('loadingState').style.display='none';
   document.getElementById('mainContent').style.display='';
 
@@ -293,9 +299,7 @@ onValue(gameRef,snap=>{
 
 function syncClockFromWall(){
   if(!S||!S.timerRunning||!S.timerStartWall)return;
-  const elapsed=Math.floor((serverNow()-S.timerStartWall)/1000);
-  if(S.countUp)S.elapsedSec=Math.max(0,elapsed);
-  else if(S.timerSecAtStart!=null)S.timerSec=Math.max(0,S.timerSecAtStart-elapsed);
+  S.elapsedSec=Math.max(0,Math.floor((serverNow()-S.timerStartWall)/1000));
 }
 /* Re-derive the clock the moment the tab becomes visible again — background
    tabs throttle timers, and this snaps the display back to the true time. */
@@ -335,23 +339,19 @@ function showFinalOverlay(d){
 function renderTimerOnly(){
   if(!S)return;
   const el=document.getElementById('timerDigits');
-  // FINAL: manually ended OR countdown at zero at end of 2nd half
-  if(S.gameFinal||(!S.countUp&&S.timerSec<=0&&S.half===2&&!S.timerRunning)){
-    el.textContent='FULL TIME';el.className='timer-digits final';return;
-  }
-  if(S.countUp){
-    const sec=S.elapsedSec||0,m=Math.floor(sec/60),s=sec%60;
-    el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-    el.className='timer-digits'+(sec>=S.halfMinutes*60?' warning':'');
-    return;
-  }
-  const sec=S.timerSec??0,m=Math.floor(sec/60),s=sec%60;
+  if(S.gameFinal){el.textContent='FULL TIME';el.className='timer-digits final';return;}
+  const sec=S.elapsedSec||0,m=Math.floor(sec/60),s=sec%60;
   el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-  el.className='timer-digits';
-  if(sec<=60)el.classList.add('urgent');
-  else if(sec<=300)el.classList.add('warning');
+  el.className='timer-digits'+(sec>=(S.halfMinutes||30)*60?' warning':'');
 }
 function esc(t){return String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+/* "#7 Jake" / "#7" / "Jake" — whichever parts the coach entered */
+function playerLabel(name,number){
+  const n=(name&&name!=='—')?name:'';
+  if(number&&n)return `#${number} ${n}`;
+  if(number)return `#${number}`;
+  return n||'—';
+}
 function renderAll(){
   if(!S)return;
   const h=S.homeScore||0,a=S.awayScore||0;
@@ -382,6 +382,20 @@ function renderAll(){
   document.getElementById('homeCards').innerHTML=cardsHtml(S.homeYellow||0,S.homeRed||0);
   document.getElementById('awayCards').innerHTML=cardsHtml(S.awayYellow||0,S.awayRed||0);
 
+  // Card log — who picked them up
+  const cardLog=S.cards||[];
+  const cardsSec=document.getElementById('cardsSection'),cardsList=document.getElementById('cardsList');
+  cardsSec.style.display=cardLog.length?'':'none';
+  cardsList.innerHTML=[...cardLog].reverse().map(c=>`
+    <div class="goal-item">
+      <div class="card-badge-log ${c.color==='red'?'red':'yellow'}"></div>
+      <div class="goal-info">
+        <div class="goal-scorer">${esc(playerLabel(c.player,c.number))}</div>
+        <div class="goal-team">${esc(c.team==='home'?(S.homeTeam||'SDSC Surf'):(S.awayTeam||'Opponent'))}</div>
+      </div>
+      <div class="goal-time">${esc(c.time)}</div>
+    </div>`).join('');
+
   // Goals
   const goals=S.goals||[];
   const list=document.getElementById('goalsList');
@@ -390,7 +404,7 @@ function renderAll(){
     <div class="goal-item">
       <div class="goal-badge ${g.team==='home'?'ours':'theirs'}">${g.team==='home'?'⚽':'🔵'}</div>
       <div class="goal-info">
-        <div class="goal-scorer">${esc(g.scorer)}</div>
+        <div class="goal-scorer">${esc(playerLabel(g.scorer,g.number))}</div>
         <div class="goal-team">${esc(g.team==='home'?(S.homeTeam||'SDSC Surf'):(S.awayTeam||'Opponent'))}</div>
       </div>
       <div class="goal-time">${esc(g.time)}</div>

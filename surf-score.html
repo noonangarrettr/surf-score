@@ -82,15 +82,15 @@ html::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 @keyframes ringPop{0%{opacity:.9;transform:scale(.6)}100%{opacity:0;transform:scale(1.8)}}
 .score-sep{font-family:'Oswald',sans-serif;font-size:38px;font-weight:300;color:rgba(255,255,255,.25);text-align:center;line-height:1;padding-top:26px;align-self:start}
 
-/* Shots under score */
-.shots-row{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:4px;min-height:20px}
+/* Shots under score — extra breathing room below the big score digits */
+.shots-row{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:16px;min-height:20px}
 .shots-count{font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;color:var(--white)}
 .shots-label{font-size:10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
-.btn-shot-adj{width:38px;height:38px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:var(--off-white);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.btn-shot-adj{width:42px;height:42px;border-radius:9px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:var(--off-white);font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
 .btn-shot-adj:active{opacity:.6}
 
-/* Cards row */
-.cards-row{display:flex;justify-content:center;gap:4px;margin-top:6px;min-height:28px;flex-wrap:nowrap;max-width:100%}
+/* Cards row — sits under the goal/undo buttons */
+.cards-row{display:flex;justify-content:center;gap:4px;margin-top:8px;min-height:28px;flex-wrap:nowrap;max-width:100%}
 .card-chip{display:flex;align-items:center;gap:4px;padding:8px 9px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:transform .1s;flex-shrink:1;min-width:0}
 .card-chip:active{transform:scale(.9)}
 .card-yellow{background:var(--yellow-card);color:#1a1200}
@@ -111,18 +111,10 @@ html::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .timer-card{margin:0 16px 14px;background:rgba(13,31,60,.82);border:1px solid rgba(255,255,255,.14);border-radius:24px;padding:18px 18px 16px;box-shadow:0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.08)}
 .timer-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .timer-label-text{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted)}
-.timer-duration-control{display:flex;align-items:center;gap:8px}
-.dur-btn{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:var(--white);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.dur-display{font-family:'Oswald',sans-serif;font-size:13px;color:var(--gold);font-weight:500;min-width:44px;text-align:center}
+.timer-mode-tag{font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);opacity:.75}
 .timer-digits{font-family:'Oswald',sans-serif;font-size:74px;font-weight:700;letter-spacing:4px;text-align:center;line-height:1;color:var(--white);transition:color .3s}
 .timer-digits.warning{color:var(--gold)}
-.timer-digits.urgent{color:var(--red);animation:flash 1s infinite}
 .timer-digits.final{color:var(--white);animation:none;font-size:52px;letter-spacing:6px}
-@keyframes flash{0%,100%{opacity:1}50%{opacity:.45}}
-.timer-mode-btn{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:6px;padding:4px 9px;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
-.timer-mode-btn.countup{color:var(--gold);border-color:rgba(232,184,75,.35);background:rgba(232,184,75,.09)}
-.stoppage-row{display:flex;gap:6px;justify-content:center;margin-top:10px;align-items:center}
-.btn-stoppage{border:1px solid rgba(232,184,75,.35);border-radius:9px;padding:6px 14px;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;background:rgba(232,184,75,.1);color:var(--gold);cursor:pointer}
 .timer-btns{display:flex;gap:8px;margin-top:12px}
 .timer-btn{flex:1;border:none;border-radius:12px;padding:13px 6px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:transform .1s,opacity .1s;color:var(--white)}
 .timer-btn:active{transform:scale(.95);opacity:.85}
@@ -146,8 +138,14 @@ html::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .goal-scorer{font-size:14px;font-weight:600;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .goal-team{font-size:11px;color:var(--muted);margin-top:1px}
 .goal-time{font-family:'Oswald',sans-serif;font-size:15px;color:var(--gold);letter-spacing:.5px;flex-shrink:0}
+.goal-num{color:var(--gold);font-weight:700;margin-right:4px}
+.btn-edit-entry{flex-shrink:0;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;width:32px;height:32px;font-size:13px;color:var(--off-white);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.btn-edit-entry:active{opacity:.6}
 .empty-goals{text-align:center;padding:26px 16px;color:var(--muted);font-size:13px;line-height:1.7}
 .empty-goals span{font-size:26px;display:block;margin-bottom:6px}
+.card-badge-log{width:22px;height:30px;border-radius:4px;flex-shrink:0}
+.card-badge-log.yellow{background:var(--yellow-card)}
+.card-badge-log.red{background:var(--red-card)}
 
 /* === SHARE + NEW GAME === */
 .share-banner{margin:0 16px 14px;background:rgba(37,97,196,.14);border:1px solid rgba(37,97,196,.28);border-radius:16px;padding:14px 16px}
@@ -169,6 +167,9 @@ html::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .modal-input{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:15px 16px;color:var(--white);font-size:16px;font-family:'Inter',sans-serif;outline:none;margin-bottom:14px;transition:border-color .2s}
 .modal-input:focus{border-color:var(--surf-blue)}
 .modal-input::placeholder{color:var(--muted)}
+.modal-fields{display:flex;gap:10px}
+.modal-fields .modal-input{margin-bottom:14px}
+.modal-input.num{flex:0 0 92px;text-align:center;font-family:'Oswald',sans-serif;font-weight:600;letter-spacing:1px}
 .modal-btns{display:flex;gap:10px}
 .btn-confirm{flex:2;background:var(--surf-blue);color:white;border:none;border-radius:14px;padding:15px;font-size:15px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer}
 .btn-cancel-modal{flex:1;background:rgba(255,255,255,.07);color:var(--muted);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:15px;font-size:15px;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer}
@@ -222,7 +223,7 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
   <!-- Header -->
   <div class="header">
     <div class="brand">
-      <div class="brand-top">Boys · Match Day</div>
+      <div class="brand-top">Match Day</div>
       <div class="brand-name">SDSC <em>Surf</em></div>
     </div>
     <div class="sync-wrap" id="syncWrap">
@@ -253,6 +254,10 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
           <span class="shots-label">shots</span>
           <button class="btn-shot-adj" onclick="adjShot('home',1)">+</button>
         </div>
+        <div class="team-goal-btns">
+          <button class="btn-goal btn-our-goal" id="btnHomeGoal" onclick="addGoal('home')">⚽ Surf Goal</button>
+          <button class="btn-undo-goal" onclick="undoGoal('home')">↩ Undo</button>
+        </div>
         <div class="cards-row">
           <button class="card-chip card-yellow" onclick="addCard('home','yellow')">
             🟨 <span id="hYC">0</span>
@@ -262,10 +267,6 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
             🟥 <span id="hRC">0</span>
             <span class="btn-card-minus" onclick="adjCard(event,'home','red',-1)">−</span>
           </button>
-        </div>
-        <div class="team-goal-btns">
-          <button class="btn-goal btn-our-goal" id="btnHomeGoal" onclick="addGoal('home')">⚽ Surf Goal</button>
-          <button class="btn-undo-goal" onclick="undoGoal('home')">↩ Undo</button>
         </div>
       </div>
 
@@ -287,6 +288,10 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
           <span class="shots-label">shots</span>
           <button class="btn-shot-adj" onclick="adjShot('away',1)">+</button>
         </div>
+        <div class="team-goal-btns">
+          <button class="btn-goal btn-their-goal" id="btnAwayGoal" onclick="addGoal('away')">⚽ Their Goal</button>
+          <button class="btn-undo-goal" onclick="undoGoal('away')">↩ Undo</button>
+        </div>
         <div class="cards-row">
           <button class="card-chip card-yellow" onclick="addCard('away','yellow')">
             🟨 <span id="aYC">0</span>
@@ -297,10 +302,6 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
             <span class="btn-card-minus" onclick="adjCard(event,'away','red',-1)">−</span>
           </button>
         </div>
-        <div class="team-goal-btns">
-          <button class="btn-goal btn-their-goal" id="btnAwayGoal" onclick="addGoal('away')">⚽ Their Goal</button>
-          <button class="btn-undo-goal" onclick="undoGoal('away')">↩ Undo</button>
-        </div>
       </div>
     </div>
   </div>
@@ -309,20 +310,9 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
   <div class="timer-card">
     <div class="timer-top">
       <div class="timer-label-text" id="timerHalfLabel">1ST HALF</div>
-      <div class="timer-duration-control">
-        <button class="timer-mode-btn" id="modeBtn" onclick="toggleClockMode()">▲ COUNT UP</button>
-        <button class="dur-btn" onclick="adjustDuration(-5)">−</button>
-        <div class="dur-display" id="durDisplay">30 MIN</div>
-        <button class="dur-btn" onclick="adjustDuration(5)">+</button>
-      </div>
+      <div class="timer-mode-tag">▲ Count Up</div>
     </div>
-    <div class="timer-digits" id="timerDigits">30:00</div>
-    <div class="stoppage-row" id="stoppageRow" style="display:none">
-      <span style="font-size:11px;color:var(--muted)">Stoppage:</span>
-      <button class="btn-stoppage" onclick="addStoppage(1)">+1m</button>
-      <button class="btn-stoppage" onclick="addStoppage(2)">+2m</button>
-      <button class="btn-stoppage" onclick="addStoppage(3)">+3m</button>
-    </div>
+    <div class="timer-digits" id="timerDigits">00:00</div>
     <div class="timer-btns">
       <button class="timer-btn btn-start" id="btnStart" onclick="startTimer()">▶ Start</button>
       <button class="timer-btn btn-pause" id="btnPause" onclick="pauseTimer()" style="display:none">⏸ Pause</button>
@@ -342,6 +332,12 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
     </div>
   </div>
 
+  <!-- Cards Log -->
+  <div class="section" id="cardsSection" style="display:none">
+    <div class="sec-label">Cards</div>
+    <div class="goals-card" id="cardsList"></div>
+  </div>
+
   <!-- Share -->
   <div class="share-banner">
     <h4>📲 Share with Parents</h4>
@@ -354,16 +350,38 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
   <div class="footer-mark">SDSC Surf · Match Day</div>
 </div>
 
-<!-- Scorer Modal -->
+<!-- Scorer Modal — also used to edit an existing goal's scorer -->
 <div class="modal-overlay" id="scorerModal">
   <div class="modal-sheet">
     <div class="modal-pill"></div>
     <div class="modal-title" id="modalTitle">WHO SCORED?</div>
-    <input class="modal-input" id="scorerInput" placeholder="Player name or number (optional)" maxlength="30"
-      onkeydown="if(event.key==='Enter')confirmGoal()">
+    <div class="modal-fields">
+      <input class="modal-input num" id="scorerNumber" placeholder="#" inputmode="numeric" maxlength="3"
+        onkeydown="if(event.key==='Enter')confirmGoal()">
+      <input class="modal-input" id="scorerInput" placeholder="Player name (optional)" maxlength="30"
+        onkeydown="if(event.key==='Enter')confirmGoal()">
+    </div>
     <div class="modal-btns">
-      <button class="btn-confirm" onclick="confirmGoal()">⚽ Confirm Goal</button>
+      <button class="btn-confirm" id="goalConfirmBtn" onclick="confirmGoal()">⚽ Confirm Goal</button>
       <button class="btn-cancel-modal" onclick="cancelGoal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Card Modal — records (or edits) who picked up a card -->
+<div class="modal-overlay" id="cardModal">
+  <div class="modal-sheet">
+    <div class="modal-pill"></div>
+    <div class="modal-title" id="cardModalTitle">WHO GOT THE CARD?</div>
+    <div class="modal-fields">
+      <input class="modal-input num" id="cardNumber" placeholder="#" inputmode="numeric" maxlength="3"
+        onkeydown="if(event.key==='Enter')confirmCard()">
+      <input class="modal-input" id="cardPlayer" placeholder="Player name (optional)" maxlength="30"
+        onkeydown="if(event.key==='Enter')confirmCard()">
+    </div>
+    <div class="modal-btns">
+      <button class="btn-confirm" id="cardConfirmBtn" onclick="confirmCard()">Record Card</button>
+      <button class="btn-cancel-modal" onclick="cancelCard()">Cancel</button>
     </div>
   </div>
 </div>
@@ -386,15 +404,16 @@ const FB={
    are merged over these defaults — an absent key means "reset to default",
    never "keep whatever this device had before". */
 const DEFAULT_STATE={
-  homeScore:0,awayScore:0,goals:[],half:1,halfMinutes:30,timerSec:1800,
-  timerRunning:false,timerStartWall:null,timerSecAtStart:null,countUp:false,elapsedSec:0,
+  homeScore:0,awayScore:0,goals:[],cards:[],half:1,halfMinutes:30,
+  timerRunning:false,timerStartWall:null,elapsedSec:0,
   homeTeam:'SDSC Surf',awayTeam:'Opponent',
   homeShots:0,awayShots:0,
   homeYellow:0,homeRed:0,awayYellow:0,awayRed:0,
-  gameFinal:false,stoppageSec:0,timerOwner:null
+  gameFinal:false,timerOwner:null
 };
 let S={...DEFAULT_STATE};
 let ticker=null,pendingTeam=null,nameDebounce=null,serverOffset=0,wakeLock=null;
+let editGoalIdx=null,pendingCard=null,editCardIdx=null;
 const CLIENT_ID=(self.crypto&&crypto.randomUUID)?crypto.randomUUID():'c'+Math.random().toString(36).slice(2);
 
 const fbApp=initializeApp(FB);
@@ -411,8 +430,8 @@ onValue(ref(db,'.info/connected'),snap=>{setSyncStatus(snap.val()?'live':'offlin
 
 onValue(gameRef,snap=>{
   const d=snap.val();
-  // goals:[] gives each merge a fresh array — never a mutable alias of the defaults
-  S={...DEFAULT_STATE,goals:[],...(d||{})};
+  // goals/cards:[] give each merge fresh arrays — never mutable aliases of the defaults
+  S={...DEFAULT_STATE,goals:[],cards:[],...(d||{})};
   if(S.timerRunning){
     syncClockFromWall();
     if(!ticker)startLocalTick();
@@ -441,15 +460,13 @@ function setSyncStatus(s){
   else{l.textContent='SYNC…';}
 }
 
-/* ── TIMER ──
-   The server-corrected wall-clock start (timerStartWall + timerSecAtStart)
-   is the single source of truth while running. Every device derives the
-   display from it locally — the ticking clock itself is never pushed. */
+/* ── TIMER (count up only) ──
+   The server-corrected wall-clock start (timerStartWall) is the single
+   source of truth while running. Every device derives the display from it
+   locally — the ticking clock itself is never pushed. */
 function syncClockFromWall(){
   if(!S.timerStartWall)return;
-  const elapsed=Math.floor((serverNow()-S.timerStartWall)/1000);
-  if(S.countUp)S.elapsedSec=Math.max(0,elapsed);
-  else if(S.timerSecAtStart!=null)S.timerSec=Math.max(0,S.timerSecAtStart-elapsed);
+  S.elapsedSec=Math.max(0,Math.floor((serverNow()-S.timerStartWall)/1000));
 }
 function startLocalTick(){
   if(ticker)return;
@@ -457,23 +474,9 @@ function startLocalTick(){
     if(!S.timerRunning){stopLocalTick();showStartBtn();return;}
     syncClockFromWall();
     renderTimer();
-    if(!S.countUp&&S.timerSec<=0)onCountdownExpired();
   },1000);
   document.getElementById('btnStart').style.display='none';
   document.getElementById('btnPause').style.display='';
-}
-function onCountdownExpired(){
-  stopLocalTick();showStartBtn();
-  /* Only the device that started the timer advances the game, so several
-     open devices don't race each other with conflicting writes. */
-  if(S.timerOwner&&S.timerOwner!==CLIENT_ID)return;
-  S.timerRunning=false;S.timerStartWall=null;S.timerSecAtStart=null;S.timerOwner=null;
-  if(S.half===1){
-    S.half=2;S.timerSec=S.halfMinutes*60;S.elapsedSec=0;S.stoppageSec=0;
-    renderHalf();
-  }
-  renderTimer();showHalftimeOverlay();releaseWakeLock();
-  pushFields('timerRunning','timerStartWall','timerSecAtStart','timerOwner','half','timerSec','elapsedSec','stoppageSec');
 }
 function stopLocalTick(){clearInterval(ticker);ticker=null;}
 function showStartBtn(){
@@ -483,51 +486,39 @@ function showStartBtn(){
 function startTimer(){
   if(ticker||S.gameFinal)return;
   S.timerRunning=true;S.timerOwner=CLIENT_ID;
-  if(S.countUp){
-    S.elapsedSec=S.elapsedSec||0;
-    S.timerStartWall=serverNow()-S.elapsedSec*1000;
-  } else {
-    S.timerStartWall=serverNow();
-    S.timerSecAtStart=S.timerSec;
-  }
+  S.elapsedSec=S.elapsedSec||0;
+  S.timerStartWall=serverNow()-S.elapsedSec*1000;
   startLocalTick();requestWakeLock();
-  pushFields('timerRunning','timerOwner','timerStartWall','timerSecAtStart','timerSec','elapsedSec');
+  pushFields('timerRunning','timerOwner','timerStartWall','elapsedSec');
 }
 function pauseTimer(){
   stopLocalTick();
   syncClockFromWall();
-  S.timerRunning=false;S.timerStartWall=null;S.timerSecAtStart=null;S.timerOwner=null;
+  S.timerRunning=false;S.timerStartWall=null;S.timerOwner=null;
   showStartBtn();renderTimer();releaseWakeLock();
-  pushFields('timerRunning','timerStartWall','timerSecAtStart','timerOwner','timerSec','elapsedSec');
-}
-function toggleClockMode(){
-  if(S.timerRunning)return;
-  S.countUp=!S.countUp;
-  if(S.countUp){S.elapsedSec=0;}
-  else{S.timerSec=S.halfMinutes*60;}
-  renderTimer();pushFields('countUp','timerSec','elapsedSec');
+  pushFields('timerRunning','timerStartWall','timerOwner','elapsedSec');
 }
 function resetTimer(){
   if(!confirm('Restart the timer?'))return;
   stopLocalTick();
-  S.timerRunning=false;S.timerSec=S.halfMinutes*60;S.elapsedSec=0;S.stoppageSec=0;
-  S.timerStartWall=null;S.timerSecAtStart=null;S.timerOwner=null;
+  S.timerRunning=false;S.elapsedSec=0;
+  S.timerStartWall=null;S.timerOwner=null;
   showStartBtn();renderTimer();releaseWakeLock();
-  pushFields('timerRunning','timerSec','elapsedSec','stoppageSec','timerStartWall','timerSecAtStart','timerOwner');
+  pushFields('timerRunning','elapsedSec','timerStartWall','timerOwner');
 }
 function switchHalf(){
   stopLocalTick();S.timerRunning=false;
-  S.half=S.half===1?2:1;S.timerSec=S.halfMinutes*60;S.elapsedSec=0;S.stoppageSec=0;
-  S.timerStartWall=null;S.timerSecAtStart=null;S.timerOwner=null;
+  S.half=S.half===1?2:1;S.elapsedSec=0;
+  S.timerStartWall=null;S.timerOwner=null;
   showStartBtn();renderTimer();renderHalf();showHalftimeOverlay();releaseWakeLock();
-  pushFields('half','timerRunning','timerSec','elapsedSec','stoppageSec','timerStartWall','timerSecAtStart','timerOwner');
+  pushFields('half','timerRunning','elapsedSec','timerStartWall','timerOwner');
 }
 function endGame(){
   if(!confirm('End the game and mark as Final?'))return;
   stopLocalTick();
   syncClockFromWall();
   S.timerRunning=false;S.gameFinal=true;
-  S.timerStartWall=null;S.timerSecAtStart=null;S.timerOwner=null;
+  S.timerStartWall=null;S.timerOwner=null;
   showStartBtn();releaseWakeLock();
   document.getElementById('htBanner').textContent='FULL TIME';
   document.getElementById('htScore').textContent=`${S.homeScore} : ${S.awayScore}`;
@@ -535,21 +526,7 @@ function endGame(){
   const ov=document.getElementById('htOverlay');
   ov.classList.add('show');setTimeout(()=>ov.classList.remove('show'),6000);
   renderTimer();renderHalf();
-  pushFields('gameFinal','timerRunning','timerStartWall','timerSecAtStart','timerOwner','timerSec','elapsedSec');
-}
-function adjustDuration(d){
-  if(S.timerRunning||S.countUp)return;
-  const n=Math.max(5,Math.min(60,S.halfMinutes+d));
-  if(n===S.halfMinutes)return;
-  S.halfMinutes=n;S.timerSec=n*60;renderTimer();pushFields('halfMinutes','timerSec');
-}
-function addStoppage(mins){
-  /* While running the display is derived from timerSecAtStart, so extend
-     that too — bumping timerSec alone is overwritten on the next tick. */
-  if(S.timerRunning&&S.timerSecAtStart!=null)S.timerSecAtStart+=mins*60;
-  S.timerSec+=mins*60;
-  S.stoppageSec=(S.stoppageSec||0)+mins*60;
-  renderTimer();pushFields('timerSec','timerSecAtStart','stoppageSec');
+  pushFields('gameFinal','timerRunning','timerStartWall','timerOwner','elapsedSec');
 }
 
 /* ── SCREEN WAKE LOCK — keep the phone awake while the clock runs ── */
@@ -566,57 +543,19 @@ document.addEventListener('visibilitychange',()=>{
 
 function renderTimer(){
   const el=document.getElementById('timerDigits');
-  // FINAL: manually ended or countdown reached zero at end of 2nd half
-  if(S.gameFinal||(!S.countUp&&S.timerSec<=0&&S.half===2&&!S.timerRunning)){
-    el.textContent='FULL TIME';el.className='timer-digits final';
-    document.getElementById('stoppageRow').style.display='none';
-    // Disable timer controls when game is final
-    const btnStart=document.getElementById('btnStart');
-    const btnHalf=document.getElementById('btnHalf');
-    const btnFinal=document.getElementById('btnFinal');
-    if(btnStart){btnStart.disabled=true;btnStart.style.opacity='0.3';}
-    if(btnHalf){btnHalf.disabled=true;btnHalf.style.opacity='0.3';}
-    if(btnFinal){btnFinal.disabled=true;btnFinal.style.opacity='0.3';}
-  } else {
-    const btnStart=document.getElementById('btnStart');
-    const btnHalf=document.getElementById('btnHalf');
-    const btnFinal=document.getElementById('btnFinal');
-    if(btnStart){btnStart.disabled=false;btnStart.style.opacity='';}
-    if(btnHalf){btnHalf.disabled=false;btnHalf.style.opacity='';}
-    if(btnFinal){btnFinal.disabled=false;btnFinal.style.opacity='';}
-  }
-  if(S.gameFinal){
-    document.getElementById('durDisplay').textContent=`${S.halfMinutes} MIN`;
-    return;
-  }
-  if(S.countUp){
-    const sec=S.elapsedSec||0;
-    const m=Math.floor(sec/60),s=sec%60;
-    el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-    // Past the configured half length: cue the coach that time is up
-    el.className='timer-digits'+(sec>=S.halfMinutes*60?' warning':'');
-    document.getElementById('stoppageRow').style.display='none';
-  } else {
-    const m=Math.floor(S.timerSec/60),s=S.timerSec%60;
-    el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-    el.className='timer-digits';
-    if(S.timerSec<=60)el.classList.add('urgent');
-    else if(S.timerSec<=300)el.classList.add('warning');
-    document.getElementById('stoppageRow').style.display=S.timerSec<=300&&S.timerRunning?'flex':'none';
-  }
-  document.getElementById('durDisplay').textContent=`${S.halfMinutes} MIN`;
-  document.querySelectorAll('.dur-btn').forEach(b=>{
-    b.style.opacity=(S.timerRunning||S.countUp)?'0.25':'1';
-    b.style.pointerEvents=(S.timerRunning||S.countUp)?'none':'auto';
+  // Timer controls are dead once the game is marked Final
+  ['btnStart','btnHalf','btnFinal'].forEach(id=>{
+    const b=document.getElementById(id);
+    if(!b)return;
+    b.disabled=!!S.gameFinal;
+    b.style.opacity=S.gameFinal?'0.3':'';
   });
-  // Mode button label
-  const mb=document.getElementById('modeBtn');
-  if(mb){
-    mb.textContent=S.countUp?'▼ COUNT DOWN':'▲ COUNT UP';
-    mb.className='timer-mode-btn'+(S.countUp?' countup':'');
-    mb.style.opacity=S.timerRunning?'0.4':'1';
-    mb.style.pointerEvents=S.timerRunning?'none':'auto';
-  }
+  if(S.gameFinal){el.textContent='FULL TIME';el.className='timer-digits final';return;}
+  const sec=S.elapsedSec||0;
+  const m=Math.floor(sec/60),s=sec%60;
+  el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  // Past the regulation half length: cue the coach that time is up
+  el.className='timer-digits'+(sec>=S.halfMinutes*60?' warning':'');
 }
 function renderHalf(){
   const lbl=S.gameFinal?'FINAL':(S.half===1?'1ST HALF':'2ND HALF');
@@ -627,7 +566,7 @@ function renderHalf(){
 
 /* ── HALFTIME OVERLAY ── */
 function showHalftimeOverlay(){
-  document.getElementById('htBanner').textContent=(S.gameFinal||(!S.countUp&&S.timerSec<=0&&S.half===2))?'FULL TIME':'HALF TIME';
+  document.getElementById('htBanner').textContent=S.gameFinal?'FULL TIME':'HALF TIME';
   document.getElementById('htScore').textContent=`${S.homeScore} : ${S.awayScore}`;
   document.getElementById('htTeams').textContent=`${S.homeTeam.toUpperCase()} vs ${S.awayTeam.toUpperCase()}`;
   const ov=document.getElementById('htOverlay');
@@ -636,37 +575,62 @@ function showHalftimeOverlay(){
 }
 
 /* ── GOALS ── */
+/* Stamp of the current match clock, wall-clock derived while running so
+   every device agrees on the minute a goal or card happened. */
+function currentGameTime(){
+  const elapsed=S.timerRunning&&S.timerStartWall
+    ?Math.max(0,Math.floor((serverNow()-S.timerStartWall)/1000))
+    :(S.elapsedSec||0);
+  const m=Math.floor(elapsed/60),s=elapsed%60;
+  return `${S.half===1?'1H':'2H'} ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+/* "#7 Jake" / "#7" / "Jake" — whichever parts were entered */
+function playerLabel(name,number){
+  const n=(name&&name!=='—')?name:'';
+  if(number&&n)return `#${number} ${n}`;
+  if(number)return `#${number}`;
+  return n||'—';
+}
+function readPlayerFields(numId,nameId){
+  return{
+    number:document.getElementById(numId).value.trim().replace(/^#/,''),
+    name:document.getElementById(nameId).value.trim()
+  };
+}
 function addGoal(team){
-  pendingTeam=team;
+  pendingTeam=team;editGoalIdx=null;
   const nm=team==='home'?S.homeTeam:S.awayTeam;
   document.getElementById('modalTitle').textContent=`${nm} SCORED!`;
   document.getElementById('scorerInput').value='';
+  document.getElementById('scorerNumber').value='';
+  document.getElementById('goalConfirmBtn').textContent='⚽ Confirm Goal';
   document.getElementById('scorerModal').classList.add('open');
-  setTimeout(()=>document.getElementById('scorerInput').focus(),320);
+  setTimeout(()=>document.getElementById('scorerNumber').focus(),320);
+}
+/* Fix a mis-typed scorer after the fact — name and/or number */
+function editGoal(idx){
+  const g=(S.goals||[])[idx];
+  if(!g)return;
+  pendingTeam=null;editGoalIdx=idx;
+  document.getElementById('modalTitle').textContent='EDIT SCORER';
+  document.getElementById('scorerInput').value=g.scorer&&g.scorer!=='—'?g.scorer:'';
+  document.getElementById('scorerNumber').value=g.number||'';
+  document.getElementById('goalConfirmBtn').textContent='✓ Save';
+  document.getElementById('scorerModal').classList.add('open');
+  setTimeout(()=>document.getElementById('scorerNumber').focus(),320);
 }
 function confirmGoal(){
+  const {number,name}=readPlayerFields('scorerNumber','scorerInput');
+  if(editGoalIdx!==null){
+    const g=(S.goals||[])[editGoalIdx];
+    if(g){g.scorer=name||'—';g.number=number||null;}
+    cancelGoal();renderGoals();pushFields('goals');
+    return;
+  }
   if(!pendingTeam)return; // guard: double-tap/Enter+tap must not double-record
   const team=pendingTeam;
-  const name=document.getElementById('scorerInput').value.trim()||'—';
-  let elapsed;
-  if(S.countUp){
-    // Use wall-clock for accuracy if running, else use last stored elapsed
-    elapsed=S.timerRunning&&S.timerStartWall
-      ?Math.floor((serverNow()-S.timerStartWall)/1000)
-      :(S.elapsedSec||0);
-  } else {
-    // Compute remaining time from wall-clock if running for accuracy
-    let curSec=S.timerSec;
-    if(S.timerRunning&&S.timerStartWall&&S.timerSecAtStart!=null){
-      curSec=Math.max(0,S.timerSecAtStart-Math.floor((serverNow()-S.timerStartWall)/1000));
-    }
-    // Include added stoppage so goals in added time don't clamp to 00:00
-    elapsed=Math.max(0,S.halfMinutes*60+(S.stoppageSec||0)-curSec);
-  }
-  const m=Math.floor(elapsed/60),s=elapsed%60;
   S.goals=S.goals||[];
-  S.goals.push({team,scorer:name,
-    time:`${S.half===1?'1H':'2H'} ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`,id:Date.now()});
+  S.goals.push({team,scorer:name||'—',number:number||null,time:currentGameTime(),id:Date.now()});
   if(team==='home'){S.homeScore++;S.homeShots++;}
   else{S.awayScore++;S.awayShots++;}
   cancelGoal();renderScores();renderGoals();renderShots();
@@ -688,7 +652,10 @@ function undoGoal(team){
   renderScores();renderGoals();renderShots();
   pushFields('goals','homeScore','awayScore','homeShots','awayShots');
 }
-function cancelGoal(){document.getElementById('scorerModal').classList.remove('open');pendingTeam=null;}
+function cancelGoal(){
+  document.getElementById('scorerModal').classList.remove('open');
+  pendingTeam=null;editGoalIdx=null;
+}
 
 /* ── SHOTS (with +/−) ── */
 function adjShot(team,delta){
@@ -697,21 +664,63 @@ function adjShot(team,delta){
   renderShots();pushFields('homeShots','awayShots');
 }
 
-/* ── CARDS (with +/−) ── */
+/* ── CARDS — each one records the player who got it ── */
+const CARD_KEY={home:{yellow:'homeYellow',red:'homeRed'},away:{yellow:'awayYellow',red:'awayRed'}};
 function addCard(team,color){
-  if(team==='home'&&color==='yellow')S.homeYellow++;
-  else if(team==='home'&&color==='red')S.homeRed++;
-  else if(team==='away'&&color==='yellow')S.awayYellow++;
-  else S.awayRed++;
-  renderCards();pushFields('homeYellow','homeRed','awayYellow','awayRed');
+  pendingCard={team,color};editCardIdx=null;
+  const nm=team==='home'?S.homeTeam:S.awayTeam;
+  document.getElementById('cardModalTitle').textContent=
+    `${color==='yellow'?'🟨 YELLOW':'🟥 RED'} · ${nm.toUpperCase()}`;
+  document.getElementById('cardPlayer').value='';
+  document.getElementById('cardNumber').value='';
+  document.getElementById('cardConfirmBtn').textContent='Record Card';
+  document.getElementById('cardModal').classList.add('open');
+  setTimeout(()=>document.getElementById('cardNumber').focus(),320);
 }
+function editCard(idx){
+  const c=(S.cards||[])[idx];
+  if(!c)return;
+  pendingCard=null;editCardIdx=idx;
+  document.getElementById('cardModalTitle').textContent='EDIT CARD';
+  document.getElementById('cardPlayer').value=c.player&&c.player!=='—'?c.player:'';
+  document.getElementById('cardNumber').value=c.number||'';
+  document.getElementById('cardConfirmBtn').textContent='✓ Save';
+  document.getElementById('cardModal').classList.add('open');
+  setTimeout(()=>document.getElementById('cardNumber').focus(),320);
+}
+function confirmCard(){
+  const {number,name}=readPlayerFields('cardNumber','cardPlayer');
+  if(editCardIdx!==null){
+    const c=(S.cards||[])[editCardIdx];
+    if(c){c.player=name||'—';c.number=number||null;}
+    cancelCard();renderCards();pushFields('cards');
+    return;
+  }
+  if(!pendingCard)return; // guard: double-tap/Enter+tap must not double-record
+  const {team,color}=pendingCard;
+  S.cards=S.cards||[];
+  S.cards.push({team,color,player:name||'—',number:number||null,time:currentGameTime(),id:Date.now()});
+  const key=CARD_KEY[team][color];
+  S[key]=(S[key]||0)+1;
+  cancelCard();renderCards();
+  pushFields('cards','homeYellow','homeRed','awayYellow','awayRed');
+}
+function cancelCard(){
+  document.getElementById('cardModal').classList.remove('open');
+  pendingCard=null;editCardIdx=null;
+}
+/* The chip's − removes the most recent card of that team+colour, log entry included */
 function adjCard(e,team,color,delta){
   e.stopPropagation();
-  if(team==='home'&&color==='yellow')S.homeYellow=Math.max(0,S.homeYellow+delta);
-  else if(team==='home'&&color==='red')S.homeRed=Math.max(0,S.homeRed+delta);
-  else if(team==='away'&&color==='yellow')S.awayYellow=Math.max(0,S.awayYellow+delta);
-  else S.awayRed=Math.max(0,S.awayRed+delta);
-  renderCards();pushFields('homeYellow','homeRed','awayYellow','awayRed');
+  const key=CARD_KEY[team][color];
+  S[key]=Math.max(0,(S[key]||0)+delta);
+  if(delta<0){
+    S.cards=S.cards||[];
+    for(let i=S.cards.length-1;i>=0;i--){
+      if(S.cards[i].team===team&&S.cards[i].color===color){S.cards.splice(i,1);break;}
+    }
+  }
+  renderCards();pushFields('cards','homeYellow','homeRed','awayYellow','awayRed');
 }
 
 /* ── TEAM NAMES → update goal buttons ── */
@@ -731,9 +740,9 @@ function updateGoalBtnLabels(){
 function newGame(){
   if(!confirm('Start a new game? Clears scores, goals, cards and shots on all devices.'))return;
   stopLocalTick();showStartBtn();releaseWakeLock();
-  S.homeScore=0;S.awayScore=0;S.goals=[];S.half=1;
-  S.timerSec=S.halfMinutes*60;S.timerRunning=false;S.elapsedSec=0;S.stoppageSec=0;
-  S.timerStartWall=null;S.timerSecAtStart=null;S.timerOwner=null;S.gameFinal=false;
+  S.homeScore=0;S.awayScore=0;S.goals=[];S.cards=[];S.half=1;
+  S.timerRunning=false;S.elapsedSec=0;
+  S.timerStartWall=null;S.timerOwner=null;S.gameFinal=false;
   S.homeShots=0;S.awayShots=0;S.homeYellow=0;S.homeRed=0;S.awayYellow=0;S.awayRed=0;
   renderAll();pushAll();
 }
@@ -758,15 +767,17 @@ function renderGoals(){
   const el=document.getElementById('goalsList');
   const goals=S.goals||[];
   if(!goals.length){el.innerHTML='<div class="empty-goals"><span>⚽</span>No goals yet — kick it off!</div>';return;}
-  el.innerHTML=[...goals].reverse().map(g=>`
+  // Index is the edit handle, so map before reversing for display
+  el.innerHTML=goals.map((g,i)=>`
     <div class="goal-item">
       <div class="goal-badge ${g.team==='home'?'ours':'theirs'}">${g.team==='home'?'⚽':'🔵'}</div>
       <div class="goal-info">
-        <div class="goal-scorer">${esc(g.scorer)}</div>
+        <div class="goal-scorer">${esc(playerLabel(g.scorer,g.number))}</div>
         <div class="goal-team">${esc(g.team==='home'?S.homeTeam:S.awayTeam)}</div>
       </div>
       <div class="goal-time">${esc(g.time)}</div>
-    </div>`).join('');
+      <button class="btn-edit-entry" onclick="editGoal(${i})" title="Edit scorer">✏️</button>
+    </div>`).reverse().join('');
 }
 function renderShots(){
   document.getElementById('homeShotsCount').textContent=S.homeShots||0;
@@ -777,6 +788,20 @@ function renderCards(){
   document.getElementById('hRC').textContent=S.homeRed||0;
   document.getElementById('aYC').textContent=S.awayYellow||0;
   document.getElementById('aRC').textContent=S.awayRed||0;
+  const cards=S.cards||[];
+  const sec=document.getElementById('cardsSection'),list=document.getElementById('cardsList');
+  sec.style.display=cards.length?'':'none';
+  if(!cards.length){list.innerHTML='';return;}
+  list.innerHTML=cards.map((c,i)=>`
+    <div class="goal-item">
+      <div class="card-badge-log ${c.color==='red'?'red':'yellow'}"></div>
+      <div class="goal-info">
+        <div class="goal-scorer">${esc(playerLabel(c.player,c.number))}</div>
+        <div class="goal-team">${esc(c.team==='home'?S.homeTeam:S.awayTeam)}</div>
+      </div>
+      <div class="goal-time">${esc(c.time)}</div>
+      <button class="btn-edit-entry" onclick="editCard(${i})" title="Edit player">✏️</button>
+    </div>`).reverse().join('');
 }
 function renderAll(){
   renderScores();renderGoals();renderTimer();renderHalf();renderShots();renderCards();
@@ -821,11 +846,12 @@ function launchConfetti(){
 }
 
 window.startTimer=startTimer;window.pauseTimer=pauseTimer;window.resetTimer=resetTimer;
-window.switchHalf=switchHalf;window.adjustDuration=adjustDuration;window.addStoppage=addStoppage;
-window.toggleClockMode=toggleClockMode;window.endGame=endGame;
+window.switchHalf=switchHalf;window.endGame=endGame;
 window.addGoal=addGoal;window.undoGoal=undoGoal;window.confirmGoal=confirmGoal;window.cancelGoal=cancelGoal;
+window.editGoal=editGoal;
 window.newGame=newGame;window.onTeamName=onTeamName;window.copyViewerUrl=copyViewerUrl;
 window.addCard=addCard;window.adjCard=adjCard;window.adjShot=adjShot;
+window.editCard=editCard;window.confirmCard=confirmCard;window.cancelCard=cancelCard;
 renderAll();
 </script>
 </body>
