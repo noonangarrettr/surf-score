@@ -6,35 +6,119 @@
 <meta name="theme-color" content="#eaeff7">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<!-- 'default' keeps dark status-bar glyphs, which is what a light page needs -->
+<!-- 'default' keeps dark status-bar glyphs, which is what the light kit needs.
+     iOS freezes this at launch, so it can't follow the kit toggle the way
+     theme-color does — dark glyphs stay legible on both, so it stays put. -->
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 <title>SDSC Surf · Match Day</title>
+<script>
+/* Paint the saved kit before the first frame — no flash of the other palette.
+   Firebase's value takes over a moment later, this is just the head start. */
+(function(){try{if(localStorage.getItem('surfKit')==='oro'){
+  document.documentElement.setAttribute('data-theme','oro');
+  var m=document.querySelector('meta[name="theme-color"]');
+  if(m)m.setAttribute('content','#0c0c0f');
+}}catch(e){}})();
+</script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
-/* === DAYLIGHT PALETTE ===
-   Club colours off the crest: royal blue, black, white — no gold.
-   Light ground on purpose: in direct sun a phone's own light barely
-   competes with the glare, so a mostly-white page holds far more
-   usable contrast than a dark one. Every pairing below clears WCAG AA,
-   most clear AAA. */
+/* === TWO KITS, ONE APP ===
+   Every colour below is a token, so the whole app changes kit by flipping
+   one attribute on <html>. Nothing outside this block hard-codes a colour.
+
+   DAYLIGHT is the home kit: crest royal blue on a light ground, chosen
+   because a phone's backlight can't beat direct sun — a mostly-white page
+   holds far more usable contrast out on the touchline.
+
+   OLA DE ORO is the alternate kit: black and metallic gold off the new
+   Nike strip. It's a dark page, so it reads best in shade, under lights
+   or indoors; the coach picks whichever the day calls for.
+
+   Both clear WCAG AA on every pairing, most clear AAA. */
 :root{
-  --surf-blue:#1b4b9e;      /* crest royal — 8.3:1 on white */
-  --surf-deep:#122f63;      /* crest blue at its darkest — 13.0:1 */
-  --surf-bright:#2a61c8;    /* lift for gradients and pressed states */
-  --surf-tint:#e3ecfb;      /* faint blue fill */
+  /* --- DAYLIGHT (home kit): royal blue, black, white --- */
+  --accent:#1b4b9e;         /* crest royal — 8.3:1 on white */
+  --accent-deep:#122f63;    /* crest blue at its darkest — 13.0:1 */
+  --accent-bright:#2a61c8;  /* lift for gradients and pressed states */
+  --accent-tint:#e3ecfb;    /* faint accent fill */
+  --accent-text:#122f63;    /* accent as body copy, on paper/tint */
+  --on-accent:#ffffff;      /* type that sits on an accent fill */
   --ink:#0b1220;            /* crest black — 18.7:1 on white */
   --muted:#4e5c73;          /* secondary text — 6.8:1 */
   --line:#d3ddec;           /* hairlines */
   --paper:#ffffff;          /* cards */
   --wash:#eaeff7;           /* page ground */
   --neutral:#6b7a93;        /* trailing score */
+  --solid:#0b1220;          /* solid neutral button (pause) */
+  --on-solid:#ffffff;
   --alert:#b3261e;          /* full time / danger — 6.5:1 */
+  --alert-line:rgba(179,38,30,.35);
+  --err-bg:#fdecea;
   --success:#0a6b45;        /* live pill — 5.9:1 */
+  --success-line:rgba(10,107,69,.35);
+  --live-bg:#e6f4ee;
   --white:#ffffff;
-  --yellow-card:#f2c500;--red-card:#c62828;
+  --edge:#b9cef0;           /* tinted-panel border */
+  --dash:#b3c2d8;           /* dashed new-game border */
+  --footer:#5d6c85;
+  --sh:11,18,32;            /* shadow tint, as r,g,b */
+  --scrim:rgba(var(--sh),.55);
+  --btn-glow:rgba(27,75,158,.3);
+  --flash:rgba(27,75,158,.4);
+  --sky:linear-gradient(175deg,#f7faff 0%,#eaeff7 45%,#dde5f2 100%);
+  --wave:rgba(27,75,158,.10);
+  --wave-deep:rgba(18,47,99,.07);
+  --overlay-grad:linear-gradient(165deg,#2a61c8,#122f63 60%,#0b1220);
+  --overlay-ink:#ffffff;
+  --overlay-accent:#ffffff;
+  --dismiss-bg:#ffffff;
+  --dismiss-fg:#122f63;
+  --theme-color:#eaeff7;
+  /* Referee cards are literal, never themed */
+  --yellow-card:#f2c500;--red-card:#c62828;--card-ink:#0b1220;
+}
+html[data-theme="oro"]{
+  /* --- OLA DE ORO (alternate kit): black + metallic gold --- */
+  --accent:#d4af37;         /* kit gold — 9.3:1 on the card black */
+  --accent-deep:#8a6d16;    /* gold at its darkest, for gradients */
+  --accent-bright:#f0cf5f;  /* highlight gold */
+  --accent-tint:#2b2411;    /* faint gold fill on black */
+  --accent-text:#e2c25c;    /* gold as body copy — 9.8:1 on paper */
+  --on-accent:#0b0b0d;      /* black type on a gold fill — 9.3:1 */
+  --ink:#f6f2e6;            /* warm white lettering — 16.4:1 */
+  --muted:#a49a85;          /* secondary text — 7.1:1 */
+  --line:#332f27;
+  --paper:#16161a;          /* jersey black, lifted just off the ground */
+  --wash:#0c0c0f;
+  --neutral:#7d7768;        /* trailing score — 4.2:1, display size */
+  --solid:#2a2a31;
+  --on-solid:#f6f2e6;
+  --alert:#ff6f61;          /* danger, lifted for a dark ground — 6.9:1 */
+  --alert-line:rgba(255,111,97,.4);
+  --err-bg:#2a1512;
+  --success:#3ecf8e;        /* live pill — 9.4:1 */
+  --success-line:rgba(62,207,142,.4);
+  --live-bg:#0f2a1f;
+  --white:#ffffff;
+  --edge:#3d341a;
+  --dash:#4a4230;
+  --footer:#8b8371;
+  --sh:0,0,0;
+  --scrim:rgba(0,0,0,.66);
+  --btn-glow:rgba(212,175,55,.28);
+  --flash:rgba(212,175,55,.35);
+  --sky:linear-gradient(175deg,#17171c 0%,#0d0d10 45%,#000000 100%);
+  --wave:rgba(212,175,55,.14);
+  --wave-deep:rgba(212,175,55,.10);
+  --overlay-grad:linear-gradient(165deg,#1c1a14,#0b0b0d 55%,#000000);
+  --overlay-ink:#f6f2e6;
+  --overlay-accent:#d4af37;
+  --dismiss-bg:#d4af37;
+  --dismiss-fg:#0b0b0d;
+  --theme-color:#0c0c0f;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{background:var(--wash);min-height:100%}
@@ -42,39 +126,49 @@ body{font-family:'Inter',sans-serif;color:var(--ink);min-height:100dvh;max-width
 
 /* === LIGHT SKY BACKGROUND === */
 html::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:linear-gradient(175deg,#f7faff 0%,#eaeff7 45%,#dde5f2 100%)}
+  background:var(--sky)}
 
-/* === BLUE WAVES === */
+/* === WAVES === */
+/* Fill comes from the kit: club blue on the light page, gold on the black */
 .wave-bg{position:fixed;bottom:0;left:0;right:0;z-index:0;pointer-events:none;height:140px;overflow:hidden}
 .wave-bg svg{position:absolute;bottom:0;width:200%;animation:waveScroll 20s linear infinite}
 .wave-bg svg:nth-child(2){animation-duration:28s;animation-direction:reverse;opacity:.5}
 .wave-bg svg:nth-child(3){animation-duration:36s;opacity:.25}
 @keyframes waveScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.wave-bg svg path{fill:var(--wave)}
+.wave-bg svg:nth-child(3) path{fill:var(--wave-deep)}
 
 .app{position:relative;z-index:1;padding-bottom:52px}
 
 /* === HEADER === */
 /* Status bar is opaque now, so the page no longer sits under it */
 .header{display:flex;align-items:center;justify-content:space-between;padding:28px 20px 16px}
-.brand-top{font-family:'Oswald',sans-serif;font-size:10px;font-weight:600;letter-spacing:3.5px;text-transform:uppercase;color:var(--surf-blue)}
+.brand-top{font-family:'Oswald',sans-serif;font-size:10px;font-weight:600;letter-spacing:3.5px;text-transform:uppercase;color:var(--accent)}
 .brand-name{font-family:'Oswald',sans-serif;font-size:32px;font-weight:700;letter-spacing:1px;color:var(--ink);line-height:1.1}
-.brand-name em{font-style:normal;color:var(--surf-blue)}
+.brand-name em{font-style:normal;color:var(--accent)}
 .sync-wrap{position:relative;display:flex;align-items:center}
 .sync-ring{position:absolute;inset:-6px;border-radius:50px;border:1.5px solid transparent}
-.sync-wrap.live .sync-ring{border-color:rgba(10,107,69,.35);animation:ringBreath 2s ease-in-out infinite}
+.sync-wrap.live .sync-ring{border-color:var(--success-line);animation:ringBreath 2s ease-in-out infinite}
 @keyframes ringBreath{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
 .sync-pill{display:flex;align-items:center;gap:6px;background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:5px 12px;font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;transition:all .3s}
-.sync-wrap.live .sync-pill{color:var(--success);border-color:rgba(10,107,69,.35);background:#e6f4ee}
-.sync-wrap.error .sync-pill{color:var(--alert);border-color:rgba(179,38,30,.35);background:#fdecea}
+.sync-wrap.live .sync-pill{color:var(--success);border-color:var(--success-line);background:var(--live-bg)}
+.sync-wrap.error .sync-pill{color:var(--alert);border-color:var(--alert-line);background:var(--err-bg)}
 .sync-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
 .sync-wrap.live .sync-dot{animation:dotPulse 1.8s infinite}
 @keyframes dotPulse{0%,100%{opacity:1}50%{opacity:.2}}
 
+/* === KIT TOGGLE === */
+.header-actions{display:flex;align-items:center;gap:8px}
+.kit-toggle{display:flex;align-items:center;gap:7px;background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:5px 11px 5px 6px;font-family:'Oswald',sans-serif;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:transform .1s}
+.kit-toggle:active{transform:scale(.94)}
+/* The swatch is the kit in miniature: accent over the page ground */
+.kit-swatch{width:16px;height:16px;border-radius:50%;border:1px solid var(--line);flex-shrink:0;background:linear-gradient(135deg,var(--accent) 0 50%,var(--wash) 50% 100%)}
+
 /* === SCOREBOARD === */
-.scoreboard{margin:0 16px 14px;background:var(--paper);border:1px solid var(--line);border-radius:24px;overflow:hidden;box-shadow:0 10px 30px rgba(11,18,32,.12)}
-.match-header{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:linear-gradient(90deg,var(--surf-blue),var(--surf-deep))}
-.match-league{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--white)}
-.match-half{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--white)}
+.scoreboard{margin:0 16px 14px;background:var(--paper);border:1px solid var(--line);border-radius:24px;overflow:hidden;box-shadow:0 10px 30px rgba(var(--sh),.12)}
+.match-header{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:linear-gradient(90deg,var(--accent),var(--accent-deep))}
+.match-league{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--on-accent)}
+.match-half{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--on-accent)}
 
 /* Unified team grid — same columns for scores and buttons */
 .team-grid{display:grid;grid-template-columns:1fr 44px 1fr;align-items:start;padding:16px 10px 14px;gap:4px}
@@ -85,14 +179,14 @@ html::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .scores-row{display:grid;grid-template-columns:1fr 52px 1fr;align-items:start;padding:18px 12px 6px;gap:4px}
 .team-col{text-align:center;width:100%;overflow:hidden}
 .team-label-input{background:transparent;border:none;outline:none;font-family:'Oswald',sans-serif;font-size:18px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--ink);text-align:center;width:100%;padding:3px 4px;border-radius:6px;transition:background .2s}
-.team-label-input:focus{background:var(--surf-tint)}
+.team-label-input:focus{background:var(--accent-tint)}
 .score-wrap{position:relative;display:inline-block}
 .score-num{font-family:'Oswald',sans-serif;font-size:96px;font-weight:700;line-height:1;color:var(--ink);text-align:center;transition:color .25s}
-.score-num.leading{color:var(--surf-blue)}
+.score-num.leading{color:var(--accent)}
 .score-num.losing{color:var(--neutral)}
 .score-num.bump{animation:scorePop .4s cubic-bezier(.36,.07,.19,.97) forwards}
 @keyframes scorePop{0%{transform:scale(1)}35%{transform:scale(1.28)}65%{transform:scale(.96)}100%{transform:scale(1)}}
-.score-ring{position:absolute;inset:-8px;border-radius:50%;border:3px solid var(--surf-blue);opacity:0;pointer-events:none}
+.score-ring{position:absolute;inset:-8px;border-radius:50%;border:3px solid var(--accent);opacity:0;pointer-events:none}
 .score-ring.fire{animation:ringPop .6s ease-out forwards}
 @keyframes ringPop{0%{opacity:.9;transform:scale(.6)}100%{opacity:0;transform:scale(1.8)}}
 .score-sep{font-family:'Oswald',sans-serif;font-size:38px;font-weight:400;color:var(--neutral);text-align:center;line-height:1;padding-top:26px;align-self:start}
@@ -101,38 +195,38 @@ html::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .shots-row{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:16px;min-height:20px}
 .shots-count{font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;color:var(--ink)}
 .shots-label{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
-.btn-shot-adj{width:42px;height:42px;border-radius:9px;border:1.5px solid var(--surf-blue);background:var(--surf-tint);color:var(--surf-blue);font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
-.btn-shot-adj:active{background:var(--surf-blue);color:var(--white)}
+.btn-shot-adj{width:42px;height:42px;border-radius:9px;border:1.5px solid var(--accent);background:var(--accent-tint);color:var(--accent);font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.btn-shot-adj:active{background:var(--accent);color:var(--on-accent)}
 
 /* Cards row — sits under the goal/undo buttons */
 .cards-row{display:flex;justify-content:center;gap:4px;margin-top:8px;min-height:28px;flex-wrap:nowrap;max-width:100%}
 .card-chip{display:flex;align-items:center;gap:4px;padding:8px 9px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:transform .1s;flex-shrink:1;min-width:0}
 .card-chip:active{transform:scale(.9)}
-.card-yellow{background:var(--yellow-card);color:var(--ink)}
+.card-yellow{background:var(--yellow-card);color:var(--card-ink)}
 .card-red-chip{background:var(--red-card);color:var(--white)}
 .btn-card-minus{background:rgba(0,0,0,.22);border:none;border-radius:5px;width:26px;height:26px;font-size:14px;font-weight:700;color:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:2px}
 
 /* Goal buttons — full width inside team column */
 .btn-goal{border:none;border-radius:12px;padding:14px 8px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:transform .1s,opacity .1s;display:flex;align-items:center;justify-content:center;gap:5px;width:100%}
 .btn-goal:active{transform:scale(.93);opacity:.8}
-.btn-our-goal{background:var(--surf-blue);color:var(--white);box-shadow:0 4px 14px rgba(27,75,158,.3)}
+.btn-our-goal{background:var(--accent);color:var(--on-accent);box-shadow:0 4px 14px var(--btn-glow)}
 .btn-their-goal{background:var(--paper);color:var(--ink);border:1.5px solid var(--ink)}
 .btn-undo-goal{border:1px solid var(--line);border-radius:9px;padding:9px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer;background:var(--wash);color:var(--muted);transition:opacity .1s,transform .1s;width:100%;text-align:center}
 .btn-undo-goal:active{transform:scale(.94);opacity:.7}
 
 /* === TIMER === */
-.timer-card{margin:0 16px 14px;background:var(--paper);border:1px solid var(--line);border-radius:24px;padding:18px 18px 16px;box-shadow:0 10px 30px rgba(11,18,32,.12)}
+.timer-card{margin:0 16px 14px;background:var(--paper);border:1px solid var(--line);border-radius:24px;padding:18px 18px 16px;box-shadow:0 10px 30px rgba(var(--sh),.12)}
 .timer-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .timer-label-text{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted)}
-.timer-mode-tag{font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--surf-blue)}
+.timer-mode-tag{font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent)}
 .timer-digits{font-family:'Oswald',sans-serif;font-size:74px;font-weight:700;letter-spacing:4px;text-align:center;line-height:1;color:var(--ink);transition:color .3s}
 .timer-digits.warning{color:var(--alert)}
 .timer-digits.final{color:var(--alert);animation:none;font-size:52px;letter-spacing:6px}
 .timer-btns{display:flex;gap:8px;margin-top:12px}
-.timer-btn{flex:1;border:none;border-radius:12px;padding:13px 6px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:transform .1s,opacity .1s;color:var(--white)}
+.timer-btn{flex:1;border:none;border-radius:12px;padding:13px 6px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:transform .1s,opacity .1s;color:var(--on-accent)}
 .timer-btn:active{transform:scale(.95);opacity:.85}
-.btn-start{background:var(--surf-blue);box-shadow:0 4px 14px rgba(27,75,158,.3)}
-.btn-pause{background:var(--ink)}
+.btn-start{background:var(--accent);box-shadow:0 4px 14px var(--btn-glow)}
+.btn-pause{background:var(--solid);color:var(--on-solid)}
 .btn-half{background:var(--paper);color:var(--ink);border:1.5px solid var(--ink)}
 .btn-reset{background:var(--wash);color:var(--muted);border:1px solid var(--line)}
 .btn-final{background:var(--paper);color:var(--alert);border:1.5px solid var(--alert);letter-spacing:.5px}
@@ -140,19 +234,19 @@ html::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 /* === GOALS LOG === */
 .section{margin:0 16px 14px}
 .sec-label{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:9px;padding-left:2px}
-.goals-card{background:var(--paper);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 6px 20px rgba(11,18,32,.08)}
+.goals-card{background:var(--paper);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 6px 20px rgba(var(--sh),.08)}
 .goal-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);animation:fadeSlide .3s ease}
 @keyframes fadeSlide{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
 .goal-item:last-child{border-bottom:none}
 .goal-badge{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.goal-badge.ours{background:var(--surf-tint)}
+.goal-badge.ours{background:var(--accent-tint)}
 .goal-badge.theirs{background:var(--wash)}
 .goal-info{flex:1;min-width:0}
 .goal-scorer{font-size:14px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .goal-team{font-size:11px;color:var(--muted);margin-top:1px}
-.goal-time{font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;color:var(--surf-blue);letter-spacing:.5px;flex-shrink:0}
+.goal-time{font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;color:var(--accent);letter-spacing:.5px;flex-shrink:0}
 .btn-edit-entry{flex-shrink:0;background:var(--wash);border:1px solid var(--line);border-radius:8px;width:32px;height:32px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.btn-edit-entry:active{background:var(--surf-tint)}
+.btn-edit-entry:active{background:var(--accent-tint)}
 .empty-goals{text-align:center;padding:26px 16px;color:var(--muted);font-size:13px;line-height:1.7}
 .empty-goals span{font-size:26px;display:block;margin-bottom:6px}
 .card-badge-log{width:22px;height:30px;border-radius:4px;flex-shrink:0}
@@ -160,54 +254,54 @@ html::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .card-badge-log.red{background:var(--red-card)}
 
 /* === SHARE + NEW GAME === */
-.share-banner{margin:0 16px 14px;background:var(--surf-tint);border:1px solid #b9cef0;border-radius:16px;padding:14px 16px}
-.share-banner h4{font-size:13px;font-weight:700;color:var(--surf-deep);margin-bottom:3px}
+.share-banner{margin:0 16px 14px;background:var(--accent-tint);border:1px solid var(--edge);border-radius:16px;padding:14px 16px}
+.share-banner h4{font-size:13px;font-weight:700;color:var(--accent-text);margin-bottom:3px}
 .share-banner p{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:10px}
-.share-url{background:var(--paper);border:1px solid #b9cef0;border-radius:8px;padding:7px 12px;font-size:11px;color:var(--surf-blue);font-family:'Inter',sans-serif;word-break:break-all;margin-bottom:10px;line-height:1.5}
-.btn-copy{width:100%;background:var(--surf-blue);color:var(--white);border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer}
-.btn-new-game{display:block;width:calc(100% - 32px);margin:0 16px 14px;background:transparent;border:1.5px dashed #b3c2d8;border-radius:16px;padding:13px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;letter-spacing:.5px;transition:border-color .2s,color .2s}
-.btn-new-game:hover{border-color:var(--surf-blue);color:var(--surf-blue)}
-.footer-mark{text-align:center;padding:4px 0;font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#5d6c85}
+.share-url{background:var(--paper);border:1px solid var(--edge);border-radius:8px;padding:7px 12px;font-size:11px;color:var(--accent);font-family:'Inter',sans-serif;word-break:break-all;margin-bottom:10px;line-height:1.5}
+.btn-copy{width:100%;background:var(--accent);color:var(--on-accent);border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer}
+.btn-new-game{display:block;width:calc(100% - 32px);margin:0 16px 14px;background:transparent;border:1.5px dashed var(--dash);border-radius:16px;padding:13px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;letter-spacing:.5px;transition:border-color .2s,color .2s}
+.btn-new-game:hover{border-color:var(--accent);color:var(--accent)}
+.footer-mark{text-align:center;padding:4px 0;font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--footer)}
 
 /* === SCORER MODAL === */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(11,18,32,.55);z-index:200;align-items:flex-end}
+.modal-overlay{display:none;position:fixed;inset:0;background:var(--scrim);z-index:200;align-items:flex-end}
 .modal-overlay.open{display:flex}
-.modal-sheet{background:var(--paper);border-top:4px solid var(--surf-blue);border-radius:28px 28px 0 0;padding:24px 20px 44px;width:100%;animation:sheetUp .28s cubic-bezier(.22,1,.36,1)}
+.modal-sheet{background:var(--paper);border-top:4px solid var(--accent);border-radius:28px 28px 0 0;padding:24px 20px 44px;width:100%;animation:sheetUp .28s cubic-bezier(.22,1,.36,1)}
 @keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .modal-pill{width:40px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 20px}
-.modal-title{font-family:'Oswald',sans-serif;font-size:22px;font-weight:600;letter-spacing:1px;text-align:center;margin-bottom:16px;color:var(--surf-deep)}
+.modal-title{font-family:'Oswald',sans-serif;font-size:22px;font-weight:600;letter-spacing:1px;text-align:center;margin-bottom:16px;color:var(--accent-text)}
 .modal-input{width:100%;background:var(--wash);border:1.5px solid var(--line);border-radius:14px;padding:15px 16px;color:var(--ink);font-size:16px;font-family:'Inter',sans-serif;outline:none;margin-bottom:14px;transition:border-color .2s}
-.modal-input:focus{border-color:var(--surf-blue);background:var(--paper)}
+.modal-input:focus{border-color:var(--accent);background:var(--paper)}
 .modal-input::placeholder{color:var(--muted)}
 .modal-fields{display:flex;gap:10px}
 .modal-fields .modal-input{margin-bottom:14px}
 .modal-input.num{flex:0 0 92px;text-align:center;font-family:'Oswald',sans-serif;font-weight:600;letter-spacing:1px}
 .modal-btns{display:flex;gap:10px}
-.btn-confirm{flex:2;background:var(--surf-blue);color:var(--white);border:none;border-radius:14px;padding:15px;font-size:15px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer}
+.btn-confirm{flex:2;background:var(--accent);color:var(--on-accent);border:none;border-radius:14px;padding:15px;font-size:15px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer}
 .btn-cancel-modal{flex:1;background:var(--wash);color:var(--muted);border:1px solid var(--line);border-radius:14px;padding:15px;font-size:15px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer}
 
 /* === HALFTIME OVERLAY === */
 /* Full-bleed club blue: the one place a saturated ground beats white,
    since it's white type at display size and reads from arm's length. */
-.halftime-overlay{position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(165deg,var(--surf-bright),var(--surf-deep) 60%,var(--ink));opacity:0;pointer-events:none;transition:opacity .4s}
+.halftime-overlay{position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--overlay-grad);opacity:0;pointer-events:none;transition:opacity .4s}
 .halftime-overlay.show{opacity:1;pointer-events:auto}
-.ht-label{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:5px;text-transform:uppercase;color:var(--white);margin-bottom:14px;animation:htUp .6s ease .2s both}
-.ht-banner{font-family:'Oswald',sans-serif;font-size:52px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--white);margin-bottom:20px;animation:htUp .6s ease .35s both}
-.ht-score{font-family:'Oswald',sans-serif;font-size:88px;font-weight:700;color:var(--white);letter-spacing:8px;animation:htUp .6s ease .5s both}
-.ht-teams{font-family:'Oswald',sans-serif;font-size:15px;letter-spacing:2px;color:var(--white);margin-top:8px;animation:htUp .6s ease .6s both}
-.ht-dismiss{margin-top:28px;background:var(--white);border:none;border-radius:12px;padding:10px 28px;color:var(--surf-deep);font-size:13px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;animation:htUp .6s ease .7s both}
+.ht-label{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:5px;text-transform:uppercase;color:var(--overlay-ink);margin-bottom:14px;animation:htUp .6s ease .2s both}
+.ht-banner{font-family:'Oswald',sans-serif;font-size:52px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--overlay-accent);margin-bottom:20px;animation:htUp .6s ease .35s both}
+.ht-score{font-family:'Oswald',sans-serif;font-size:88px;font-weight:700;color:var(--overlay-ink);letter-spacing:8px;animation:htUp .6s ease .5s both}
+.ht-teams{font-family:'Oswald',sans-serif;font-size:15px;letter-spacing:2px;color:var(--overlay-ink);margin-top:8px;animation:htUp .6s ease .6s both}
+.ht-dismiss{margin-top:28px;background:var(--dismiss-bg);border:none;border-radius:12px;padding:10px 28px;color:var(--dismiss-fg);font-size:13px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;animation:htUp .6s ease .7s both}
 @keyframes htUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 
 /* === CELEBRATION === */
 .goal-flash{position:fixed;inset:0;z-index:250;pointer-events:none;opacity:0}
 .goal-flash.fire{animation:flashBurst .5s ease-out forwards}
-@keyframes flashBurst{0%{opacity:.6;background:radial-gradient(circle,rgba(27,75,158,.4) 0%,transparent 70%)}100%{opacity:0}}
+@keyframes flashBurst{0%{opacity:.6;background:radial-gradient(circle,var(--flash) 0%,transparent 70%)}100%{opacity:0}}
 canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
 </style>
 </head>
 <body>
 
-<!-- Club-blue waves, echoing the crest -->
+<!-- Waves in the active kit colour -->
 <div class="wave-bg">
   <svg viewBox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="height:100px">
     <path d="M0,50 C180,90 360,15 540,55 C720,95 900,15 1080,55 C1260,95 1360,35 1440,55 L1440,100 L0,100Z" fill="rgba(27,75,158,0.10)"/>
@@ -240,9 +334,14 @@ canvas#confetti{position:fixed;inset:0;z-index:249;pointer-events:none}
       <div class="brand-top">Match Day</div>
       <div class="brand-name">SDSC <em>Surf</em></div>
     </div>
-    <div class="sync-wrap" id="syncWrap">
-      <div class="sync-ring"></div>
-      <div class="sync-pill"><div class="sync-dot"></div><span id="syncLabel">SYNC…</span></div>
+    <div class="header-actions">
+      <button class="kit-toggle" id="kitToggle" onclick="toggleKit()" aria-label="Switch kit colours">
+        <span class="kit-swatch"></span><span id="kitName">Blue</span>
+      </button>
+      <div class="sync-wrap" id="syncWrap">
+        <div class="sync-ring"></div>
+        <div class="sync-pill"><div class="sync-dot"></div><span id="syncLabel">SYNC…</span></div>
+      </div>
     </div>
   </div>
 
@@ -414,6 +513,30 @@ const FB={
   appId:"1:1066375405954:web:552acd57a7d66243806f9b"
 };
 
+/* ── KITS ──
+   Two palettes, one attribute on <html>. The choice lives in shared state,
+   so switching kit on the coach's phone switches the parents' view too. */
+const KITS={
+  daylight:{label:'Blue',next:'Ola de Oro',meta:'#eaeff7',
+    confetti:['#1b4b9e','#2a61c8','#122f63','#0b1220','#7aa5ee']},
+  oro:{label:'Oro',next:'blue home',meta:'#0c0c0f',
+    // Black is dropped here — it disappears against the dark page
+    confetti:['#d4af37','#f0cf5f','#c9a227','#8a6d16','#ffffff']}
+};
+function kitOf(t){return KITS[t]?t:'daylight';}
+function applyKit(t){
+  const k=kitOf(t);
+  document.documentElement.setAttribute('data-theme',k);
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta)meta.setAttribute('content',KITS[k].meta);
+  const name=document.getElementById('kitName');
+  if(name)name.textContent=KITS[k].label;
+  const btn=document.getElementById('kitToggle');
+  if(btn)btn.title='Switch to the '+KITS[k].next+' kit';
+  // Remembered per device so a reload paints the right kit immediately
+  try{localStorage.setItem('surfKit',k)}catch(e){}
+}
+
 /* Realtime Database never stores null or empty values, so incoming snapshots
    are merged over these defaults — an absent key means "reset to default",
    never "keep whatever this device had before". */
@@ -423,7 +546,8 @@ const DEFAULT_STATE={
   homeTeam:'SDSC Surf',awayTeam:'Opponent',
   homeShots:0,awayShots:0,
   homeYellow:0,homeRed:0,awayYellow:0,awayRed:0,
-  gameFinal:false,timerOwner:null
+  gameFinal:false,timerOwner:null,
+  theme:'daylight'
 };
 let S={...DEFAULT_STATE};
 let ticker=null,pendingTeam=null,nameDebounce=null,serverOffset=0,wakeLock=null;
@@ -472,6 +596,13 @@ function setSyncStatus(s){
   else if(s==='offline'){w.classList.add('error');l.textContent='OFFLINE';}
   else if(s==='error'){w.classList.add('error');l.textContent='ERROR';}
   else{l.textContent='SYNC…';}
+}
+
+function toggleKit(){
+  S.theme=kitOf(S.theme)==='oro'?'daylight':'oro';
+  applyKit(S.theme);
+  if(navigator.vibrate)navigator.vibrate(20);
+  pushFields('theme');
 }
 
 /* ── TIMER (count up only) ──
@@ -818,6 +949,7 @@ function renderCards(){
     </div>`).reverse().join('');
 }
 function renderAll(){
+  applyKit(S.theme);
   renderScores();renderGoals();renderTimer();renderHalf();renderShots();renderCards();
   // Don't yank the caret while the coach is typing a team name
   const hi=document.getElementById('homeInput'),ai=document.getElementById('awayInput');
@@ -835,8 +967,7 @@ function launchConfetti(){
   const canvas=document.getElementById('confetti');
   const ctx=canvas.getContext('2d');
   canvas.width=window.innerWidth;canvas.height=window.innerHeight;
-  // Club palette — white is dropped, it disappears against a light page
-  const colors=['#1b4b9e','#2a61c8','#122f63','#0b1220','#7aa5ee'];
+  const colors=KITS[kitOf(S.theme)].confetti;
   const particles=Array.from({length:90},()=>({
     x:Math.random()*canvas.width,y:Math.random()*canvas.height*.35,
     vx:(Math.random()-.5)*8,vy:Math.random()*4+2,size:Math.random()*7+3,
@@ -866,6 +997,7 @@ window.addGoal=addGoal;window.undoGoal=undoGoal;window.confirmGoal=confirmGoal;w
 window.editGoal=editGoal;
 window.newGame=newGame;window.onTeamName=onTeamName;window.copyViewerUrl=copyViewerUrl;
 window.addCard=addCard;window.adjCard=adjCard;window.adjShot=adjShot;
+window.toggleKit=toggleKit;
 window.editCard=editCard;window.confirmCard=confirmCard;window.cancelCard=cancelCard;
 renderAll();
 </script>
